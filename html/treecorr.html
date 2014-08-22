@@ -1,0 +1,1413 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>treecorr package &mdash; treecorr  documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="treecorr  documentation" href="index.html" />
+    <link rel="prev" title="Welcome to treecorr’s documentation!" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to treecorr’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">treecorr  documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="treecorr-package">
+<h1>treecorr package<a class="headerlink" href="#treecorr-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-treecorr.binnedcorr2">
+<span id="treecorr-binnedcorr2-module"></span><h2>treecorr.binnedcorr2 module<a class="headerlink" href="#module-treecorr.binnedcorr2" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="treecorr.binnedcorr2.BinnedCorr2">
+<em class="property">class </em><tt class="descclassname">treecorr.binnedcorr2.</tt><tt class="descname">BinnedCorr2</tt><big>(</big><em>config=None</em>, <em>logger=None</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/treecorr/binnedcorr2.html#BinnedCorr2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.binnedcorr2.BinnedCorr2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>This class stores the results of a 2-point correlation calculation, along with some
+ancillary data.</p>
+<p>This is a base class that is not intended to be constructed directly.  But it has a few
+helper functions that derived classes can use to help perform their calculations.  See
+the derived classes for more details:</p>
+<blockquote>
+<div>G2Correlation - handles shear-shear correlation functions
+N2Correlation - handles count-count correlation functions
+K2Correlation - handles kappa-kappa correlation functions
+NGCorrelation - handles count-shear correlation functions
+NKCorrelation - handles count-kappa correlation functions
+KGCorrelation - handles kappa-shear correlation functions</div></blockquote>
+<p>Note that when we refer to kappa in the correlation function, that is because I
+come from a weak lensing perspective.  But really any scalar quantity may be used
+here.  CMB temperature fluctuations for example.</p>
+<p>The constructor for all derived classes take a config dict as the first argument,
+since this is often how we keep track of parameters, but if you don&#8217;t want to 
+use one or if you want to change some parameters from what are in a config dict,
+then you can use normal kwargs, which take precedence over anything in the config dict.</p>
+<p>Exactly three of the following 4 parameters are required either in the config dict or
+in kwargs:</p>
+<blockquote>
+<div>nbins - How many bins to use
+bin_size - The width of the bins in log(separation)
+min_sep - The minimum separation; the left edge of the first bin
+max_sep - The maximum separation; the right edge of the last bin</div></blockquote>
+<p>Any three of these may be provided.  The fourth number will be calculated from them.</p>
+<p>Note that if bin_size, min_sep, and max_sep are specified, then the nominal number of
+bins is not necessarily and integer.  In this case, nbins will be rounded up to the 
+next higher integer, and max_sep will be updated to account for this.</p>
+<dl class="method">
+<dt id="treecorr.binnedcorr2.BinnedCorr2.gen_write">
+<tt class="descname">gen_write</tt><big>(</big><em>file_name</em>, <em>headers</em>, <em>columns</em><big>)</big><a class="reference internal" href="_modules/treecorr/binnedcorr2.html#BinnedCorr2.gen_write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.binnedcorr2.BinnedCorr2.gen_write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write some columns to an output file with the given headers.</p>
+<p>We do this basic functionality a lot, so put the code to do it in one place.</p>
+<p>headers should be a list of strings.
+columns should be a list of numpy arrays.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="treecorr.binnedcorr2.SetOMPThreads">
+<tt class="descclassname">treecorr.binnedcorr2.</tt><tt class="descname">SetOMPThreads</tt><big>(</big><em>num_threads</em><big>)</big><a class="reference internal" href="_modules/treecorr/binnedcorr2.html#SetOMPThreads"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.binnedcorr2.SetOMPThreads" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-treecorr.catalog">
+<span id="treecorr-catalog-module"></span><h2>treecorr.catalog module<a class="headerlink" href="#module-treecorr.catalog" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="treecorr.catalog.Catalog">
+<em class="property">class </em><tt class="descclassname">treecorr.catalog.</tt><tt class="descname">Catalog</tt><big>(</big><em>file_name=None</em>, <em>config=None</em>, <em>num=0</em>, <em>logger=None</em>, <em>is_rand=False</em>, <em>x=None</em>, <em>y=None</em>, <em>ra=None</em>, <em>dec=None</em>, <em>r=None</em>, <em>w=None</em>, <em>flag=None</em>, <em>g1=None</em>, <em>g2=None</em>, <em>k=None</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/treecorr/catalog.html#Catalog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.catalog.Catalog" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>A classs storing the catalog information for a particular set of objects
+to be correlated in some way.</p>
+<p>The usual way to build this is using a config dict:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cat</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">Catalog</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This uses the information in the config dict to read the input file, which may be either
+a FITS catalog or an ASCII catalog.  Normally the distinction is made according to the
+file_name&#8217;s extension, but it can also be set explicitly with config[&#8216;file_type&#8217;].</p>
+<p>See <a class="reference external" href="https://github.com/rmjarvis/TreeCorr/wiki/Configuration-Parameters">https://github.com/rmjarvis/TreeCorr/wiki/Configuration-Parameters</a>
+for a complete list of all of the relevant configuration parameters.  In particular,
+the first section &#8220;Parameters about the input file&#8221;.</p>
+<p>The num parameter is either 0 or 1 (default 0), which specifies whether this corresponds
+to the first or second file in the configuration file.  e.g. if you are doing an NG
+correlation function, then the first file is not required to have g1_col, g2_col set.
+Thus, you would define these as something like <cite>g1_col = 0 3</cite> and <cite>g2_col = 0 4</cite>.
+Then when reading the first file, you would use num=0 to indicate that you want to use the
+first elements of these vectors (i.e. no g1 or g2 columns), and for the second file, you
+would use num=1 to use columsn 3 and 4.</p>
+<p>An alternate way to build a Catalog is to provide the data vectors by hand.  This may
+be more convenient when using this as part of a longer script where you are building the
+data vectors in python and then want to compute the correlation function.  The syntax for this
+is:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cat</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">Catalog</span><span class="p">(</span><span class="n">g1</span><span class="o">=</span><span class="n">g1</span><span class="p">,</span> <span class="n">g2</span><span class="o">=</span><span class="n">g2</span><span class="p">,</span> <span class="n">ra</span><span class="o">=</span><span class="n">ra</span><span class="p">,</span> <span class="n">dec</span><span class="o">=</span><span class="n">dec</span><span class="p">,</span>
+<span class="go">                           ra_units=ra_units, dec_units=dec_units)</span>
+</pre></div>
+</div>
+<p>Each of these data vectors should be a numpy array.  For x,y, the units fields are optional,
+in which case the units are assumed to be arcsec.  But for ra,dec they are required.
+These units parameters may alternatively be provided in the config dict as above.
+Valid columns to include are: x,y,ra,dec,g1,g2,k,w.  As usual, exactly one of (x,y) or
+(ra,dec) must be given.  The others are optional, although if g1 or g2 is given, the other
+must also be given.  Flags may be included by setting w=0 for those objects.</p>
+<p>A Catalog object will have available the following attributes:</p>
+<blockquote>
+<div><p>x           The x positions, if defined, as a numpy array. (None otherwise)
+y           The y positions, if defined, as a numpy array. (None otherwise)
+ra          The right ascension, if defined, as a numpy array. (None otherwise)
+dec         The declination, if defined, as a numpy array. (None otherwise)
+r           The distance, if defined, as a numpy array. (None otherwise)
+w           The weights, as a numpy array. (All 1&#8217;s if no weight column provided.)
+g1          The g1 component of the shear, if defined, as a numpy array. (None otherwise)
+g2          The g2 component of the shear, if defined, as a numpy array. (None otherwise)
+k           The convergence, kappa, if defined, as a numpy array. (None otherwise)</p>
+<p>nobj        The number of objects with non-zero weight
+sumw        The sum of the weights
+varg        The shear variance (aka shape noise)
+vark        The kappa variance
+name        When constructed from a file, this will be the file_name.  It is only used as</p>
+<blockquote>
+<div>a reference name in logging output  after construction, so if you construct it 
+from data vectors directly, it will be &#8216;&#8217;.  You may assign to it if you want to
+give this catalog a specific name.</div></blockquote>
+</div></blockquote>
+<dl class="method">
+<dt id="treecorr.catalog.Catalog.checkForNaN">
+<tt class="descname">checkForNaN</tt><big>(</big><em>col</em>, <em>col_str</em><big>)</big><a class="reference internal" href="_modules/treecorr/catalog.html#Catalog.checkForNaN"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.catalog.Catalog.checkForNaN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="treecorr.catalog.Catalog.getGField">
+<tt class="descname">getGField</tt><big>(</big><em>min_sep</em>, <em>max_sep</em>, <em>b</em>, <em>logger=None</em>, <em>config=None</em><big>)</big><a class="reference internal" href="_modules/treecorr/catalog.html#Catalog.getGField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.catalog.Catalog.getGField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a GField based on the g1,g2 values in this catalog.</p>
+<p>The GField object is cached, so this is efficient to call multiple times.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.catalog.Catalog.getGSimpleField">
+<tt class="descname">getGSimpleField</tt><big>(</big><em>logger=None</em>, <em>config=None</em><big>)</big><a class="reference internal" href="_modules/treecorr/catalog.html#Catalog.getGSimpleField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.catalog.Catalog.getGSimpleField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a GSimpleField based on the g1,g2 values in this catalog.</p>
+<p>The GSimpleField object is cached, so this is efficient to call multiple times.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.catalog.Catalog.getKField">
+<tt class="descname">getKField</tt><big>(</big><em>min_sep</em>, <em>max_sep</em>, <em>b</em>, <em>logger=None</em>, <em>config=None</em><big>)</big><a class="reference internal" href="_modules/treecorr/catalog.html#Catalog.getKField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.catalog.Catalog.getKField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a KField based on the k values in this catalog.</p>
+<p>The KField object is cached, so this is efficient to call multiple times.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.catalog.Catalog.getKSimpleField">
+<tt class="descname">getKSimpleField</tt><big>(</big><em>logger=None</em>, <em>config=None</em><big>)</big><a class="reference internal" href="_modules/treecorr/catalog.html#Catalog.getKSimpleField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.catalog.Catalog.getKSimpleField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a KSimpleField based on the k values in this catalog.</p>
+<p>The KSimpleField object is cached, so this is efficient to call multiple times.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.catalog.Catalog.getNField">
+<tt class="descname">getNField</tt><big>(</big><em>min_sep</em>, <em>max_sep</em>, <em>b</em>, <em>logger=None</em>, <em>config=None</em><big>)</big><a class="reference internal" href="_modules/treecorr/catalog.html#Catalog.getNField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.catalog.Catalog.getNField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an NField based on the positions in this catalog.</p>
+<p>The NField object is cached, so this is efficient to call multiple times.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.catalog.Catalog.getNSimpleField">
+<tt class="descname">getNSimpleField</tt><big>(</big><em>logger=None</em>, <em>config=None</em><big>)</big><a class="reference internal" href="_modules/treecorr/catalog.html#Catalog.getNSimpleField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.catalog.Catalog.getNSimpleField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an NSimpleField based on the positions in this catalog.</p>
+<p>The NSimpleField object is cached, so this is efficient to call multiple times.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.catalog.Catalog.read_ascii">
+<tt class="descname">read_ascii</tt><big>(</big><em>file_name</em>, <em>num=0</em>, <em>is_rand=False</em><big>)</big><a class="reference internal" href="_modules/treecorr/catalog.html#Catalog.read_ascii"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.catalog.Catalog.read_ascii" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the catalog from an ASCII file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.catalog.Catalog.read_fits">
+<tt class="descname">read_fits</tt><big>(</big><em>file_name</em>, <em>num=0</em>, <em>is_rand=False</em><big>)</big><a class="reference internal" href="_modules/treecorr/catalog.html#Catalog.read_fits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.catalog.Catalog.read_fits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the catalog from a FITS file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.catalog.Catalog.read_fitsio">
+<tt class="descname">read_fitsio</tt><big>(</big><em>file_name</em>, <em>num</em>, <em>is_rand</em>, <em>x_col</em>, <em>y_col</em>, <em>ra_col</em>, <em>dec_col</em>, <em>r_col</em>, <em>w_col</em>, <em>flag_col</em>, <em>g1_col</em>, <em>g2_col</em>, <em>k_col</em><big>)</big><a class="reference internal" href="_modules/treecorr/catalog.html#Catalog.read_fitsio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.catalog.Catalog.read_fitsio" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="treecorr.catalog.Catalog.read_pyfits">
+<tt class="descname">read_pyfits</tt><big>(</big><em>file_name</em>, <em>num</em>, <em>is_rand</em>, <em>x_col</em>, <em>y_col</em>, <em>ra_col</em>, <em>dec_col</em>, <em>r_col</em>, <em>w_col</em>, <em>flag_col</em>, <em>g1_col</em>, <em>g2_col</em>, <em>k_col</em><big>)</big><a class="reference internal" href="_modules/treecorr/catalog.html#Catalog.read_pyfits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.catalog.Catalog.read_pyfits" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="treecorr.catalog.Catalog.write">
+<tt class="descname">write</tt><big>(</big><em>file_name</em><big>)</big><a class="reference internal" href="_modules/treecorr/catalog.html#Catalog.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.catalog.Catalog.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the catalog to a file.  Currently only ASCII output is supported.</p>
+<p>Note that the x,y,ra,dec columns are output using the same units as were used when
+building the Catalog.  If you want to use a different unit, you can set the catalog&#8217;s
+units directly before writing.  e.g.:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cat</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">Catalog</span><span class="p">(</span><span class="s">&#39;cat.dat&#39;</span><span class="p">,</span> <span class="n">ra</span><span class="o">=</span><span class="n">ra</span><span class="p">,</span> <span class="n">dec</span><span class="o">=</span><span class="n">dec</span><span class="p">,</span>
+<span class="go">                           ra_units=&#39;hours&#39;, dec_units=&#39;degrees&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cat</span><span class="o">.</span><span class="n">ra_units</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">degrees</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cat</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;new_cat.dat&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="treecorr.catalog.calculateVarG">
+<tt class="descclassname">treecorr.catalog.</tt><tt class="descname">calculateVarG</tt><big>(</big><em>cat_list</em><big>)</big><a class="reference internal" href="_modules/treecorr/catalog.html#calculateVarG"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.catalog.calculateVarG" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the overall shear variance from a list of catalogs.</p>
+<p>The catalogs are assumed to be equivalent, so this is just the average shear
+variance weighted by the number of objects in each catalog.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="treecorr.catalog.calculateVarK">
+<tt class="descclassname">treecorr.catalog.</tt><tt class="descname">calculateVarK</tt><big>(</big><em>cat_list</em><big>)</big><a class="reference internal" href="_modules/treecorr/catalog.html#calculateVarK"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.catalog.calculateVarK" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the overall kappa variance from a list of catalogs.</p>
+<p>The catalogs are assumed to be equivalent, so this is just the average kappa
+variance weighted by the number of objects in each catalog.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="treecorr.catalog.isGColRequired">
+<tt class="descclassname">treecorr.catalog.</tt><tt class="descname">isGColRequired</tt><big>(</big><em>config</em>, <em>num</em><big>)</big><a class="reference internal" href="_modules/treecorr/catalog.html#isGColRequired"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.catalog.isGColRequired" title="Permalink to this definition">¶</a></dt>
+<dd><p>A quick helper function that checks whether we need to bother reading the g1,g2 columns.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="treecorr.catalog.isKColRequired">
+<tt class="descclassname">treecorr.catalog.</tt><tt class="descname">isKColRequired</tt><big>(</big><em>config</em>, <em>num</em><big>)</big><a class="reference internal" href="_modules/treecorr/catalog.html#isKColRequired"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.catalog.isKColRequired" title="Permalink to this definition">¶</a></dt>
+<dd><p>A quick helper function that checks whether we need to bother reading the k column.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="treecorr.catalog.read_catalogs">
+<tt class="descclassname">treecorr.catalog.</tt><tt class="descname">read_catalogs</tt><big>(</big><em>config</em>, <em>key=None</em>, <em>list_key=None</em>, <em>num=0</em>, <em>logger=None</em>, <em>is_rand=None</em><big>)</big><a class="reference internal" href="_modules/treecorr/catalog.html#read_catalogs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.catalog.read_catalogs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read in a list of catalogs for the given key.</p>
+<p>key should be the file_name parameter or similar key word.
+list_key should be be corresponging file_list parameter, if appropriate.
+At least one of key or list_key must be provided.  If both are provided, then only
+one of these should be in the config dict.</p>
+<p>If neither key nor list_key is found in the config dict, then a null list [] is returned.</p>
+<p>num indicates which key to use if any of the fields like x_col, flip_g1, etc. are lists.
+The default is 0, which means to use the first item in the list if they are lists.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-treecorr.celestial">
+<span id="treecorr-celestial-module"></span><h2>treecorr.celestial module<a class="headerlink" href="#module-treecorr.celestial" title="Permalink to this headline">¶</a></h2>
+<p>&#64;file celestial.py
+The CelestialCoord class describing coordinates on the celestial sphere.</p>
+<dl class="class">
+<dt id="treecorr.celestial.CelestialCoord">
+<em class="property">class </em><tt class="descclassname">treecorr.celestial.</tt><tt class="descname">CelestialCoord</tt><big>(</big><em>ra</em>, <em>dec</em><big>)</big><a class="reference internal" href="_modules/treecorr/celestial.html#CelestialCoord"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.celestial.CelestialCoord" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>This class defines a position on the celestial sphere, normally given by
+two angles, <cite>ra</cite> and <cite>dec</cite>.</p>
+<p>Mostly this class exists to enforce the units when a position is really a location on
+the celestial sphere rather than using PositionD as we normally do for positions.
+In that role, it can be considered a lightweight wrapper around two angles, <cite>ra</cite> and <cite>dec</cite>.
+They are accessible as <cite>coord.ra</cite> and <cite>coord.dec</cite>.</p>
+<p>However, there are a few useful functions that we provide.</p>
+<p>The distance between two coordinate positions can be calculated with</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">coord</span><span class="o">.</span><span class="n">distanceTo</span><span class="p">(</span><span class="n">other_coord</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>There are several tangent plane projections you can use:</dt>
+<dd><ul class="first last simple">
+<li>a Lambert projection, which preserves area</li>
+<li>a stereographic projection, which preserves angles</li>
+<li>a gnomonic projection, which makes all great circles straight lines</li>
+<li>a Postel projection, which preserves distances from the tangent point</li>
+</ul>
+</dd>
+</dl>
+<p>See the project() and deproject() functions for details.</p>
+<p>You can also precess a coordinate from one epoch to another and get galactic coordinates
+with, e.g.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">coord1950</span> <span class="o">=</span> <span class="n">coord2000</span><span class="o">.</span><span class="n">precess</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span> <span class="mi">1950</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">el</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">coord</span><span class="o">.</span><span class="n">galactic</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We don&#8217;t use either of these for anything within TreeCorr, but I had the code to do it
+lying around, so I included it here in case someone might find it useful.</p>
+<p>A CelestialCoord object is initialized with the following command:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">coord</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">CelestialCoord</span><span class="p">(</span><span class="n">ra</span><span class="p">,</span> <span class="n">dec</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>&#64;param ra       The right ascension in radians.
+&#64;param dec      The declination in radian.</p>
+<dl class="method">
+<dt id="treecorr.celestial.CelestialCoord.angleBetween">
+<tt class="descname">angleBetween</tt><big>(</big><em>coord1</em>, <em>coord2</em><big>)</big><a class="reference internal" href="_modules/treecorr/celestial.html#CelestialCoord.angleBetween"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.celestial.CelestialCoord.angleBetween" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the open angle at the location of the current coord between <cite>coord1</cite> and <cite>coord2</cite>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.celestial.CelestialCoord.area">
+<tt class="descname">area</tt><big>(</big><em>coord1</em>, <em>coord2</em><big>)</big><a class="reference internal" href="_modules/treecorr/celestial.html#CelestialCoord.area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.celestial.CelestialCoord.area" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the area of the spherical triangle defined by the current coord, <cite>coord1</cite>,
+and <cite>coord2</cite>, returning the area in steradians.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.celestial.CelestialCoord.copy">
+<tt class="descname">copy</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/treecorr/celestial.html#CelestialCoord.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.celestial.CelestialCoord.copy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="treecorr.celestial.CelestialCoord.dec">
+<tt class="descname">dec</tt><a class="reference internal" href="_modules/treecorr/celestial.html#CelestialCoord.dec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.celestial.CelestialCoord.dec" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="treecorr.celestial.CelestialCoord.deproject">
+<tt class="descname">deproject</tt><big>(</big><em>u</em>, <em>v</em>, <em>projection='lambert'</em><big>)</big><a class="reference internal" href="_modules/treecorr/celestial.html#CelestialCoord.deproject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.celestial.CelestialCoord.deproject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do the reverse process from the project() function.</p>
+<p>i.e. This takes in a position (u,v) as a tuple and returns the corresponding celestial
+coordinate, using the current coordinate as the center point of the tangent plane
+projection.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.celestial.CelestialCoord.deproject_jac">
+<tt class="descname">deproject_jac</tt><big>(</big><em>u</em>, <em>v</em>, <em>projection='lambert'</em><big>)</big><a class="reference internal" href="_modules/treecorr/celestial.html#CelestialCoord.deproject_jac"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.celestial.CelestialCoord.deproject_jac" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the jacobian of the deprojection.</p>
+<p>i.e. if the input position is (u,v) (in radians) then the return matrix is</p>
+<dl class="docutils">
+<dt>J = ( dra/du cos(dec)  dra/dv cos(dec) )</dt>
+<dd>(    ddec/du          ddec/dv      )</dd>
+</dl>
+<p>&#64;returns the matrix as a tuple (J00, J01, J10, J11)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.celestial.CelestialCoord.deproject_rad">
+<tt class="descname">deproject_rad</tt><big>(</big><em>u</em>, <em>v</em>, <em>projection='lambert'</em><big>)</big><a class="reference internal" href="_modules/treecorr/celestial.html#CelestialCoord.deproject_rad"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.celestial.CelestialCoord.deproject_rad" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is basically identical to the deproject() function except that the output <cite>ra</cite>,
+<cite>dec</cite> are returned as a tuple (ra, dec) in radians rather than packaged as a CelestialCoord
+object.</p>
+<p>The main advantage to this is that it will work if <cite>u</cite> and <cite>v</cite> are NumPy arrays, in which 
+case the output <cite>ra</cite>, <cite>dec</cite> will also be NumPy arrays.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.celestial.CelestialCoord.distanceTo">
+<tt class="descname">distanceTo</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/treecorr/celestial.html#CelestialCoord.distanceTo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.celestial.CelestialCoord.distanceTo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the great circle distance between this coord and another one.
+The return value is in radians.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.celestial.CelestialCoord.galactic">
+<tt class="descname">galactic</tt><big>(</big><em>epoch=2000.0</em><big>)</big><a class="reference internal" href="_modules/treecorr/celestial.html#CelestialCoord.galactic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.celestial.CelestialCoord.galactic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the longitude and latitude in galactic coordinates corresponding to this position.</p>
+<p>The formulae are implemented in terms of the 1950 coordinates, so we need to
+precess from the current epoch to 1950.  The current epoch is assumed to be 2000
+by default, but you may also specify a different value with the epoch parameter.</p>
+<p>&#64;returns the longitude and latitude as a tuple (el, b) in radians.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.celestial.CelestialCoord.precess">
+<tt class="descname">precess</tt><big>(</big><em>from_epoch</em>, <em>to_epoch</em><big>)</big><a class="reference internal" href="_modules/treecorr/celestial.html#CelestialCoord.precess"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.celestial.CelestialCoord.precess" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function precesses equatorial ra and dec from one epoch to another.
+It is adapted from a set of fortran subroutines based on (a) pages 30-34 of
+the Explanatory Supplement to the AE, (b) Lieske, et al. (1977) A&amp;A 58, 1-16,
+and (c) Lieske (1979) A&amp;A 73, 282-284.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.celestial.CelestialCoord.project">
+<tt class="descname">project</tt><big>(</big><em>other</em>, <em>projection='lambert'</em><big>)</big><a class="reference internal" href="_modules/treecorr/celestial.html#CelestialCoord.project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.celestial.CelestialCoord.project" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use the currect coord as the center point of a tangent plane projection to project
+the <cite>other</cite> coordinate onto that plane.</p>
+<p>This function returns the position (u,v) in the Euclidean coordinate system defined by
+a tangent plane projection around the current coordinate, with +v pointing north and
++u pointing west.</p>
+<p>There are currently four options for the projection, which you can specify with the
+optional <cite>projection</cite> keyword argument:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>&#8216;lambert&#8217; [default] uses a Lambert azimuthal projection, which preserves</dt>
+<dd>area, but not angles.  For more information, see
+<a class="reference external" href="http://mathworld.wolfram.com/LambertAzimuthalEqual-AreaProjection.html">http://mathworld.wolfram.com/LambertAzimuthalEqual-AreaProjection.html</a></dd>
+<dt>&#8216;stereographic&#8217; uses a stereographic proejection, which preserves angles, but</dt>
+<dd>not area.  For more information, see
+<a class="reference external" href="http://mathworld.wolfram.com/StereographicProjection.html">http://mathworld.wolfram.com/StereographicProjection.html</a></dd>
+<dt>&#8216;gnomonic&#8217; uses a gnomonic projection (i.e. a projection from the center of the</dt>
+<dd>sphere), which has the property that all great circles become straight 
+lines.  For more information, see
+<a class="reference external" href="http://mathworld.wolfram.com/GnomonicProjection.html">http://mathworld.wolfram.com/GnomonicProjection.html</a></dd>
+<dt>&#8216;postel&#8217; uses a Postel equidistant proejection, which preserves distances from</dt>
+<dd>the projection point, but not area or angles.  For more information, see
+<a class="reference external" href="http://mathworld.wolfram.com/AzimuthalEquidistantProjection.html">http://mathworld.wolfram.com/AzimuthalEquidistantProjection.html</a></dd>
+</dl>
+</div></blockquote>
+<p>The distance or angle errors increase with distance from the projection point of course.</p>
+<p>&#64;returns (u,v) in radians as a tuple.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.celestial.CelestialCoord.project_rad">
+<tt class="descname">project_rad</tt><big>(</big><em>ra</em>, <em>dec</em>, <em>projection</em><big>)</big><a class="reference internal" href="_modules/treecorr/celestial.html#CelestialCoord.project_rad"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.celestial.CelestialCoord.project_rad" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is basically identical to the project() function except that the input <cite>ra</cite>, <cite>dec</cite>
+are given in radians rather than packaged as a CelestialCoord object.</p>
+<p>Also, the output is returned as a tuple (x,y), rather than packaged as a PositionD object.</p>
+<p>The main advantage to this is that it will work if <cite>ra</cite> and <cite>dec</cite> are NumPy arrays, in which
+case the output <cite>x</cite>, <cite>y</cite> will also be NumPy arrays.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="treecorr.celestial.CelestialCoord.ra">
+<tt class="descname">ra</tt><a class="reference internal" href="_modules/treecorr/celestial.html#CelestialCoord.ra"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.celestial.CelestialCoord.ra" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-treecorr.config">
+<span id="treecorr-config-module"></span><h2>treecorr.config module<a class="headerlink" href="#module-treecorr.config" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="treecorr.config.check_config">
+<tt class="descclassname">treecorr.config.</tt><tt class="descname">check_config</tt><big>(</big><em>config</em>, <em>params</em><big>)</big><a class="reference internal" href="_modules/treecorr/config.html#check_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.config.check_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check (and update) a config dict to conform to the given parameter rules.
+The params dict has an entry for each valid config parameter whose value is a tuple
+with the following items:</p>
+<blockquote>
+<div><ul class="simple">
+<li>type</li>
+<li>can be a list?</li>
+<li>default value</li>
+<li>valid values</li>
+<li>description (Multiple entries here are allowed for longer strings)</li>
+</ul>
+</div></blockquote>
+<p>Returns the updated config dict.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="treecorr.config.convert">
+<tt class="descclassname">treecorr.config.</tt><tt class="descname">convert</tt><big>(</big><em>value</em>, <em>value_type</em>, <em>key</em><big>)</big><a class="reference internal" href="_modules/treecorr/config.html#convert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.config.convert" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="treecorr.config.get">
+<tt class="descclassname">treecorr.config.</tt><tt class="descname">get</tt><big>(</big><em>config</em>, <em>key</em>, <em>value_type=&lt;type 'str'&gt;</em>, <em>default=None</em><big>)</big><a class="reference internal" href="_modules/treecorr/config.html#get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.config.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>A helper function to get a key from config converting to a particular type</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="treecorr.config.get_from_list">
+<tt class="descclassname">treecorr.config.</tt><tt class="descname">get_from_list</tt><big>(</big><em>config</em>, <em>key</em>, <em>num</em>, <em>value_type=&lt;type 'str'&gt;</em>, <em>default=None</em><big>)</big><a class="reference internal" href="_modules/treecorr/config.html#get_from_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.config.get_from_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>A helper function to get a key from config that is allowed to be a list</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="treecorr.config.merge_config">
+<tt class="descclassname">treecorr.config.</tt><tt class="descname">merge_config</tt><big>(</big><em>config</em>, <em>kwargs</em><big>)</big><a class="reference internal" href="_modules/treecorr/config.html#merge_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.config.merge_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="treecorr.config.parse_bool">
+<tt class="descclassname">treecorr.config.</tt><tt class="descname">parse_bool</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/treecorr/config.html#parse_bool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.config.parse_bool" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="treecorr.config.parse_unit">
+<tt class="descclassname">treecorr.config.</tt><tt class="descname">parse_unit</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/treecorr/config.html#parse_unit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.config.parse_unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the appropriate unit, allowing the value to merely start with one of the unit names.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="treecorr.config.parse_variable">
+<tt class="descclassname">treecorr.config.</tt><tt class="descname">parse_variable</tt><big>(</big><em>config</em>, <em>v</em><big>)</big><a class="reference internal" href="_modules/treecorr/config.html#parse_variable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.config.parse_variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="treecorr.config.print_params">
+<tt class="descclassname">treecorr.config.</tt><tt class="descname">print_params</tt><big>(</big><em>params</em><big>)</big><a class="reference internal" href="_modules/treecorr/config.html#print_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.config.print_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>List the information about the valid parameters, given by the given params dict.
+See check_config for the structure of the params dict.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="treecorr.config.read_config">
+<tt class="descclassname">treecorr.config.</tt><tt class="descname">read_config</tt><big>(</big><em>file_name</em><big>)</big><a class="reference internal" href="_modules/treecorr/config.html#read_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.config.read_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a configuration dict from a file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="treecorr.config.setup_logger">
+<tt class="descclassname">treecorr.config.</tt><tt class="descname">setup_logger</tt><big>(</big><em>verbose</em>, <em>log_file</em><big>)</big><a class="reference internal" href="_modules/treecorr/config.html#setup_logger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.config.setup_logger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse the integer verbosity level from the command line args into a logging_level string</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-treecorr.corr2">
+<span id="treecorr-corr2-module"></span><h2>treecorr.corr2 module<a class="headerlink" href="#module-treecorr.corr2" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="treecorr.corr2.corr2">
+<tt class="descclassname">treecorr.corr2.</tt><tt class="descname">corr2</tt><big>(</big><em>config</em>, <em>logger=None</em><big>)</big><a class="reference internal" href="_modules/treecorr/corr2.html#corr2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.corr2.corr2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the full two-point correlation function code based on the parameters in the
+given config dict.</p>
+<p>The function print_corr2_params() will output information about the valid parameters
+that are expected to be in the config dict.</p>
+<p>Optionally a logger parameter maybe given, in which case it is used for logging.
+If not given, the logging will be based on the verbose and log_file parameters.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="treecorr.corr2.print_corr2_params">
+<tt class="descclassname">treecorr.corr2.</tt><tt class="descname">print_corr2_params</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/treecorr/corr2.html#print_corr2_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.corr2.print_corr2_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print information about the valid parameters that may be given to the corr2 function.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-treecorr.field">
+<span id="treecorr-field-module"></span><h2>treecorr.field module<a class="headerlink" href="#module-treecorr.field" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="treecorr.field.GField">
+<em class="property">class </em><tt class="descclassname">treecorr.field.</tt><tt class="descname">GField</tt><big>(</big><em>cat</em>, <em>min_sep=None</em>, <em>max_sep=None</em>, <em>b=None</em>, <em>logger=None</em>, <em>config=None</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/treecorr/field.html#GField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.field.GField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>This class stores the shear field in a tree structure from which it is efficient
+to compute the two-point correlation functions.</p>
+<p>A GField is typically created from a Catalog object using</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">gfield</span> <span class="o">=</span> <span class="n">cat</span><span class="o">.</span><span class="n">getGField</span><span class="p">(</span><span class="n">min_sep</span><span class="p">,</span> <span class="n">max_sep</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="treecorr.field.GSimpleField">
+<em class="property">class </em><tt class="descclassname">treecorr.field.</tt><tt class="descname">GSimpleField</tt><big>(</big><em>cat</em>, <em>logger=None</em>, <em>config=None</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/treecorr/field.html#GSimpleField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.field.GSimpleField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>This class stores the shear field in a tree structure from which it is efficient
+to compute the two-point correlation functions.</p>
+<p>A GSimpleField is typically created from a Catalog object using</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">gfield</span> <span class="o">=</span> <span class="n">cat</span><span class="o">.</span><span class="n">getGSimpleField</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="treecorr.field.KField">
+<em class="property">class </em><tt class="descclassname">treecorr.field.</tt><tt class="descname">KField</tt><big>(</big><em>cat</em>, <em>min_sep=None</em>, <em>max_sep=None</em>, <em>b=None</em>, <em>logger=None</em>, <em>config=None</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/treecorr/field.html#KField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.field.KField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>This class stores the kappa field in a tree structure from which it is efficient
+to compute the two-point correlation functions.</p>
+<p>A KField is typically created from a Catalog object using</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kfield</span> <span class="o">=</span> <span class="n">cat</span><span class="o">.</span><span class="n">getKField</span><span class="p">(</span><span class="n">min_sep</span><span class="p">,</span> <span class="n">max_sep</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="treecorr.field.KSimpleField">
+<em class="property">class </em><tt class="descclassname">treecorr.field.</tt><tt class="descname">KSimpleField</tt><big>(</big><em>cat</em>, <em>logger=None</em>, <em>config=None</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/treecorr/field.html#KSimpleField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.field.KSimpleField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>This class stores the kappa field in a tree structure from which it is efficient
+to compute the two-point correlation functions.</p>
+<p>A KSimpleField is typically created from a Catalog object using</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kfield</span> <span class="o">=</span> <span class="n">cat</span><span class="o">.</span><span class="n">getKSimpleField</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="treecorr.field.NField">
+<em class="property">class </em><tt class="descclassname">treecorr.field.</tt><tt class="descname">NField</tt><big>(</big><em>cat</em>, <em>min_sep=None</em>, <em>max_sep=None</em>, <em>b=None</em>, <em>logger=None</em>, <em>config=None</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/treecorr/field.html#NField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.field.NField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>This class stores the positions in a tree structure from which it is efficient
+to compute the two-point correlation functions.</p>
+<p>An NField is typically created from a Catalog object using</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">nfield</span> <span class="o">=</span> <span class="n">cat</span><span class="o">.</span><span class="n">getNField</span><span class="p">(</span><span class="n">min_sep</span><span class="p">,</span> <span class="n">max_sep</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="treecorr.field.NSimpleField">
+<em class="property">class </em><tt class="descclassname">treecorr.field.</tt><tt class="descname">NSimpleField</tt><big>(</big><em>cat</em>, <em>logger=None</em>, <em>config=None</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/treecorr/field.html#NSimpleField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.field.NSimpleField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>This class stores the positions as a list, skipping all the tree stuff.</p>
+<p>An NSimpleField is typically created from a Catalog object using</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">nfield</span> <span class="o">=</span> <span class="n">cat</span><span class="o">.</span><span class="n">getNSimpleField</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="treecorr.field.parse_split_method">
+<tt class="descclassname">treecorr.field.</tt><tt class="descname">parse_split_method</tt><big>(</big><em>split_method</em><big>)</big><a class="reference internal" href="_modules/treecorr/field.html#parse_split_method"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.field.parse_split_method" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-treecorr.g2correlation">
+<span id="treecorr-g2correlation-module"></span><h2>treecorr.g2correlation module<a class="headerlink" href="#module-treecorr.g2correlation" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="treecorr.g2correlation.G2Correlation">
+<em class="property">class </em><tt class="descclassname">treecorr.g2correlation.</tt><tt class="descname">G2Correlation</tt><big>(</big><em>config=None</em>, <em>logger=None</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/treecorr/g2correlation.html#G2Correlation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.g2correlation.G2Correlation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#treecorr.binnedcorr2.BinnedCorr2" title="treecorr.binnedcorr2.BinnedCorr2"><tt class="xref py py-class docutils literal"><span class="pre">treecorr.binnedcorr2.BinnedCorr2</span></tt></a></p>
+<p>This class handles the calculation and storage of a 2-point shear-shear correlation
+function.</p>
+<p>It holds the following attributes:</p>
+<blockquote>
+<div><p>logr        The nominal center of the bin in log(r).
+meanlogr    The (weighted) mean value of log(r) for the pairs in each bin.</p>
+<blockquote>
+<div>If there are no pairs in a bin, then logr will be used instead.</div></blockquote>
+<p>xip         The correlation function, xi_plus(r).
+xim         The correlation funciton, xi_minus(r).
+xip_im      The imaginary part of xi_plus(r).
+xim_im      The imaginary part of xi_plus(r).
+varxi       The variance of xip and xim, only including the shape noise propagated</p>
+<blockquote>
+<div>into the final correlation.  This does not include sample variance, so
+it is always an underestimate of the actual variance.</div></blockquote>
+<p>weight      The total weight in each bin.
+npairs      The number of pairs going into each bin.</p>
+</div></blockquote>
+<p>The usage pattern is as follows:</p>
+<blockquote>
+<div>gg = treecorr.G2Correlation(config)
+gg.process(cat1)        # For auto-correlation.
+gg.process(cat1,cat2)   # For cross-correlation.
+gg.write(file_name)     # Write out to a file.
+xip = gg.xip            # Or access the correlation function directly.</div></blockquote>
+<dl class="method">
+<dt id="treecorr.g2correlation.G2Correlation.calculateGamSq">
+<tt class="descname">calculateGamSq</tt><big>(</big><em>eb=False</em><big>)</big><a class="reference internal" href="_modules/treecorr/g2correlation.html#G2Correlation.calculateGamSq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.g2correlation.G2Correlation.calculateGamSq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the tophat shear variance from the correlation function.</p>
+<p>&lt;Gam^2&gt;(R) = int_r=0..2R [s^2 dlogr S+(s) xi+(r)]
+&lt;Gam^2_E&gt;(R) = int_r=0..2R [1/2 s^2 dlogr (S+(s) xi+(r) + S-(s) xi-(r)]
+&lt;Gam^2_B&gt;(R) = int_r=0..2R [1/2 s^2 dlogr (S+(s) xi+(r) - S-(s) xi-(r)]</p>
+<p>S+(s) = 1/Pi * (4*arccos(s/2) - s sqrt(4-s^2) )
+S-(s) = (s&lt;=2):  1/(Pi s^4) * ( s sqrt(4-s^2) (6-s^2) - 8(3-s^2) arcsin(s/2) )</p>
+<blockquote>
+<div>(s&gt;=2):  4(s^2-3)/s^4</div></blockquote>
+<p>cf Schneider, et al, 2001: <a class="reference external" href="http://adsabs.harvard.edu/abs/2002A%26A...389..729S">http://adsabs.harvard.edu/abs/2002A%26A...389..729S</a></p>
+<p>The default behavior is not to compute the E/B versions.  They are calculated if
+eb is set to True.</p>
+<dl class="docutils">
+<dt>returns (gamsq, vargamsq)                                if eb == False</dt>
+<dd>(gamsq, vargamsq, gamsq_e, gamsq_b, vargamsq_e)  if eb == True</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.g2correlation.G2Correlation.calculateMapSq">
+<tt class="descname">calculateMapSq</tt><big>(</big><em>m2_uform=None</em><big>)</big><a class="reference internal" href="_modules/treecorr/g2correlation.html#G2Correlation.calculateMapSq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.g2correlation.G2Correlation.calculateMapSq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the aperture mass statistics from the correlation function.</p>
+<p>&lt;Map^2&gt;(R) = int_r=0..rmax [1/2 (r/R)^2 dlogr (T+(r/R) xi+(r) + T-(r/R) xi-(r)) ]
+&lt;Mx^2&gt;(R)  = int_r=0..rmax [1/2 (r/R)^2 dlogr (T+(r/R) xi+(r) - T-(r/R) xi-(r)) ]</p>
+<p>The m2_uform parameter sets which definition of the aperture mass to use.
+The default is to look in the config dict that was used to build the catalog,
+or use &#8216;Crittenden&#8217; if it is not specified.</p>
+<p>If m2_uform == &#8216;Crittenden&#8217;:</p>
+<blockquote>
+<div>U(r) = 1/2Pi (1-r^2) exp(-r^2/2)
+Q(r) = 1/4Pi r^2 exp(-r^2/2)
+T+(s) = (s^4 - 16s^2 + 32)/128 exp(-s^2/4)
+T-(s) = s^4/128 exp(-s^2/4)
+rmax = infinity</div></blockquote>
+<p>If m2_uform == &#8216;Schneider&#8217;:</p>
+<blockquote>
+<div><p>U(r) = 9/Pi (1-r^2) (1/3-r^2)
+Q(r) = 6/Pi r^2 (1-r^2)
+T+(s) = 12/5Pi (2-15s^2) arccos(s/2)</p>
+<blockquote>
+<div><ul class="simple">
+<li>1/(100Pi) s sqrt(4-s^2) (120 + 2320s^2 - 754s^4 + 132s^6 - 9s^8)</li>
+</ul>
+</div></blockquote>
+<p>T-(s) = 3/70Pi s^3 (4-s^2)^(7/2)
+rmax = 2R</p>
+</div></blockquote>
+<p>cf Schneider, et al (2001): <a class="reference external" href="http://xxx.lanl.gov/abs/astro-ph/0112441">http://xxx.lanl.gov/abs/astro-ph/0112441</a></p>
+<p>returns (mapsq, mapsq_im, mxsq, mxsq_im, varmapsq)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.g2correlation.G2Correlation.clear">
+<tt class="descname">clear</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/treecorr/g2correlation.html#G2Correlation.clear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.g2correlation.G2Correlation.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear the data vectors</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.g2correlation.G2Correlation.finalize">
+<tt class="descname">finalize</tt><big>(</big><em>varg1</em>, <em>varg2</em><big>)</big><a class="reference internal" href="_modules/treecorr/g2correlation.html#G2Correlation.finalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.g2correlation.G2Correlation.finalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finalize the calculation of the correlation function.</p>
+<p>The process_auto and process_cross commands accumulate values in each bin,
+so they can be called multiple times if appropriate.  Afterwards, this command
+finishes the calculation by dividing each column by the total weight.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.g2correlation.G2Correlation.process">
+<tt class="descname">process</tt><big>(</big><em>cat1</em>, <em>cat2=None</em><big>)</big><a class="reference internal" href="_modules/treecorr/g2correlation.html#G2Correlation.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.g2correlation.G2Correlation.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the correlation function.</p>
+<p>If only 1 argument is given, then compute an auto-correlation function.
+If 2 arguments are given, then compute a cross-correlation function.</p>
+<p>Both arguments may be lists, in which case all items in the list are used 
+for that element of the correlation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.g2correlation.G2Correlation.process_auto">
+<tt class="descname">process_auto</tt><big>(</big><em>cat1</em><big>)</big><a class="reference internal" href="_modules/treecorr/g2correlation.html#G2Correlation.process_auto"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.g2correlation.G2Correlation.process_auto" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process a single catalog, accumulating the auto-correlation.</p>
+<p>This accumulates the weighted sums into the bins, but does not finalize
+the calculation by dividing by the total weight at the end.  After
+calling this function as often as desired, the finalize() command will
+finish the calculation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.g2correlation.G2Correlation.process_cross">
+<tt class="descname">process_cross</tt><big>(</big><em>cat1</em>, <em>cat2</em><big>)</big><a class="reference internal" href="_modules/treecorr/g2correlation.html#G2Correlation.process_cross"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.g2correlation.G2Correlation.process_cross" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process a single pair of catalogs, accumulating the cross-correlation.</p>
+<p>This accumulates the weighted sums into the bins, but does not finalize
+the calculation by dividing by the total weight at the end.  After
+calling this function as often as desired, the finalize() command will
+finish the calculation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.g2correlation.G2Correlation.process_pairwise">
+<tt class="descname">process_pairwise</tt><big>(</big><em>cat1</em>, <em>cat2</em><big>)</big><a class="reference internal" href="_modules/treecorr/g2correlation.html#G2Correlation.process_pairwise"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.g2correlation.G2Correlation.process_pairwise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process a single pair of catalogs, accumulating the cross-correlation, only using
+the corresponding pairs of objects in each catalog.</p>
+<p>This accumulates the weighted sums into the bins, but does not finalize
+the calculation by dividing by the total weight at the end.  After
+calling this function as often as desired, the finalize() command will
+finish the calculation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.g2correlation.G2Correlation.write">
+<tt class="descname">write</tt><big>(</big><em>file_name</em><big>)</big><a class="reference internal" href="_modules/treecorr/g2correlation.html#G2Correlation.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.g2correlation.G2Correlation.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the correlation function to the file, file_name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.g2correlation.G2Correlation.writeMapSq">
+<tt class="descname">writeMapSq</tt><big>(</big><em>file_name</em>, <em>m2_uform=None</em><big>)</big><a class="reference internal" href="_modules/treecorr/g2correlation.html#G2Correlation.writeMapSq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.g2correlation.G2Correlation.writeMapSq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the aperture mass statistics based on the correlation function to the
+file, file_name.</p>
+<p>See calculateMapSq for an explanation of the m2_uform parameter.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="treecorr.g2correlation.cdouble_ptr">
+<tt class="descclassname">treecorr.g2correlation.</tt><tt class="descname">cdouble_ptr</tt><a class="headerlink" href="#treecorr.g2correlation.cdouble_ptr" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <tt class="xref py py-class docutils literal"><span class="pre">LP_c_double</span></tt></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-treecorr.k2correlation">
+<span id="treecorr-k2correlation-module"></span><h2>treecorr.k2correlation module<a class="headerlink" href="#module-treecorr.k2correlation" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="treecorr.k2correlation.K2Correlation">
+<em class="property">class </em><tt class="descclassname">treecorr.k2correlation.</tt><tt class="descname">K2Correlation</tt><big>(</big><em>config=None</em>, <em>logger=None</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/treecorr/k2correlation.html#K2Correlation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.k2correlation.K2Correlation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#treecorr.binnedcorr2.BinnedCorr2" title="treecorr.binnedcorr2.BinnedCorr2"><tt class="xref py py-class docutils literal"><span class="pre">treecorr.binnedcorr2.BinnedCorr2</span></tt></a></p>
+<p>This class handles the calculation and storage of a 2-point kappa-kappa correlation
+function.</p>
+<p>Note: while we use the term kappa here and the letter K in various places, in fact
+any scalar field will work here.  For example, you can use this to compute correlations
+of the CMB temperature fluctuations, where &#8220;kappa&#8221; would really be delta T.</p>
+<p>It holds the following attributes:</p>
+<blockquote>
+<div><p>logr        The nominal center of the bin in log(r).
+meanlogr    The (weighted) mean value of log(r) for the pairs in each bin.</p>
+<blockquote>
+<div>If there are no pairs in a bin, then logr will be used instead.</div></blockquote>
+<p>xi          The correlation function, xi(r).
+varxi       The variance of xi, only including the shot noise propagated into the</p>
+<blockquote>
+<div>final correlation.  This does not include sample variance, so it is always
+an underestimate of the actual variance.</div></blockquote>
+<p>weight      The total weight in each bin.
+npairs      The number of pairs going into each bin.</p>
+</div></blockquote>
+<p>The usage pattern is as follows:</p>
+<blockquote>
+<div>kk = treecorr.K2Correlation(config)
+kk.process(cat1)        # For auto-correlation.
+kk.process(cat1,cat2)   # For cross-correlation.
+kk.write(file_name)     # Write out to a file.
+xi = kk.xi              # Or access the correlation function directly.</div></blockquote>
+<dl class="method">
+<dt id="treecorr.k2correlation.K2Correlation.clear">
+<tt class="descname">clear</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/treecorr/k2correlation.html#K2Correlation.clear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.k2correlation.K2Correlation.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear the data vectors</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.k2correlation.K2Correlation.finalize">
+<tt class="descname">finalize</tt><big>(</big><em>vark1</em>, <em>vark2</em><big>)</big><a class="reference internal" href="_modules/treecorr/k2correlation.html#K2Correlation.finalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.k2correlation.K2Correlation.finalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finalize the calculation of the correlation function.</p>
+<p>The process_auto and process_cross commands accumulate values in each bin,
+so they can be called multiple times if appropriate.  Afterwards, this command
+finishes the calculation by dividing each column by the total weight.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.k2correlation.K2Correlation.process">
+<tt class="descname">process</tt><big>(</big><em>cat1</em>, <em>cat2=None</em><big>)</big><a class="reference internal" href="_modules/treecorr/k2correlation.html#K2Correlation.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.k2correlation.K2Correlation.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the correlation function.</p>
+<p>If only 1 argument is given, then compute an auto-correlation function.
+If 2 arguments are given, then compute a cross-correlation function.</p>
+<p>Both arguments may be lists, in which case all items in the list are used 
+for that element of the correlation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.k2correlation.K2Correlation.process_auto">
+<tt class="descname">process_auto</tt><big>(</big><em>cat1</em><big>)</big><a class="reference internal" href="_modules/treecorr/k2correlation.html#K2Correlation.process_auto"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.k2correlation.K2Correlation.process_auto" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process a single catalog, accumulating the auto-correlation.</p>
+<p>This accumulates the weighted sums into the bins, but does not finalize
+the calculation by dividing by the total weight at the end.  After
+calling this function as often as desired, the finalize() command will
+finish the calculation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.k2correlation.K2Correlation.process_cross">
+<tt class="descname">process_cross</tt><big>(</big><em>cat1</em>, <em>cat2</em><big>)</big><a class="reference internal" href="_modules/treecorr/k2correlation.html#K2Correlation.process_cross"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.k2correlation.K2Correlation.process_cross" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process a single pair of catalogs, accumulating the cross-correlation.</p>
+<p>This accumulates the weighted sums into the bins, but does not finalize
+the calculation by dividing by the total weight at the end.  After
+calling this function as often as desired, the finalize() command will
+finish the calculation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.k2correlation.K2Correlation.process_pairwise">
+<tt class="descname">process_pairwise</tt><big>(</big><em>cat1</em>, <em>cat2</em><big>)</big><a class="reference internal" href="_modules/treecorr/k2correlation.html#K2Correlation.process_pairwise"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.k2correlation.K2Correlation.process_pairwise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process a single pair of catalogs, accumulating the cross-correlation, only using
+the corresponding pairs of objects in each catalog.</p>
+<p>This accumulates the weighted sums into the bins, but does not finalize
+the calculation by dividing by the total weight at the end.  After
+calling this function as often as desired, the finalize() command will
+finish the calculation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.k2correlation.K2Correlation.write">
+<tt class="descname">write</tt><big>(</big><em>file_name</em><big>)</big><a class="reference internal" href="_modules/treecorr/k2correlation.html#K2Correlation.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.k2correlation.K2Correlation.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the correlation function to the file, file_name.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-treecorr.kgcorrelation">
+<span id="treecorr-kgcorrelation-module"></span><h2>treecorr.kgcorrelation module<a class="headerlink" href="#module-treecorr.kgcorrelation" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="treecorr.kgcorrelation.KGCorrelation">
+<em class="property">class </em><tt class="descclassname">treecorr.kgcorrelation.</tt><tt class="descname">KGCorrelation</tt><big>(</big><em>config=None</em>, <em>logger=None</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/treecorr/kgcorrelation.html#KGCorrelation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.kgcorrelation.KGCorrelation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#treecorr.binnedcorr2.BinnedCorr2" title="treecorr.binnedcorr2.BinnedCorr2"><tt class="xref py py-class docutils literal"><span class="pre">treecorr.binnedcorr2.BinnedCorr2</span></tt></a></p>
+<p>This class handles the calculation and storage of a 2-point shear-shear correlation
+function.</p>
+<p>It holds the following attributes:</p>
+<blockquote>
+<div><p>logr        The nominal center of the bin in log(r).
+meanlogr    The (weighted) mean value of log(r) for the pairs in each bin.</p>
+<blockquote>
+<div>If there are no pairs in a bin, then logr will be used instead.</div></blockquote>
+<p>xi          The correlation function, xi(r) = &lt;kappa gamma_T&gt;.
+xi_im       The imaginary part of xi(r).
+varxi       The variance of xi, only including the shape noise propagated into the</p>
+<blockquote>
+<div>final correlation.  This does not include sample variance, so it is always
+an underestimate of the actual variance.</div></blockquote>
+<p>weight      The total weight in each bin.
+npairs      The number of pairs going into each bin.</p>
+</div></blockquote>
+<p>The usage pattern is as follows:</p>
+<blockquote>
+<div>kg = treecorr.KGCorrelation(config)
+kg.process(cat1,cat2)   # Calculate the cross-correlation
+kg.write(file_name)     # Write out to a file.
+xi = kg.xi              # Or access the correlation function directly.</div></blockquote>
+<dl class="method">
+<dt id="treecorr.kgcorrelation.KGCorrelation.clear">
+<tt class="descname">clear</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/treecorr/kgcorrelation.html#KGCorrelation.clear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.kgcorrelation.KGCorrelation.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear the data vectors</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.kgcorrelation.KGCorrelation.finalize">
+<tt class="descname">finalize</tt><big>(</big><em>vark</em>, <em>varg</em><big>)</big><a class="reference internal" href="_modules/treecorr/kgcorrelation.html#KGCorrelation.finalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.kgcorrelation.KGCorrelation.finalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finalize the calculation of the correlation function.</p>
+<p>The process_cross command accumulates values in each bin, so it can be called
+multiple times if appropriate.  Afterwards, this command finishes the calculation
+by dividing each column by the total weight.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.kgcorrelation.KGCorrelation.process">
+<tt class="descname">process</tt><big>(</big><em>cat1</em>, <em>cat2</em><big>)</big><a class="reference internal" href="_modules/treecorr/kgcorrelation.html#KGCorrelation.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.kgcorrelation.KGCorrelation.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the correlation function.</p>
+<p>Both arguments may be lists, in which case all items in the list are used 
+for that element of the correlation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.kgcorrelation.KGCorrelation.process_cross">
+<tt class="descname">process_cross</tt><big>(</big><em>cat1</em>, <em>cat2</em><big>)</big><a class="reference internal" href="_modules/treecorr/kgcorrelation.html#KGCorrelation.process_cross"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.kgcorrelation.KGCorrelation.process_cross" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process a single pair of catalogs, accumulating the cross-correlation.</p>
+<p>This accumulates the weighted sums into the bins, but does not finalize
+the calculation by dividing by the total weight at the end.  After
+calling this function as often as desired, the finalize() command will
+finish the calculation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.kgcorrelation.KGCorrelation.process_pairwise">
+<tt class="descname">process_pairwise</tt><big>(</big><em>cat1</em>, <em>cat2</em><big>)</big><a class="reference internal" href="_modules/treecorr/kgcorrelation.html#KGCorrelation.process_pairwise"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.kgcorrelation.KGCorrelation.process_pairwise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process a single pair of catalogs, accumulating the cross-correlation, only using
+the corresponding pairs of objects in each catalog.</p>
+<p>This accumulates the weighted sums into the bins, but does not finalize
+the calculation by dividing by the total weight at the end.  After
+calling this function as often as desired, the finalize() command will
+finish the calculation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.kgcorrelation.KGCorrelation.write">
+<tt class="descname">write</tt><big>(</big><em>file_name</em><big>)</big><a class="reference internal" href="_modules/treecorr/kgcorrelation.html#KGCorrelation.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.kgcorrelation.KGCorrelation.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the correlation function to the file, file_name.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-treecorr.n2correlation">
+<span id="treecorr-n2correlation-module"></span><h2>treecorr.n2correlation module<a class="headerlink" href="#module-treecorr.n2correlation" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="treecorr.n2correlation.N2Correlation">
+<em class="property">class </em><tt class="descclassname">treecorr.n2correlation.</tt><tt class="descname">N2Correlation</tt><big>(</big><em>config=None</em>, <em>logger=None</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/treecorr/n2correlation.html#N2Correlation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.n2correlation.N2Correlation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#treecorr.binnedcorr2.BinnedCorr2" title="treecorr.binnedcorr2.BinnedCorr2"><tt class="xref py py-class docutils literal"><span class="pre">treecorr.binnedcorr2.BinnedCorr2</span></tt></a></p>
+<p>This class handles the calculation and storage of a 2-point shear-shear correlation
+function.</p>
+<p>It holds the following attributes:</p>
+<blockquote>
+<div><p>logr        The nominal center of the bin in log(r).
+meanlogr    The (weighted) mean value of log(r) for the pairs in each bin.</p>
+<blockquote>
+<div>If there are no pairs in a bin, then logr will be used instead.</div></blockquote>
+<p>npairs      The number of pairs going into each bin.
+tot         The total number of pairs processed, which is used to normalize</p>
+<blockquote>
+<div>the randoms if they have a different number of pairs.</div></blockquote>
+</div></blockquote>
+<p>The usage pattern is as follows:</p>
+<blockquote>
+<div>nn = treecorr.N2Correlation(config)
+nn.process(cat1)        # For auto-correlation.
+nn.process(cat1,cat2)   # For cross-correlation.
+rr.process...           # Likewise for random-random correlations
+dr.process...           # If desired, also do data-random correlations
+rd.process...           # For cross-correlations, also do the reverse.
+nn.write(file_name,rr,dr,rd)         # Write out to a file.
+xi,varxi = nn.calculateXi(rr,dr,rd)  # Or get the calculated correlation function directly.</div></blockquote>
+<dl class="method">
+<dt id="treecorr.n2correlation.N2Correlation.calculateNapSq">
+<tt class="descname">calculateNapSq</tt><big>(</big><em>rr</em>, <em>dr=None</em>, <em>rd=None</em>, <em>m2_uform=None</em><big>)</big><a class="reference internal" href="_modules/treecorr/n2correlation.html#N2Correlation.calculateNapSq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.n2correlation.N2Correlation.calculateNapSq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the correlary to the aperture mass statistics for counts.</p>
+<p>This is used by NGCorrelation.writeNorm.  See that function and also 
+G2Correlation.calculateMapSq() for more details.</p>
+<p>returns (nsq, varnsq)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.n2correlation.N2Correlation.calculateXi">
+<tt class="descname">calculateXi</tt><big>(</big><em>rr</em>, <em>dr=None</em>, <em>rd=None</em><big>)</big><a class="reference internal" href="_modules/treecorr/n2correlation.html#N2Correlation.calculateXi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.n2correlation.N2Correlation.calculateXi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the correlation function given another correlation function of random
+points using the same mask, and possibly cross correlations of the data and random.</p>
+<p>For a signal that involves a cross correlations, there should be two random
+cross-correlations: data-random and random-data, given as dr and rd.</p>
+<p>rr is the N2Correlation function for random points.
+If dr is None, the simple correlation function (nn/rr - 1) is used.
+if dr is given and rd is None, then (nn - 2dr + rr)/rr is used.
+If dr and rd are both given, then (nn - dr - rd + rr)/rr is used.</p>
+<p>returns (xi, varxi)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.n2correlation.N2Correlation.clear">
+<tt class="descname">clear</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/treecorr/n2correlation.html#N2Correlation.clear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.n2correlation.N2Correlation.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear the data vectors</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.n2correlation.N2Correlation.finalize">
+<tt class="descname">finalize</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/treecorr/n2correlation.html#N2Correlation.finalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.n2correlation.N2Correlation.finalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finalize the calculation of the correlation function.</p>
+<p>The process_auto and process_cross commands accumulate values in each bin,
+so they can be called multiple times if appropriate.  Afterwards, this command
+finishes the calculation of meanlogr by dividing each column by the total weight.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.n2correlation.N2Correlation.process">
+<tt class="descname">process</tt><big>(</big><em>cat1</em>, <em>cat2=None</em><big>)</big><a class="reference internal" href="_modules/treecorr/n2correlation.html#N2Correlation.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.n2correlation.N2Correlation.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the correlation function.</p>
+<p>If only 1 argument is given, then compute an auto-correlation function.
+If 2 arguments are given, then compute a cross-correlation function.</p>
+<p>Both arguments may be lists, in which case all items in the list are used 
+for that element of the correlation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.n2correlation.N2Correlation.process_auto">
+<tt class="descname">process_auto</tt><big>(</big><em>cat1</em><big>)</big><a class="reference internal" href="_modules/treecorr/n2correlation.html#N2Correlation.process_auto"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.n2correlation.N2Correlation.process_auto" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process a single catalog, accumulating the auto-correlation.</p>
+<p>This accumulates the auto-correlation for the given catalog.  After
+calling this function as often as desired, the finalize() command will
+finish the calculation of meanlogr.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.n2correlation.N2Correlation.process_cross">
+<tt class="descname">process_cross</tt><big>(</big><em>cat1</em>, <em>cat2</em><big>)</big><a class="reference internal" href="_modules/treecorr/n2correlation.html#N2Correlation.process_cross"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.n2correlation.N2Correlation.process_cross" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process a single pair of catalogs, accumulating the cross-correlation.</p>
+<p>This accumulates the cross-correlation for the given catalogs.  After
+calling this function as often as desired, the finalize() command will
+finish the calculation of meanlogr.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.n2correlation.N2Correlation.process_pairwise">
+<tt class="descname">process_pairwise</tt><big>(</big><em>cat1</em>, <em>cat2</em><big>)</big><a class="reference internal" href="_modules/treecorr/n2correlation.html#N2Correlation.process_pairwise"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.n2correlation.N2Correlation.process_pairwise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process a single pair of catalogs, accumulating the cross-correlation, only using
+the corresponding pairs of objects in each catalog.</p>
+<p>This accumulates the weighted sums into the bins, but does not finalize
+the calculation by dividing by the total weight at the end.  After
+calling this function as often as desired, the finalize() command will
+finish the calculation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.n2correlation.N2Correlation.write">
+<tt class="descname">write</tt><big>(</big><em>file_name</em>, <em>rr</em>, <em>dr=None</em>, <em>rd=None</em><big>)</big><a class="reference internal" href="_modules/treecorr/n2correlation.html#N2Correlation.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.n2correlation.N2Correlation.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the correlation function to the file, file_name.</p>
+<p>rr is the N2Correlation function for random points.
+If dr is None, the simple correlation function (nn - rr)/rr is used.
+if dr is given and rd is None, then (nn - 2dr + rr)/rr is used.
+If dr and rd are both given, then (nn - dr - rd + rr)/rr is used.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-treecorr.ngcorrelation">
+<span id="treecorr-ngcorrelation-module"></span><h2>treecorr.ngcorrelation module<a class="headerlink" href="#module-treecorr.ngcorrelation" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="treecorr.ngcorrelation.NGCorrelation">
+<em class="property">class </em><tt class="descclassname">treecorr.ngcorrelation.</tt><tt class="descname">NGCorrelation</tt><big>(</big><em>config=None</em>, <em>logger=None</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/treecorr/ngcorrelation.html#NGCorrelation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.ngcorrelation.NGCorrelation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#treecorr.binnedcorr2.BinnedCorr2" title="treecorr.binnedcorr2.BinnedCorr2"><tt class="xref py py-class docutils literal"><span class="pre">treecorr.binnedcorr2.BinnedCorr2</span></tt></a></p>
+<p>This class handles the calculation and storage of a 2-point shear-shear correlation
+function.</p>
+<p>It holds the following attributes:</p>
+<blockquote>
+<div><p>logr        The nominal center of the bin in log(r).
+meanlogr    The (weighted) mean value of log(r) for the pairs in each bin.</p>
+<blockquote>
+<div>If there are no pairs in a bin, then logr will be used instead.</div></blockquote>
+<p>xi          The correlation function, xi(r) = &lt;gamma_T&gt;.
+xi_im       The imaginary part of xi(r).
+varxi       The variance of xi, only including the shape noise propagated into the</p>
+<blockquote>
+<div>final correlation.  This does not include sample variance, so it is
+always an underestimate of the actual variance.</div></blockquote>
+<p>weight      The total weight in each bin.
+npairs      The number of pairs going into each bin.</p>
+</div></blockquote>
+<p>The usage pattern is as follows:</p>
+<blockquote>
+<div>ng = treecorr.NGCorrelation(config)
+ng.process(cat1,cat2)   # Compute the cross-correlation.
+ng.write(file_name)     # Write out to a file.
+xi = gg.xi              # Or access the correlation function directly.</div></blockquote>
+<dl class="method">
+<dt id="treecorr.ngcorrelation.NGCorrelation.calculateNMap">
+<tt class="descname">calculateNMap</tt><big>(</big><em>rg=None</em>, <em>m2_uform=None</em><big>)</big><a class="reference internal" href="_modules/treecorr/ngcorrelation.html#NGCorrelation.calculateNMap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.ngcorrelation.NGCorrelation.calculateNMap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the aperture mass statistics from the correlation function.</p>
+<p>&lt;NMap&gt;(R) = int_r=0..2R [s^2 dlogr Tx(s) &lt;gammaT&gt;(r)]
+&lt;NMx&gt;(R)  = int_r=0..2R [s^2 dlogr Tx(s) &lt;gammaX&gt;(r)]</p>
+<p>The m2_uform parameter sets which definition of the aperture mass to use.
+The default is to look in the config dict that was used to build the catalog,
+or use &#8216;Crittenden&#8217; if it is not specified.</p>
+<p>If m2_uform == &#8216;Crittenden&#8217;:</p>
+<blockquote>
+<div>Tx(s) = s^2/128 (12-s^2) exp(-s^2/4)</div></blockquote>
+<p>If m2_uform == &#8216;Schneider&#8217;:</p>
+<blockquote>
+<div>Tx(s) = 18/Pi s^2 arccos(s/s) - 3/40Pi s^3 sqrt(4-s^2) (196 - 74s^2 + 14s^4 - s^6)</div></blockquote>
+<p>returns (nmap, nmx, varnmap)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.ngcorrelation.NGCorrelation.calculateXi">
+<tt class="descname">calculateXi</tt><big>(</big><em>rg=None</em><big>)</big><a class="reference internal" href="_modules/treecorr/ngcorrelation.html#NGCorrelation.calculateXi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.ngcorrelation.NGCorrelation.calculateXi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the correlation function possibly given another correlation function
+that uses random points for the foreground objects.</p>
+<p>If rg is None, the simple correlation function &lt;gamma_T&gt; is returned.
+If rg is not None, then a compensated calculation is done: &lt;gamma_T&gt; = (dg - rg)</p>
+<p>return (xi, xi_im, varxi)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.ngcorrelation.NGCorrelation.clear">
+<tt class="descname">clear</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/treecorr/ngcorrelation.html#NGCorrelation.clear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.ngcorrelation.NGCorrelation.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear the data vectors</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.ngcorrelation.NGCorrelation.finalize">
+<tt class="descname">finalize</tt><big>(</big><em>varg</em><big>)</big><a class="reference internal" href="_modules/treecorr/ngcorrelation.html#NGCorrelation.finalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.ngcorrelation.NGCorrelation.finalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finalize the calculation of the correlation function.</p>
+<p>The process_cross command accumulates values in each bin, so it can be called
+multiple times if appropriate.  Afterwards, this command finishes the calculation
+by dividing each column by the total weight.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.ngcorrelation.NGCorrelation.process">
+<tt class="descname">process</tt><big>(</big><em>cat1</em>, <em>cat2</em><big>)</big><a class="reference internal" href="_modules/treecorr/ngcorrelation.html#NGCorrelation.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.ngcorrelation.NGCorrelation.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the correlation function.</p>
+<p>Both arguments may be lists, in which case all items in the list are used 
+for that element of the correlation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.ngcorrelation.NGCorrelation.process_cross">
+<tt class="descname">process_cross</tt><big>(</big><em>cat1</em>, <em>cat2</em><big>)</big><a class="reference internal" href="_modules/treecorr/ngcorrelation.html#NGCorrelation.process_cross"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.ngcorrelation.NGCorrelation.process_cross" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process a single pair of catalogs, accumulating the cross-correlation.</p>
+<p>This accumulates the weighted sums into the bins, but does not finalize
+the calculation by dividing by the total weight at the end.  After
+calling this function as often as desired, the finalize() command will
+finish the calculation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.ngcorrelation.NGCorrelation.process_pairwise">
+<tt class="descname">process_pairwise</tt><big>(</big><em>cat1</em>, <em>cat2</em><big>)</big><a class="reference internal" href="_modules/treecorr/ngcorrelation.html#NGCorrelation.process_pairwise"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.ngcorrelation.NGCorrelation.process_pairwise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process a single pair of catalogs, accumulating the cross-correlation, only using
+the corresponding pairs of objects in each catalog.</p>
+<p>This accumulates the weighted sums into the bins, but does not finalize
+the calculation by dividing by the total weight at the end.  After
+calling this function as often as desired, the finalize() command will
+finish the calculation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.ngcorrelation.NGCorrelation.write">
+<tt class="descname">write</tt><big>(</big><em>file_name</em>, <em>rg=None</em><big>)</big><a class="reference internal" href="_modules/treecorr/ngcorrelation.html#NGCorrelation.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.ngcorrelation.NGCorrelation.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the correlation function to the file, file_name.</p>
+<p>If rg is None, the simple correlation function &lt;gamma_T&gt; is used.
+If rg is not None, then a compensated calculation is done: &lt;gamma_T&gt; = (dg - rg)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.ngcorrelation.NGCorrelation.writeNMap">
+<tt class="descname">writeNMap</tt><big>(</big><em>file_name</em>, <em>rg=None</em>, <em>m2_uform=None</em><big>)</big><a class="reference internal" href="_modules/treecorr/ngcorrelation.html#NGCorrelation.writeNMap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.ngcorrelation.NGCorrelation.writeNMap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the cross correlation of the foreground galaxy counts with the aperture mass
+based on the correlation function to the file, file_name.</p>
+<p>if rg is provided, the compensated calculation will be used for xi.</p>
+<p>See calculateNMap for an explanation of the m2_uform parameter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.ngcorrelation.NGCorrelation.writeNorm">
+<tt class="descname">writeNorm</tt><big>(</big><em>file_name</em>, <em>gg</em>, <em>dd</em>, <em>rr</em>, <em>dr=None</em>, <em>rg=None</em>, <em>m2_uform=None</em><big>)</big><a class="reference internal" href="_modules/treecorr/ngcorrelation.html#NGCorrelation.writeNorm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.ngcorrelation.NGCorrelation.writeNorm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the normalized aperture mass cross-correlation to the file, file_name.</p>
+<p>The combination &lt;NMap&gt;^2 / &lt;Map^2&gt; &lt;N_ap^2&gt; is related to r^2, the galaxy-mass
+correlation coefficient.</p>
+<p>Similarly, &lt;N_ap^2&gt; / &lt;Map^2&gt; is related to b^2, the galaxy bias parameter.</p>
+<p>cf. Hoekstra et al, 2002: <a class="reference external" href="http://adsabs.harvard.edu/abs/2002ApJ...577..604H">http://adsabs.harvard.edu/abs/2002ApJ...577..604H</a></p>
+<p>if rg is provided, the compensated calculation will be used for NMap.
+if dr is provided, the compensated calculation will be used for N^2.</p>
+<p>See calculateNMap for an explanation of the m2_uform parameter.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-treecorr.nkcorrelation">
+<span id="treecorr-nkcorrelation-module"></span><h2>treecorr.nkcorrelation module<a class="headerlink" href="#module-treecorr.nkcorrelation" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="treecorr.nkcorrelation.NKCorrelation">
+<em class="property">class </em><tt class="descclassname">treecorr.nkcorrelation.</tt><tt class="descname">NKCorrelation</tt><big>(</big><em>config=None</em>, <em>logger=None</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/treecorr/nkcorrelation.html#NKCorrelation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.nkcorrelation.NKCorrelation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#treecorr.binnedcorr2.BinnedCorr2" title="treecorr.binnedcorr2.BinnedCorr2"><tt class="xref py py-class docutils literal"><span class="pre">treecorr.binnedcorr2.BinnedCorr2</span></tt></a></p>
+<p>This class handles the calculation and storage of a 2-point shear-shear correlation
+function.</p>
+<p>It holds the following attributes:</p>
+<blockquote>
+<div><p>logr        The nominal center of the bin in log(r).
+meanlogr    The (weighted) mean value of log(r) for the pairs in each bin.</p>
+<blockquote>
+<div>If there are no pairs in a bin, then logr will be used instead.</div></blockquote>
+<p>xi          The correlation function, xi(r).
+varxi       The variance of xi, only including the shot noise propagated into the</p>
+<blockquote>
+<div>final correlation.  This does not include sample variance, so it is
+always an underestimate of the actual variance.</div></blockquote>
+<p>weight      The total weight in each bin.
+npairs      The number of pairs going into each bin.</p>
+</div></blockquote>
+<p>The usage pattern is as follows:</p>
+<blockquote>
+<div>nk = treecorr.NKCorrelation(config)
+nk.process(cat1,cat2)   # Compute the cross-correlation function.
+nk.write(file_name)     # Write out to a file.
+xi = nk.xi              # Or access the correlation function directly.</div></blockquote>
+<dl class="method">
+<dt id="treecorr.nkcorrelation.NKCorrelation.calculateXi">
+<tt class="descname">calculateXi</tt><big>(</big><em>rk=None</em><big>)</big><a class="reference internal" href="_modules/treecorr/nkcorrelation.html#NKCorrelation.calculateXi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.nkcorrelation.NKCorrelation.calculateXi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the correlation function possibly given another correlation function
+that uses random points for the foreground objects.</p>
+<p>If rk is None, the simple correlation function &lt;kappa&gt; is returned.
+If rk is not None, then a compensated calculation is done: &lt;kappa&gt; = (dk - rk)</p>
+<p>returns a tuple (xi, varxi)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.nkcorrelation.NKCorrelation.clear">
+<tt class="descname">clear</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/treecorr/nkcorrelation.html#NKCorrelation.clear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.nkcorrelation.NKCorrelation.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear the data vectors</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.nkcorrelation.NKCorrelation.finalize">
+<tt class="descname">finalize</tt><big>(</big><em>vark</em><big>)</big><a class="reference internal" href="_modules/treecorr/nkcorrelation.html#NKCorrelation.finalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.nkcorrelation.NKCorrelation.finalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finalize the calculation of the correlation function.</p>
+<p>The process_cross command accumulates values in each bin, so it can be called
+multiple times if appropriate.  Afterwards, this command finishes the calculation
+by dividing each column by the total weight.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.nkcorrelation.NKCorrelation.process">
+<tt class="descname">process</tt><big>(</big><em>cat1</em>, <em>cat2</em><big>)</big><a class="reference internal" href="_modules/treecorr/nkcorrelation.html#NKCorrelation.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.nkcorrelation.NKCorrelation.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the correlation function.</p>
+<p>Both arguments may be lists, in which case all items in the list are used 
+for that element of the correlation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.nkcorrelation.NKCorrelation.process_cross">
+<tt class="descname">process_cross</tt><big>(</big><em>cat1</em>, <em>cat2</em><big>)</big><a class="reference internal" href="_modules/treecorr/nkcorrelation.html#NKCorrelation.process_cross"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.nkcorrelation.NKCorrelation.process_cross" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process a single pair of catalogs, accumulating the cross-correlation.</p>
+<p>This accumulates the weighted sums into the bins, but does not finalize
+the calculation by dividing by the total weight at the end.  After
+calling this function as often as desired, the finalize() command will
+finish the calculation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.nkcorrelation.NKCorrelation.process_pairwise">
+<tt class="descname">process_pairwise</tt><big>(</big><em>cat1</em>, <em>cat2</em><big>)</big><a class="reference internal" href="_modules/treecorr/nkcorrelation.html#NKCorrelation.process_pairwise"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.nkcorrelation.NKCorrelation.process_pairwise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process a single pair of catalogs, accumulating the cross-correlation, only using
+the corresponding pairs of objects in each catalog.</p>
+<p>This accumulates the weighted sums into the bins, but does not finalize
+the calculation by dividing by the total weight at the end.  After
+calling this function as often as desired, the finalize() command will
+finish the calculation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.nkcorrelation.NKCorrelation.write">
+<tt class="descname">write</tt><big>(</big><em>file_name</em>, <em>rk=None</em><big>)</big><a class="reference internal" href="_modules/treecorr/nkcorrelation.html#NKCorrelation.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.nkcorrelation.NKCorrelation.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the correlation function to the file, file_name.</p>
+<p>If rk is None, the simple correlation function &lt;kappa&gt;(R) is used.
+If rk is not None, then a compensated calculation is done: &lt;kappa&gt;(R) = (dk - rk)</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-treecorr">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-treecorr" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">treecorr package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-treecorr.binnedcorr2">treecorr.binnedcorr2 module</a></li>
+<li><a class="reference internal" href="#module-treecorr.catalog">treecorr.catalog module</a></li>
+<li><a class="reference internal" href="#module-treecorr.celestial">treecorr.celestial module</a></li>
+<li><a class="reference internal" href="#module-treecorr.config">treecorr.config module</a></li>
+<li><a class="reference internal" href="#module-treecorr.corr2">treecorr.corr2 module</a></li>
+<li><a class="reference internal" href="#module-treecorr.field">treecorr.field module</a></li>
+<li><a class="reference internal" href="#module-treecorr.g2correlation">treecorr.g2correlation module</a></li>
+<li><a class="reference internal" href="#module-treecorr.k2correlation">treecorr.k2correlation module</a></li>
+<li><a class="reference internal" href="#module-treecorr.kgcorrelation">treecorr.kgcorrelation module</a></li>
+<li><a class="reference internal" href="#module-treecorr.n2correlation">treecorr.n2correlation module</a></li>
+<li><a class="reference internal" href="#module-treecorr.ngcorrelation">treecorr.ngcorrelation module</a></li>
+<li><a class="reference internal" href="#module-treecorr.nkcorrelation">treecorr.nkcorrelation module</a></li>
+<li><a class="reference internal" href="#module-treecorr">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to treecorr&#8217;s documentation!</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/treecorr.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to treecorr’s documentation!"
+             >previous</a> |</li>
+        <li><a href="index.html">treecorr  documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Mike Jarvis.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

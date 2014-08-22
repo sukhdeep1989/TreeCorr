@@ -1,0 +1,478 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>treecorr.g2correlation &mdash; treecorr  documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="treecorr  documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">treecorr  documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for treecorr.g2correlation</h1><div class="highlight"><pre>
+<span class="c"># Copyright (c) 2003-2014 by Mike Jarvis</span>
+<span class="c">#</span>
+<span class="c"># TreeCorr is free software: redistribution and use in source and binary forms,</span>
+<span class="c"># with or without modification, are permitted provided that the following</span>
+<span class="c"># conditions are met:</span>
+<span class="c">#</span>
+<span class="c"># 1. Redistributions of source code must retain the above copyright notice, this</span>
+<span class="c">#    list of conditions, and the disclaimer given in the accompanying LICENSE</span>
+<span class="c">#    file.</span>
+<span class="c"># 2. Redistributions in binary form must reproduce the above copyright notice,</span>
+<span class="c">#    this list of conditions, and the disclaimer given in the documentation</span>
+<span class="c">#    and/or other materials provided with the distribution.</span>
+
+
+<span class="kn">import</span> <span class="nn">treecorr</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+
+<span class="c"># Start by loading up the relevant C functions using ctypes</span>
+<span class="kn">import</span> <span class="nn">ctypes</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="c"># The numpy version of this function tries to be more portable than the native</span>
+<span class="c"># ctypes.cdll.LoadLibary or cdtypes.CDLL functions.</span>
+<span class="n">_treecorr</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ctypeslib</span><span class="o">.</span><span class="n">load_library</span><span class="p">(</span><span class="s">&#39;_treecorr&#39;</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">))</span>
+
+<span class="c"># some useful aliases</span>
+<span class="n">cint</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">c_int</span>
+<span class="n">cdouble</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">c_double</span>
+<span class="n">cdouble_ptr</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">POINTER</span><span class="p">(</span><span class="n">cdouble</span><span class="p">)</span>
+<span class="n">cvoid_ptr</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">c_void_p</span>
+
+<span class="n">_treecorr</span><span class="o">.</span><span class="n">BuildGGCorr</span><span class="o">.</span><span class="n">restype</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">c_void_p</span>
+<span class="n">_treecorr</span><span class="o">.</span><span class="n">BuildGGCorr</span><span class="o">.</span><span class="n">argtypes</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">cdouble</span><span class="p">,</span> <span class="n">cdouble</span><span class="p">,</span> <span class="n">cint</span><span class="p">,</span> <span class="n">cdouble</span><span class="p">,</span> <span class="n">cdouble</span><span class="p">,</span>
+    <span class="n">cdouble_ptr</span><span class="p">,</span> <span class="n">cdouble_ptr</span><span class="p">,</span> <span class="n">cdouble_ptr</span><span class="p">,</span> <span class="n">cdouble_ptr</span><span class="p">,</span> <span class="n">cdouble_ptr</span><span class="p">,</span> <span class="n">cdouble_ptr</span><span class="p">,</span> <span class="n">cdouble_ptr</span> <span class="p">]</span>
+<span class="n">_treecorr</span><span class="o">.</span><span class="n">DestroyGGCorr</span><span class="o">.</span><span class="n">argtypes</span> <span class="o">=</span> <span class="p">[</span> <span class="n">cvoid_ptr</span> <span class="p">]</span>
+<span class="n">_treecorr</span><span class="o">.</span><span class="n">ProcessAutoGGSphere</span><span class="o">.</span><span class="n">argtypes</span> <span class="o">=</span> <span class="p">[</span> <span class="n">cvoid_ptr</span><span class="p">,</span> <span class="n">cvoid_ptr</span><span class="p">,</span> <span class="n">cint</span>  <span class="p">]</span>
+<span class="n">_treecorr</span><span class="o">.</span><span class="n">ProcessAutoGGFlat</span><span class="o">.</span><span class="n">argtypes</span> <span class="o">=</span> <span class="p">[</span> <span class="n">cvoid_ptr</span><span class="p">,</span> <span class="n">cvoid_ptr</span><span class="p">,</span> <span class="n">cint</span>  <span class="p">]</span>
+<span class="n">_treecorr</span><span class="o">.</span><span class="n">ProcessCrossGGSphere</span><span class="o">.</span><span class="n">argtypes</span> <span class="o">=</span> <span class="p">[</span> <span class="n">cvoid_ptr</span><span class="p">,</span> <span class="n">cvoid_ptr</span><span class="p">,</span> <span class="n">cvoid_ptr</span><span class="p">,</span> <span class="n">cint</span> <span class="p">]</span>
+<span class="n">_treecorr</span><span class="o">.</span><span class="n">ProcessCrossGGFlat</span><span class="o">.</span><span class="n">argtypes</span> <span class="o">=</span> <span class="p">[</span> <span class="n">cvoid_ptr</span><span class="p">,</span> <span class="n">cvoid_ptr</span><span class="p">,</span> <span class="n">cvoid_ptr</span><span class="p">,</span> <span class="n">cint</span> <span class="p">]</span>
+<span class="n">_treecorr</span><span class="o">.</span><span class="n">ProcessPairwiseGGSphere</span><span class="o">.</span><span class="n">argtypes</span> <span class="o">=</span> <span class="p">[</span> <span class="n">cvoid_ptr</span><span class="p">,</span> <span class="n">cvoid_ptr</span><span class="p">,</span> <span class="n">cvoid_ptr</span><span class="p">,</span> <span class="n">cint</span> <span class="p">]</span>
+<span class="n">_treecorr</span><span class="o">.</span><span class="n">ProcessPairwiseGGFlat</span><span class="o">.</span><span class="n">argtypes</span> <span class="o">=</span> <span class="p">[</span> <span class="n">cvoid_ptr</span><span class="p">,</span> <span class="n">cvoid_ptr</span><span class="p">,</span> <span class="n">cvoid_ptr</span><span class="p">,</span> <span class="n">cint</span> <span class="p">]</span>
+
+
+<div class="viewcode-block" id="G2Correlation"><a class="viewcode-back" href="../../treecorr.html#treecorr.g2correlation.G2Correlation">[docs]</a><span class="k">class</span> <span class="nc">G2Correlation</span><span class="p">(</span><span class="n">treecorr</span><span class="o">.</span><span class="n">BinnedCorr2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This class handles the calculation and storage of a 2-point shear-shear correlation</span>
+<span class="sd">    function.</span>
+
+<span class="sd">    It holds the following attributes:</span>
+
+<span class="sd">        logr        The nominal center of the bin in log(r).</span>
+<span class="sd">        meanlogr    The (weighted) mean value of log(r) for the pairs in each bin.</span>
+<span class="sd">                    If there are no pairs in a bin, then logr will be used instead.</span>
+<span class="sd">        xip         The correlation function, xi_plus(r).</span>
+<span class="sd">        xim         The correlation funciton, xi_minus(r).</span>
+<span class="sd">        xip_im      The imaginary part of xi_plus(r).</span>
+<span class="sd">        xim_im      The imaginary part of xi_plus(r).</span>
+<span class="sd">        varxi       The variance of xip and xim, only including the shape noise propagated</span>
+<span class="sd">                    into the final correlation.  This does not include sample variance, so</span>
+<span class="sd">                    it is always an underestimate of the actual variance.</span>
+<span class="sd">        weight      The total weight in each bin.</span>
+<span class="sd">        npairs      The number of pairs going into each bin.</span>
+
+<span class="sd">    The usage pattern is as follows:</span>
+
+<span class="sd">        gg = treecorr.G2Correlation(config)</span>
+<span class="sd">        gg.process(cat1)        # For auto-correlation.</span>
+<span class="sd">        gg.process(cat1,cat2)   # For cross-correlation.</span>
+<span class="sd">        gg.write(file_name)     # Write out to a file.</span>
+<span class="sd">        xip = gg.xip            # Or access the correlation function directly.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">treecorr</span><span class="o">.</span><span class="n">BinnedCorr2</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">xip</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nbins</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xim</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nbins</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xip_im</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nbins</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xim_im</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nbins</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+        <span class="n">xip</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">xip</span><span class="o">.</span><span class="n">ctypes</span><span class="o">.</span><span class="n">data_as</span><span class="p">(</span><span class="n">cdouble_ptr</span><span class="p">)</span>
+        <span class="n">xipi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">xip_im</span><span class="o">.</span><span class="n">ctypes</span><span class="o">.</span><span class="n">data_as</span><span class="p">(</span><span class="n">cdouble_ptr</span><span class="p">)</span>
+        <span class="n">xim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">xim</span><span class="o">.</span><span class="n">ctypes</span><span class="o">.</span><span class="n">data_as</span><span class="p">(</span><span class="n">cdouble_ptr</span><span class="p">)</span>
+        <span class="n">ximi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">xim_im</span><span class="o">.</span><span class="n">ctypes</span><span class="o">.</span><span class="n">data_as</span><span class="p">(</span><span class="n">cdouble_ptr</span><span class="p">)</span>
+        <span class="n">meanlogr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">meanlogr</span><span class="o">.</span><span class="n">ctypes</span><span class="o">.</span><span class="n">data_as</span><span class="p">(</span><span class="n">cdouble_ptr</span><span class="p">)</span>
+        <span class="n">weight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">ctypes</span><span class="o">.</span><span class="n">data_as</span><span class="p">(</span><span class="n">cdouble_ptr</span><span class="p">)</span>
+        <span class="n">npairs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">npairs</span><span class="o">.</span><span class="n">ctypes</span><span class="o">.</span><span class="n">data_as</span><span class="p">(</span><span class="n">cdouble_ptr</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">corr</span> <span class="o">=</span> <span class="n">_treecorr</span><span class="o">.</span><span class="n">BuildGGCorr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_sep</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">max_sep</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">nbins</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">bin_size</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">b</span><span class="p">,</span>
+                                          <span class="n">xip</span><span class="p">,</span><span class="n">xipi</span><span class="p">,</span><span class="n">xim</span><span class="p">,</span><span class="n">ximi</span><span class="p">,</span><span class="n">meanlogr</span><span class="p">,</span><span class="n">weight</span><span class="p">,</span><span class="n">npairs</span><span class="p">);</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;Finished building GGCorr&#39;</span><span class="p">)</span>
+ 
+
+    <span class="k">def</span> <span class="nf">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c"># Using memory allocated from the C layer means we have to explicitly deallocate it</span>
+        <span class="c"># rather than being able to rely on the Python memory manager.</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s">&#39;data&#39;</span><span class="p">):</span>    <span class="c"># In case __init__ failed to get that far</span>
+            <span class="n">_treecorr</span><span class="o">.</span><span class="n">DestroyGGCorr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corr</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="G2Correlation.process_auto"><a class="viewcode-back" href="../../treecorr.html#treecorr.g2correlation.G2Correlation.process_auto">[docs]</a>    <span class="k">def</span> <span class="nf">process_auto</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Process a single catalog, accumulating the auto-correlation.</span>
+
+<span class="sd">        This accumulates the weighted sums into the bins, but does not finalize</span>
+<span class="sd">        the calculation by dividing by the total weight at the end.  After</span>
+<span class="sd">        calling this function as often as desired, the finalize() command will</span>
+<span class="sd">        finish the calculation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;Starting process G2 auto-correlations for cat </span><span class="si">%s</span><span class="s">.&#39;</span><span class="p">,</span><span class="n">cat1</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">field</span> <span class="o">=</span> <span class="n">cat1</span><span class="o">.</span><span class="n">getGField</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_sep</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">max_sep</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">b</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">sphere</span><span class="p">:</span>
+            <span class="n">_treecorr</span><span class="o">.</span><span class="n">ProcessAutoGGSphere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corr</span><span class="p">,</span> <span class="n">field</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dots</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_treecorr</span><span class="o">.</span><span class="n">ProcessAutoGGFlat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corr</span><span class="p">,</span> <span class="n">field</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dots</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="G2Correlation.process_cross"><a class="viewcode-back" href="../../treecorr.html#treecorr.g2correlation.G2Correlation.process_cross">[docs]</a>    <span class="k">def</span> <span class="nf">process_cross</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Process a single pair of catalogs, accumulating the cross-correlation.</span>
+
+<span class="sd">        This accumulates the weighted sums into the bins, but does not finalize</span>
+<span class="sd">        the calculation by dividing by the total weight at the end.  After</span>
+<span class="sd">        calling this function as often as desired, the finalize() command will</span>
+<span class="sd">        finish the calculation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;Starting process G2 cross-correlations for cats </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">.&#39;</span><span class="p">,</span>
+                         <span class="n">cat1</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">cat2</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">f1</span> <span class="o">=</span> <span class="n">cat1</span><span class="o">.</span><span class="n">getGField</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_sep</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">max_sep</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">b</span><span class="p">)</span>
+        <span class="n">f2</span> <span class="o">=</span> <span class="n">cat2</span><span class="o">.</span><span class="n">getGField</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_sep</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">max_sep</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">b</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">f1</span><span class="o">.</span><span class="n">sphere</span> <span class="o">!=</span> <span class="n">f2</span><span class="o">.</span><span class="n">sphere</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s">&quot;Cannot correlate catalogs with different coordinate systems.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">f1</span><span class="o">.</span><span class="n">sphere</span><span class="p">:</span>
+            <span class="n">_treecorr</span><span class="o">.</span><span class="n">ProcessCrossGGSphere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corr</span><span class="p">,</span> <span class="n">f1</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">f2</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dots</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_treecorr</span><span class="o">.</span><span class="n">ProcessCrossGGFlat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corr</span><span class="p">,</span> <span class="n">f1</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">f2</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dots</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="G2Correlation.process_pairwise"><a class="viewcode-back" href="../../treecorr.html#treecorr.g2correlation.G2Correlation.process_pairwise">[docs]</a>    <span class="k">def</span> <span class="nf">process_pairwise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Process a single pair of catalogs, accumulating the cross-correlation, only using</span>
+<span class="sd">        the corresponding pairs of objects in each catalog.</span>
+
+<span class="sd">        This accumulates the weighted sums into the bins, but does not finalize</span>
+<span class="sd">        the calculation by dividing by the total weight at the end.  After</span>
+<span class="sd">        calling this function as often as desired, the finalize() command will</span>
+<span class="sd">        finish the calculation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;Starting process G2 pairwise-correlations for cats </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">.&#39;</span><span class="p">,</span>
+                         <span class="n">cat1</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">cat2</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">f1</span> <span class="o">=</span> <span class="n">cat1</span><span class="o">.</span><span class="n">getGSimpleField</span><span class="p">()</span>
+        <span class="n">f2</span> <span class="o">=</span> <span class="n">cat2</span><span class="o">.</span><span class="n">getGSimpleField</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">f1</span><span class="o">.</span><span class="n">sphere</span> <span class="o">!=</span> <span class="n">f2</span><span class="o">.</span><span class="n">sphere</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s">&quot;Cannot correlate catalogs with different coordinate systems.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">f1</span><span class="o">.</span><span class="n">sphere</span><span class="p">:</span>
+            <span class="n">_treecorr</span><span class="o">.</span><span class="n">ProcessPairwiseGGSphere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corr</span><span class="p">,</span> <span class="n">f1</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">f2</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dots</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_treecorr</span><span class="o">.</span><span class="n">ProcessPairwiseGGFlat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corr</span><span class="p">,</span> <span class="n">f1</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">f2</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dots</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="G2Correlation.finalize"><a class="viewcode-back" href="../../treecorr.html#treecorr.g2correlation.G2Correlation.finalize">[docs]</a>    <span class="k">def</span> <span class="nf">finalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">varg1</span><span class="p">,</span> <span class="n">varg2</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Finalize the calculation of the correlation function.</span>
+
+<span class="sd">        The process_auto and process_cross commands accumulate values in each bin,</span>
+<span class="sd">        so they can be called multiple times if appropriate.  Afterwards, this command</span>
+<span class="sd">        finishes the calculation by dividing each column by the total weight.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mask1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">npairs</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="n">mask2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">npairs</span> <span class="o">==</span> <span class="mi">0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">xip</span><span class="p">[</span><span class="n">mask1</span><span class="p">]</span> <span class="o">/=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="p">[</span><span class="n">mask1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xim</span><span class="p">[</span><span class="n">mask1</span><span class="p">]</span> <span class="o">/=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="p">[</span><span class="n">mask1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xip_im</span><span class="p">[</span><span class="n">mask1</span><span class="p">]</span> <span class="o">/=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="p">[</span><span class="n">mask1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xim_im</span><span class="p">[</span><span class="n">mask1</span><span class="p">]</span> <span class="o">/=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="p">[</span><span class="n">mask1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">meanlogr</span><span class="p">[</span><span class="n">mask1</span><span class="p">]</span> <span class="o">/=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="p">[</span><span class="n">mask1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">varxi</span><span class="p">[</span><span class="n">mask1</span><span class="p">]</span> <span class="o">=</span> <span class="n">varg1</span> <span class="o">*</span> <span class="n">varg2</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">npairs</span><span class="p">[</span><span class="n">mask1</span><span class="p">]</span>
+
+        <span class="c"># Update the units of meanlogr</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">meanlogr</span><span class="p">[</span><span class="n">mask1</span><span class="p">]</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_sep_units</span>
+
+        <span class="c"># Use meanlogr when available, but set to nominal when no pairs in bin.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">meanlogr</span><span class="p">[</span><span class="n">mask2</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logr</span><span class="p">[</span><span class="n">mask2</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">varxi</span><span class="p">[</span><span class="n">mask2</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
+
+</div>
+<div class="viewcode-block" id="G2Correlation.clear"><a class="viewcode-back" href="../../treecorr.html#treecorr.g2correlation.G2Correlation.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Clear the data vectors</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xip</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xim</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xip_im</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xim_im</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">meanlogr</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">npairs</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+
+</div>
+<div class="viewcode-block" id="G2Correlation.process"><a class="viewcode-back" href="../../treecorr.html#treecorr.g2correlation.G2Correlation.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the correlation function.</span>
+
+<span class="sd">        If only 1 argument is given, then compute an auto-correlation function.</span>
+<span class="sd">        If 2 arguments are given, then compute a cross-correlation function.</span>
+
+<span class="sd">        Both arguments may be lists, in which case all items in the list are used </span>
+<span class="sd">        for that element of the correlation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">math</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span><span class="nb">list</span><span class="p">):</span> <span class="n">cat1</span> <span class="o">=</span> <span class="p">[</span><span class="n">cat1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">cat2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cat2</span><span class="p">,</span><span class="nb">list</span><span class="p">):</span> <span class="n">cat2</span> <span class="o">=</span> <span class="p">[</span><span class="n">cat2</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cat1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s">&quot;No catalogs provided for cat1&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">cat2</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">cat2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">varg1</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">calculateVarG</span><span class="p">(</span><span class="n">cat1</span><span class="p">)</span>
+            <span class="n">varg2</span> <span class="o">=</span> <span class="n">varg1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;varg = </span><span class="si">%f</span><span class="s">: sig_sn (per component) = </span><span class="si">%f</span><span class="s">&quot;</span><span class="p">,</span><span class="n">varg1</span><span class="p">,</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">varg1</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_process_all_auto</span><span class="p">(</span><span class="n">cat1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">varg1</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">calculateVarG</span><span class="p">(</span><span class="n">cat1</span><span class="p">)</span>
+            <span class="n">varg2</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">calculateVarG</span><span class="p">(</span><span class="n">cat2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;varg1 = </span><span class="si">%f</span><span class="s">: sig_sn (per component) = </span><span class="si">%f</span><span class="s">&quot;</span><span class="p">,</span><span class="n">varg1</span><span class="p">,</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">varg1</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;varg2 = </span><span class="si">%f</span><span class="s">: sig_sn (per component) = </span><span class="si">%f</span><span class="s">&quot;</span><span class="p">,</span><span class="n">varg2</span><span class="p">,</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">varg2</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_process_all_cross</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span><span class="n">cat2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">finalize</span><span class="p">(</span><span class="n">varg1</span><span class="p">,</span><span class="n">varg2</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="G2Correlation.write"><a class="viewcode-back" href="../../treecorr.html#treecorr.g2correlation.G2Correlation.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Write the correlation function to the file, file_name.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;Writing G2 correlations to </span><span class="si">%s</span><span class="s">&#39;</span><span class="p">,</span><span class="n">file_name</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">gen_write</span><span class="p">(</span>
+            <span class="n">file_name</span><span class="p">,</span>
+            <span class="p">[</span><span class="s">&#39;R_nom&#39;</span><span class="p">,</span><span class="s">&#39;&lt;R&gt;&#39;</span><span class="p">,</span><span class="s">&#39;xi+&#39;</span><span class="p">,</span><span class="s">&#39;xi-&#39;</span><span class="p">,</span><span class="s">&#39;xi+_im&#39;</span><span class="p">,</span><span class="s">&#39;xi-_im&#39;</span><span class="p">,</span><span class="s">&#39;sigma_xi&#39;</span><span class="p">,</span><span class="s">&#39;weight&#39;</span><span class="p">,</span><span class="s">&#39;npairs&#39;</span><span class="p">],</span>
+            <span class="p">[</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logr</span><span class="p">),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">meanlogr</span><span class="p">),</span>
+              <span class="bp">self</span><span class="o">.</span><span class="n">xip</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">xim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">xip_im</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">xim_im</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">varxi</span><span class="p">),</span>
+              <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">npairs</span> <span class="p">]</span> <span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="G2Correlation.calculateMapSq"><a class="viewcode-back" href="../../treecorr.html#treecorr.g2correlation.G2Correlation.calculateMapSq">[docs]</a>    <span class="k">def</span> <span class="nf">calculateMapSq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m2_uform</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate the aperture mass statistics from the correlation function.</span>
+
+<span class="sd">        &lt;Map^2&gt;(R) = int_r=0..rmax [1/2 (r/R)^2 dlogr (T+(r/R) xi+(r) + T-(r/R) xi-(r)) ]</span>
+<span class="sd">        &lt;Mx^2&gt;(R)  = int_r=0..rmax [1/2 (r/R)^2 dlogr (T+(r/R) xi+(r) - T-(r/R) xi-(r)) ]</span>
+
+<span class="sd">        The m2_uform parameter sets which definition of the aperture mass to use.</span>
+<span class="sd">        The default is to look in the config dict that was used to build the catalog,</span>
+<span class="sd">        or use &#39;Crittenden&#39; if it is not specified.</span>
+
+<span class="sd">        If m2_uform == &#39;Crittenden&#39;:</span>
+
+<span class="sd">            U(r) = 1/2Pi (1-r^2) exp(-r^2/2)</span>
+<span class="sd">            Q(r) = 1/4Pi r^2 exp(-r^2/2)</span>
+<span class="sd">            T+(s) = (s^4 - 16s^2 + 32)/128 exp(-s^2/4)</span>
+<span class="sd">            T-(s) = s^4/128 exp(-s^2/4)</span>
+<span class="sd">            rmax = infinity</span>
+
+<span class="sd">        If m2_uform == &#39;Schneider&#39;:</span>
+
+<span class="sd">            U(r) = 9/Pi (1-r^2) (1/3-r^2)</span>
+<span class="sd">            Q(r) = 6/Pi r^2 (1-r^2)</span>
+<span class="sd">            T+(s) = 12/5Pi (2-15s^2) arccos(s/2)</span>
+<span class="sd">                      + 1/(100Pi) s sqrt(4-s^2) (120 + 2320s^2 - 754s^4 + 132s^6 - 9s^8)</span>
+<span class="sd">            T-(s) = 3/70Pi s^3 (4-s^2)^(7/2)</span>
+<span class="sd">            rmax = 2R</span>
+
+<span class="sd">        cf Schneider, et al (2001): http://xxx.lanl.gov/abs/astro-ph/0112441</span>
+
+<span class="sd">        returns (mapsq, mapsq_im, mxsq, mxsq_im, varmapsq)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">m2_uform</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">m2_uform</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;m2_uform&#39;</span><span class="p">,</span><span class="s">&#39;Crittenden&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">m2_uform</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&#39;Crittenden&#39;</span><span class="p">,</span> <span class="s">&#39;Schneider&#39;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Invalid m2_uform&quot;</span><span class="p">)</span>
+
+        <span class="c"># Make s a matrix, so we can eventually do the integral by doing a matrix product.</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logr</span><span class="p">)</span>
+        <span class="n">meanr</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">meanlogr</span><span class="p">)</span> <span class="c"># Use the actual mean r for each bin</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="n">r</span><span class="p">,</span> <span class="n">meanr</span><span class="p">)</span>  
+        <span class="n">ssq</span> <span class="o">=</span> <span class="n">s</span><span class="o">*</span><span class="n">s</span>
+        <span class="k">if</span> <span class="n">m2_uform</span> <span class="o">==</span> <span class="s">&#39;Crittenden&#39;</span><span class="p">:</span>
+            <span class="n">exp_factor</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">ssq</span><span class="o">/</span><span class="mf">4.</span><span class="p">)</span>
+            <span class="n">Tp</span> <span class="o">=</span> <span class="p">(</span><span class="mf">32.</span> <span class="o">+</span> <span class="n">ssq</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="mf">16.</span> <span class="o">+</span> <span class="n">ssq</span><span class="p">))</span> <span class="o">/</span> <span class="mf">128.</span> <span class="o">*</span> <span class="n">exp_factor</span>
+            <span class="n">Tm</span> <span class="o">=</span> <span class="n">ssq</span> <span class="o">*</span> <span class="n">ssq</span> <span class="o">/</span> <span class="mf">128.</span> <span class="o">*</span> <span class="n">exp_factor</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">Tp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+            <span class="n">Tm</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+            <span class="n">sa</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">s</span><span class="o">&lt;</span><span class="mf">2.</span><span class="p">]</span>
+            <span class="n">ssqa</span> <span class="o">=</span> <span class="n">ssq</span><span class="p">[</span><span class="n">s</span><span class="o">&lt;</span><span class="mf">2.</span><span class="p">]</span>
+            <span class="n">Tp</span><span class="p">[</span><span class="n">s</span><span class="o">&lt;</span><span class="mf">2.</span><span class="p">]</span> <span class="o">=</span> <span class="mf">12.</span><span class="o">/</span><span class="p">(</span><span class="mf">5.</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">2.</span><span class="o">-</span><span class="mf">15.</span><span class="o">*</span><span class="n">ssqa</span><span class="p">)</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">sa</span><span class="o">/</span><span class="mf">2.</span><span class="p">)</span>
+            <span class="n">Tp</span><span class="p">[</span><span class="n">s</span><span class="o">&lt;</span><span class="mf">2.</span><span class="p">]</span> <span class="o">+=</span> <span class="mf">1.</span><span class="o">/</span><span class="p">(</span><span class="mf">100.</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">*</span> <span class="n">sa</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">4.</span><span class="o">-</span><span class="n">ssqa</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span>
+                        <span class="mf">120.</span> <span class="o">+</span> <span class="n">ssqa</span><span class="o">*</span><span class="p">(</span><span class="mf">2320.</span> <span class="o">+</span> <span class="n">ssqa</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="mf">754.</span> <span class="o">+</span> <span class="n">ssqa</span><span class="o">*</span><span class="p">(</span><span class="mf">132.</span> <span class="o">-</span> <span class="mf">9.</span><span class="o">*</span><span class="n">ssqa</span><span class="p">))))</span>
+            <span class="n">Tm</span><span class="p">[</span><span class="n">s</span><span class="o">&lt;</span><span class="mf">2.</span><span class="p">]</span> <span class="o">=</span> <span class="mf">3.</span><span class="o">/</span><span class="p">(</span><span class="mf">70.</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">*</span> <span class="n">sa</span> <span class="o">*</span> <span class="n">ssqa</span> <span class="o">*</span> <span class="p">(</span><span class="mf">4.</span><span class="o">-</span><span class="n">ssqa</span><span class="p">)</span><span class="o">**</span><span class="mf">3.5</span>
+        <span class="n">Tp</span> <span class="o">*=</span> <span class="n">ssq</span>
+        <span class="n">Tm</span> <span class="o">*=</span> <span class="n">ssq</span>
+
+        <span class="c"># Now do the integral by taking the matrix products.</span>
+        <span class="c"># Note that dlogr = bin_size</span>
+        <span class="n">Tpxip</span> <span class="o">=</span> <span class="n">Tp</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xip</span><span class="p">)</span>
+        <span class="n">Tmxim</span> <span class="o">=</span> <span class="n">Tm</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xim</span><span class="p">)</span>
+        <span class="n">mapsq</span> <span class="o">=</span> <span class="p">(</span><span class="n">Tpxip</span> <span class="o">+</span> <span class="n">Tmxim</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">bin_size</span>
+        <span class="n">mxsq</span> <span class="o">=</span> <span class="p">(</span><span class="n">Tpxip</span> <span class="o">-</span> <span class="n">Tmxim</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">bin_size</span>
+        <span class="n">Tpxip_im</span> <span class="o">=</span> <span class="n">Tp</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xip_im</span><span class="p">)</span>
+        <span class="n">Tmxim_im</span> <span class="o">=</span> <span class="n">Tm</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xim_im</span><span class="p">)</span>
+        <span class="n">mapsq_im</span> <span class="o">=</span> <span class="p">(</span><span class="n">Tpxip_im</span> <span class="o">+</span> <span class="n">Tmxim_im</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">bin_size</span>
+        <span class="n">mxsq_im</span> <span class="o">=</span> <span class="p">(</span><span class="n">Tpxip_im</span> <span class="o">-</span> <span class="n">Tmxim_im</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">bin_size</span>
+
+        <span class="c"># The variance of each of these is </span>
+        <span class="c"># Var(&lt;Map^2&gt;(R)) = int_r=0..2R [1/4 s^4 dlogr^2 (T+(s)^2 + T-(s)^2) Var(xi)]</span>
+        <span class="n">varmapsq</span> <span class="o">=</span> <span class="p">(</span><span class="n">Tp</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">Tm</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">varxi</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">bin_size</span><span class="o">**</span><span class="mi">2</span>
+
+        <span class="k">return</span> <span class="n">mapsq</span><span class="p">,</span> <span class="n">mapsq_im</span><span class="p">,</span> <span class="n">mxsq</span><span class="p">,</span> <span class="n">mxsq_im</span><span class="p">,</span> <span class="n">varmapsq</span>
+
+</div>
+<div class="viewcode-block" id="G2Correlation.calculateGamSq"><a class="viewcode-back" href="../../treecorr.html#treecorr.g2correlation.G2Correlation.calculateGamSq">[docs]</a>    <span class="k">def</span> <span class="nf">calculateGamSq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eb</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate the tophat shear variance from the correlation function.</span>
+
+<span class="sd">        &lt;Gam^2&gt;(R) = int_r=0..2R [s^2 dlogr S+(s) xi+(r)]</span>
+<span class="sd">        &lt;Gam^2_E&gt;(R) = int_r=0..2R [1/2 s^2 dlogr (S+(s) xi+(r) + S-(s) xi-(r)]</span>
+<span class="sd">        &lt;Gam^2_B&gt;(R) = int_r=0..2R [1/2 s^2 dlogr (S+(s) xi+(r) - S-(s) xi-(r)]</span>
+
+<span class="sd">        S+(s) = 1/Pi * (4*arccos(s/2) - s sqrt(4-s^2) )</span>
+<span class="sd">        S-(s) = (s&lt;=2):  1/(Pi s^4) * ( s sqrt(4-s^2) (6-s^2) - 8(3-s^2) arcsin(s/2) )</span>
+<span class="sd">                (s&gt;=2):  4(s^2-3)/s^4</span>
+
+<span class="sd">        cf Schneider, et al, 2001: http://adsabs.harvard.edu/abs/2002A%26A...389..729S</span>
+
+<span class="sd">        The default behavior is not to compute the E/B versions.  They are calculated if</span>
+<span class="sd">        eb is set to True.</span>
+
+<span class="sd">        returns (gamsq, vargamsq)                                if eb == False</span>
+<span class="sd">                (gamsq, vargamsq, gamsq_e, gamsq_b, vargamsq_e)  if eb == True</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logr</span><span class="p">)</span>
+        <span class="n">meanr</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">meanlogr</span><span class="p">)</span> <span class="c"># Use the actual mean r for each bin</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="n">r</span><span class="p">,</span> <span class="n">meanr</span><span class="p">)</span>  
+        <span class="n">ssq</span> <span class="o">=</span> <span class="n">s</span><span class="o">*</span><span class="n">s</span>
+        <span class="n">Sp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">sa</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">s</span><span class="o">&lt;</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">ssqa</span> <span class="o">=</span> <span class="n">ssq</span><span class="p">[</span><span class="n">s</span><span class="o">&lt;</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">Sp</span><span class="p">[</span><span class="n">s</span><span class="o">&lt;</span><span class="mf">2.</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="mf">4.</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">sa</span><span class="o">/</span><span class="mf">2.</span><span class="p">)</span> <span class="o">-</span> <span class="n">sa</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">4.</span><span class="o">-</span><span class="n">ssqa</span><span class="p">))</span>
+        <span class="n">Sp</span> <span class="o">*=</span> <span class="n">ssq</span>
+
+        <span class="c"># Now do the integral by taking the matrix products.</span>
+        <span class="c"># Note that dlogr = bin_size</span>
+        <span class="n">Spxip</span> <span class="o">=</span> <span class="n">Sp</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xip</span><span class="p">)</span>
+        <span class="n">gamsq</span> <span class="o">=</span> <span class="n">Spxip</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">bin_size</span>
+        <span class="n">vargamsq</span> <span class="o">=</span> <span class="p">(</span><span class="n">Sp</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">varxi</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">bin_size</span><span class="o">**</span><span class="mi">2</span>
+
+        <span class="c"># Stop here if eb == False</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">eb</span><span class="p">:</span> <span class="k">return</span> <span class="n">gamsq</span><span class="p">,</span> <span class="n">vargamsq</span>
+
+        <span class="n">Sm</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">Sm</span><span class="p">[</span><span class="n">s</span><span class="o">&lt;</span><span class="mf">2.</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="p">(</span><span class="n">ssqa</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">sa</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">4.</span><span class="o">-</span><span class="n">ssqa</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mf">6.</span><span class="o">-</span><span class="n">ssqa</span><span class="p">)</span>
+                                              <span class="o">-</span><span class="mf">8.</span><span class="o">*</span><span class="p">(</span><span class="mf">3.</span><span class="o">-</span><span class="n">ssqa</span><span class="p">)</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(</span><span class="n">sa</span><span class="o">/</span><span class="mf">2.</span><span class="p">))</span>
+        <span class="n">Sm</span><span class="p">[</span><span class="n">s</span><span class="o">&gt;=</span><span class="mf">2.</span><span class="p">]</span> <span class="o">=</span> <span class="mf">4.</span><span class="o">*</span><span class="p">(</span><span class="n">ssq</span><span class="p">[</span><span class="n">s</span><span class="o">&gt;=</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="mf">3.</span><span class="p">)</span><span class="o">/</span><span class="n">ssq</span><span class="p">[</span><span class="n">s</span><span class="o">&gt;=</span><span class="mi">2</span><span class="p">]</span>
+        <span class="c"># This already includes the extra ssq factor.</span>
+
+        <span class="n">Smxim</span> <span class="o">=</span> <span class="n">Sm</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xim</span><span class="p">)</span>
+        <span class="n">gamsq_e</span> <span class="o">=</span> <span class="p">(</span><span class="n">Spxip</span> <span class="o">+</span> <span class="n">Smxim</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">bin_size</span>
+        <span class="n">gamsq_b</span> <span class="o">=</span> <span class="p">(</span><span class="n">Spxip</span> <span class="o">-</span> <span class="n">Smxim</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">bin_size</span>
+        <span class="n">vargamsq_e</span> <span class="o">=</span> <span class="p">(</span><span class="n">Sp</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">Sm</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">varxi</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">bin_size</span><span class="o">**</span><span class="mi">2</span>
+
+        <span class="k">return</span> <span class="n">gamsq</span><span class="p">,</span> <span class="n">vargamsq</span><span class="p">,</span> <span class="n">gamsq_e</span><span class="p">,</span> <span class="n">gamsq_b</span><span class="p">,</span> <span class="n">vargamsq_e</span>
+
+</div>
+<div class="viewcode-block" id="G2Correlation.writeMapSq"><a class="viewcode-back" href="../../treecorr.html#treecorr.g2correlation.G2Correlation.writeMapSq">[docs]</a>    <span class="k">def</span> <span class="nf">writeMapSq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">m2_uform</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Write the aperture mass statistics based on the correlation function to the</span>
+<span class="sd">        file, file_name.</span>
+
+<span class="sd">        See calculateMapSq for an explanation of the m2_uform parameter.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;Writing Map^2 from G2 correlations to </span><span class="si">%s</span><span class="s">&#39;</span><span class="p">,</span><span class="n">file_name</span><span class="p">)</span>
+
+        <span class="n">mapsq</span><span class="p">,</span> <span class="n">mapsq_im</span><span class="p">,</span> <span class="n">mxsq</span><span class="p">,</span> <span class="n">mxsq_im</span><span class="p">,</span> <span class="n">varmapsq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculateMapSq</span><span class="p">(</span><span class="n">m2_uform</span><span class="o">=</span><span class="n">m2_uform</span><span class="p">)</span>
+        <span class="n">gamsq</span><span class="p">,</span> <span class="n">vargamsq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculateGamSq</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">gen_write</span><span class="p">(</span>
+            <span class="n">file_name</span><span class="p">,</span>
+            <span class="p">[</span><span class="s">&#39;R&#39;</span><span class="p">,</span><span class="s">&#39;&lt;Map^2&gt;&#39;</span><span class="p">,</span><span class="s">&#39;&lt;Mx^2&gt;&#39;</span><span class="p">,</span><span class="s">&#39;&lt;MMx&gt;(a)&#39;</span><span class="p">,</span><span class="s">&#39;&lt;MMx&gt;(b)&#39;</span><span class="p">,</span><span class="s">&#39;sig_map&#39;</span><span class="p">,</span><span class="s">&#39;&lt;Gam^2&gt;&#39;</span><span class="p">,</span><span class="s">&#39;sig_gam&#39;</span><span class="p">],</span>
+            <span class="p">[</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logr</span><span class="p">),</span>
+              <span class="n">mapsq</span><span class="p">,</span> <span class="n">mxsq</span><span class="p">,</span> <span class="n">mapsq_im</span><span class="p">,</span> <span class="o">-</span><span class="n">mxsq_im</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">varmapsq</span><span class="p">),</span>
+              <span class="n">gamsq</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">vargamsq</span><span class="p">)</span> <span class="p">]</span> <span class="p">)</span>
+</pre></div></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">treecorr  documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Mike Jarvis.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

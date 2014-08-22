@@ -1,0 +1,319 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>treecorr.config &mdash; treecorr  documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="treecorr  documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">treecorr  documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for treecorr.config</h1><div class="highlight"><pre>
+<span class="c"># Copyright (c) 2003-2014 by Mike Jarvis</span>
+<span class="c">#</span>
+<span class="c"># TreeCorr is free software: redistribution and use in source and binary forms,</span>
+<span class="c"># with or without modification, are permitted provided that the following</span>
+<span class="c"># conditions are met:</span>
+<span class="c">#</span>
+<span class="c"># 1. Redistributions of source code must retain the above copyright notice, this</span>
+<span class="c">#    list of conditions, and the disclaimer given in the accompanying LICENSE</span>
+<span class="c">#    file.</span>
+<span class="c"># 2. Redistributions in binary form must reproduce the above copyright notice,</span>
+<span class="c">#    this list of conditions, and the disclaimer given in the documentation</span>
+<span class="c">#    and/or other materials provided with the distribution.</span>
+
+<span class="kn">import</span> <span class="nn">treecorr</span>
+
+<div class="viewcode-block" id="parse_variable"><a class="viewcode-back" href="../../treecorr.html#treecorr.config.parse_variable">[docs]</a><span class="k">def</span> <span class="nf">parse_variable</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+    <span class="k">if</span> <span class="s">&#39;=&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
+        <span class="k">print</span> <span class="s">&#39;trying to parse: &#39;</span><span class="p">,</span><span class="n">v</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;Improper variable specification.  Use syntax: item = value.&#39;</span><span class="p">)</span>
+    <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;=&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="c"># Cut off any trailing comment</span>
+    <span class="k">if</span> <span class="s">&#39;#&#39;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span> <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;#&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;{&#39;</span><span class="p">:</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">()</span> <span class="c"># on whitespace</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">config</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">config</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">values</span>
+
+</div>
+<div class="viewcode-block" id="parse_bool"><a class="viewcode-back" href="../../treecorr.html#treecorr.config.parse_bool">[docs]</a><span class="k">def</span> <span class="nf">parse_bool</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span><span class="nb">str</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span> <span class="s">&#39;TRUE&#39;</span><span class="p">,</span> <span class="s">&#39;YES&#39;</span><span class="p">,</span> <span class="s">&#39;T&#39;</span><span class="p">,</span> <span class="s">&#39;Y&#39;</span> <span class="p">]:</span>
+            <span class="k">return</span> <span class="bp">True</span>
+        <span class="k">elif</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span> <span class="s">&#39;FALSE&#39;</span><span class="p">,</span> <span class="s">&#39;NO&#39;</span><span class="p">,</span> <span class="s">&#39;F&#39;</span><span class="p">,</span> <span class="s">&#39;N&#39;</span><span class="p">,</span> <span class="s">&#39;NONE&#39;</span> <span class="p">]:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+                <span class="k">return</span> <span class="n">val</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Unable to parse </span><span class="si">%s</span><span class="s"> as a bool.&quot;</span><span class="o">%</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">val</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Unable to parse </span><span class="si">%s</span><span class="s"> as a bool.&quot;</span><span class="o">%</span><span class="n">value</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="parse_unit"><a class="viewcode-back" href="../../treecorr.html#treecorr.config.parse_unit">[docs]</a><span class="k">def</span> <span class="nf">parse_unit</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get the appropriate unit, allowing the value to merely start with one of the unit names.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">unit</span> <span class="ow">in</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">angle_units</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">unit</span><span class="p">):</span> <span class="k">return</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">angle_units</span><span class="p">[</span><span class="n">unit</span><span class="p">]</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Unable to parse </span><span class="si">%s</span><span class="s"> as an angle unit&quot;</span><span class="o">%</span><span class="n">value</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="read_config"><a class="viewcode-back" href="../../treecorr.html#treecorr.config.read_config">[docs]</a><span class="k">def</span> <span class="nf">read_config</span><span class="p">(</span><span class="n">file_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Read a configuration dict from a file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">fin</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">fin</span><span class="p">:</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;#&#39;</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;+&#39;</span><span class="p">:</span>
+                <span class="n">include_file_name</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+                <span class="n">read_config</span><span class="p">(</span><span class="n">include_file_name</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">parse_variable</span><span class="p">(</span><span class="n">config</span><span class="p">,</span><span class="n">v</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">config</span>
+
+</div>
+<div class="viewcode-block" id="setup_logger"><a class="viewcode-back" href="../../treecorr.html#treecorr.config.setup_logger">[docs]</a><span class="k">def</span> <span class="nf">setup_logger</span><span class="p">(</span><span class="n">verbose</span><span class="p">,</span> <span class="n">log_file</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Parse the integer verbosity level from the command line args into a logging_level string</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">logging</span>
+    <span class="n">logging_levels</span> <span class="o">=</span> <span class="p">{</span>  <span class="mi">0</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">CRITICAL</span><span class="p">,</span>
+                        <span class="mi">1</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">,</span>
+                        <span class="mi">2</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span>
+                        <span class="mi">3</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span> <span class="p">}</span>
+    <span class="n">logging_level</span> <span class="o">=</span> <span class="n">logging_levels</span><span class="p">[</span><span class="n">verbose</span><span class="p">]</span>
+
+    <span class="c"># Setup logging to go to sys.stdout or (if requested) to an output file</span>
+    <span class="k">if</span> <span class="n">log_file</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">sys</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">format</span><span class="o">=</span><span class="s">&quot;</span><span class="si">%(message)s</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging_level</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">format</span><span class="o">=</span><span class="s">&quot;</span><span class="si">%(message)s</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging_level</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">log_file</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&#39;treecorr&#39;</span><span class="p">)</span>
+
+ </div>
+<div class="viewcode-block" id="check_config"><a class="viewcode-back" href="../../treecorr.html#treecorr.config.check_config">[docs]</a><span class="k">def</span> <span class="nf">check_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Check (and update) a config dict to conform to the given parameter rules.</span>
+<span class="sd">    The params dict has an entry for each valid config parameter whose value is a tuple</span>
+<span class="sd">    with the following items:</span>
+<span class="sd">     - type</span>
+<span class="sd">     - can be a list?</span>
+<span class="sd">     - default value</span>
+<span class="sd">     - valid values</span>
+<span class="sd">     - description (Multiple entries here are allowed for longer strings)</span>
+
+<span class="sd">    Returns the updated config dict.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
+        <span class="c"># Check that this is a valid key</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s">&quot;Invalid parameter </span><span class="si">%s</span><span class="s"> found in config dict.&quot;</span><span class="o">%</span><span class="n">key</span><span class="p">)</span>
+
+        <span class="n">value_type</span><span class="p">,</span> <span class="n">may_be_list</span><span class="p">,</span> <span class="n">default_value</span><span class="p">,</span> <span class="n">valid_values</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="n">key</span><span class="p">][:</span><span class="mi">4</span><span class="p">]</span>
+
+        <span class="c"># Get the value</span>
+        <span class="k">if</span> <span class="n">value_type</span> <span class="ow">is</span> <span class="nb">bool</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">parse_bool</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">value_type</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+
+        <span class="c"># If limited allowed values, check that this is one of them.</span>
+        <span class="k">if</span> <span class="n">valid_values</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">value_type</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
+                <span class="c"># Allow the string to be longer.  e.g. degrees is valid if &#39;deg&#39; is in valid_values.</span>
+                <span class="n">matches</span> <span class="o">=</span> <span class="p">[</span> <span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">valid_values</span> <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="p">]</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Parameter </span><span class="si">%s</span><span class="s"> has invalid value </span><span class="si">%s</span><span class="s">.  Valid values are </span><span class="si">%s</span><span class="s">.&quot;</span><span class="o">%</span><span class="p">(</span>
+                        <span class="n">key</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="nb">str</span><span class="p">(</span><span class="n">valid_values</span><span class="p">)))</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">matches</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid_values</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Parameter </span><span class="si">%s</span><span class="s"> has invalid value </span><span class="si">%s</span><span class="s">.  Valid values are </span><span class="si">%s</span><span class="s">.&quot;</span><span class="o">%</span><span class="p">(</span>
+                        <span class="n">key</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="nb">str</span><span class="p">(</span><span class="n">valid_values</span><span class="p">)))</span>
+
+        <span class="c"># Write it back to the dict with the right type</span>
+        <span class="n">config</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="c"># Write the defaults for other parameters to simplify the syntax of getting the values</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span> <span class="k">continue</span>
+        <span class="n">value_type</span><span class="p">,</span> <span class="n">may_be_list</span><span class="p">,</span> <span class="n">default_value</span><span class="p">,</span> <span class="n">valid_values</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="n">key</span><span class="p">][:</span><span class="mi">4</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">default_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">config</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">default_value</span>
+
+    <span class="k">return</span> <span class="n">config</span>
+
+</div>
+<div class="viewcode-block" id="print_params"><a class="viewcode-back" href="../../treecorr.html#treecorr.config.print_params">[docs]</a><span class="k">def</span> <span class="nf">print_params</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;List the information about the valid parameters, given by the given params dict.</span>
+<span class="sd">    See check_config for the structure of the params dict.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">max_len</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">params</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
+        <span class="n">value_type</span><span class="p">,</span> <span class="n">may_be_list</span><span class="p">,</span> <span class="n">default_value</span><span class="p">,</span> <span class="n">valid_values</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="n">key</span><span class="p">][:</span><span class="mi">4</span><span class="p">]</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="mi">4</span><span class="p">:]</span>
+        <span class="k">print</span> <span class="p">(</span><span class="s">&quot;{0:&lt;&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">max_len</span><span class="p">)</span><span class="o">+</span><span class="s">&quot;} {1}&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="n">description</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">description</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+            <span class="k">print</span> <span class="s">&quot;                {0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+
+        <span class="c"># str(value_type) looks like &quot;&lt;type &#39;float&#39;&gt;&quot;</span>
+        <span class="c"># value_type.__name__ looks like &#39;float&#39;</span>
+        <span class="k">if</span> <span class="n">may_be_list</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s">&quot;                Type must be {0} or a list of {0}.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value_type</span><span class="o">.</span><span class="n">__name__</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s">&quot;                Type must be {0}.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value_type</span><span class="o">.</span><span class="n">__name__</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">valid_values</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s">&quot;                Valid values are {0!s}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">valid_values</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">default_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s">&quot;                Default value is {0!s}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">default_value</span><span class="p">)</span>
+        <span class="k">print</span>
+
+</div>
+<div class="viewcode-block" id="convert"><a class="viewcode-back" href="../../treecorr.html#treecorr.config.convert">[docs]</a><span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">value_type</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">value_type</span> <span class="o">==</span> <span class="nb">str</span> <span class="ow">and</span> <span class="s">&#39;unit&#39;</span> <span class="ow">in</span> <span class="n">key</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">parse_unit</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">value_type</span> <span class="o">==</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">parse_bool</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">value_type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="get_from_list"><a class="viewcode-back" href="../../treecorr.html#treecorr.config.get_from_list">[docs]</a><span class="k">def</span> <span class="nf">get_from_list</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span> <span class="n">value_type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A helper function to get a key from config that is allowed to be a list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">num</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Not enough values in list for </span><span class="si">%s</span><span class="s">&quot;</span><span class="o">%</span><span class="n">key</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">convert</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="n">num</span><span class="p">],</span><span class="n">value_type</span><span class="p">,</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;[&#39;</span> <span class="ow">and</span> <span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;]&#39;</span><span class="p">:</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">num</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Not enough values in list for </span><span class="si">%s</span><span class="s">&quot;</span><span class="o">%</span><span class="n">key</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">convert</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="n">num</span><span class="p">],</span><span class="n">value_type</span><span class="p">,</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">convert</span><span class="p">(</span><span class="n">values</span><span class="p">,</span><span class="n">value_type</span><span class="p">,</span><span class="n">key</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">default</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">convert</span><span class="p">(</span><span class="n">default</span><span class="p">,</span><span class="n">value_type</span><span class="p">,</span><span class="n">key</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">default</span>
+</div>
+<div class="viewcode-block" id="get"><a class="viewcode-back" href="../../treecorr.html#treecorr.config.get">[docs]</a><span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value_type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A helper function to get a key from config converting to a particular type</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">convert</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">value_type</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">default</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">convert</span><span class="p">(</span><span class="n">default</span><span class="p">,</span><span class="n">value_type</span><span class="p">,</span><span class="n">key</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">default</span>
+</div>
+<div class="viewcode-block" id="merge_config"><a class="viewcode-back" href="../../treecorr.html#treecorr.config.merge_config">[docs]</a><span class="k">def</span> <span class="nf">merge_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span> <span class="n">config</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">copy</span>
+        <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span> 
+            <span class="n">config</span> <span class="o">=</span> <span class="n">kwargs</span>
+    <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">return</span> <span class="n">config</span>
+</pre></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">treecorr  documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Mike Jarvis.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

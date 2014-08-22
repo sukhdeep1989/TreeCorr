@@ -1,0 +1,458 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>treecorr.corr2 &mdash; treecorr  documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="treecorr  documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">treecorr  documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for treecorr.corr2</h1><div class="highlight"><pre>
+<span class="c"># Copyright (c) 2003-2014 by Mike Jarvis</span>
+<span class="c">#</span>
+<span class="c"># TreeCorr is free software: redistribution and use in source and binary forms,</span>
+<span class="c"># with or without modification, are permitted provided that the following</span>
+<span class="c"># conditions are met:</span>
+<span class="c">#</span>
+<span class="c"># 1. Redistributions of source code must retain the above copyright notice, this</span>
+<span class="c">#    list of conditions, and the disclaimer given in the accompanying LICENSE</span>
+<span class="c">#    file.</span>
+<span class="c"># 2. Redistributions in binary form must reproduce the above copyright notice,</span>
+<span class="c">#    this list of conditions, and the disclaimer given in the documentation</span>
+<span class="c">#    and/or other materials provided with the distribution.</span>
+
+<span class="kn">import</span> <span class="nn">treecorr</span>
+
+<span class="c"># Dict describing the valid parameters, what types they are, and a description:</span>
+<span class="c"># Each value is a tuple with the following elements:</span>
+<span class="c">#    type</span>
+<span class="c">#    may_be_list</span>
+<span class="c">#    default value</span>
+<span class="c">#    list of valid values</span>
+<span class="c">#    description</span>
+<span class="n">corr2_valid_params</span> <span class="o">=</span> <span class="p">{</span>
+
+    <span class="c"># Parameters about the input catlogs</span>
+
+    <span class="s">&#39;file_name&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;The file(s) with the galaxy data.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;file_name2&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>  <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;The file(s) to use for the second field for a cross-correlation.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;rand_file_name&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>  <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;For NN correlations, a list of random files.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;rand_file_name2&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;The randoms for the second field for a cross-correlation.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;file_list&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;A text file with file names in lieu of file_name.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;file_list2&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;A text file with file names in lieu of file_name2.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;rand_file_list&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;A text file with file names in lieu of rand_file_name.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;rand_file_list2&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;A text file with file names in lieu of rand_file_name2.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;file_type&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;ASCII&#39;</span><span class="p">,</span> <span class="s">&#39;FITS&#39;</span><span class="p">],</span>
+            <span class="s">&#39;The file type of the input files. The default is to use the file name extension.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;delimiter&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;The delimeter between values in an ASCII catalog. The default is any whitespace.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;comment_marker&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="s">&#39;#&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;The first (non-whitespace) character of comment lines in an input ASCII catalog.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;first_row&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;The first row to use from the input catalog&#39;</span><span class="p">),</span>
+    <span class="s">&#39;last_row&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;The last row to use from the input catalog.  The default is to use all of them.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;x_col&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="s">&#39;0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;Which column to use for x. Should be an integer for ASCII catalogs.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;y_col&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="s">&#39;0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;Which column to use for y. Should be an integer for ASCII catalogs.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;ra_col&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="s">&#39;0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;Which column to use for ra. Should be an integer for ASCII catalogs.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;dec_col&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="s">&#39;0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;Which column to use for dec. Should be an integer for ASCII catalogs.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;r_col&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="s">&#39;0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;Which column to use for r.  Only valid with ra,dec. &#39;</span><span class="p">,</span>
+            <span class="s">&#39;Should be an integer for ASCII catalogs.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;x_units&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">angle_units</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span>
+            <span class="s">&#39;The units of x values.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;y_units&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">angle_units</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span>
+            <span class="s">&#39;The units of y values.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;ra_units&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">angle_units</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span>
+            <span class="s">&#39;The units of ra values. Required when using ra_col.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;dec_units&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">angle_units</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span>
+            <span class="s">&#39;The units of dec values. Required when using dec_col.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;g1_col&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="s">&#39;0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;Which column to use for g1. Should be an integer for ASCII catalogs.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;g2_col&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="s">&#39;0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;Which column to use for g2. Should be an integer for ASCII catalogs.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;k_col&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="s">&#39;0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;Which column to use for kappa. Should be an integer for ASCII catalogs. &#39;</span><span class="p">),</span>
+    <span class="s">&#39;w_col&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="s">&#39;0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;Which column to use for weight. Should be an integer for ASCII catalogs.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;flag_col&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="s">&#39;0&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;Which column to use for flag. Should be an integer for ASCII catalogs.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;ignore_flag&#39;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;Ignore objects with flag &amp; ignore_flag != 0 (bitwise &amp;)&#39;</span><span class="p">),</span>
+    <span class="s">&#39;ok_flag&#39;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;Ignore objects with flag &amp; ~ok_flag != 0 (bitwise &amp;, ~)&#39;</span><span class="p">),</span>
+    <span class="s">&#39;hdu&#39;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;Which HDU in a fits file to use rather than hdu=1&#39;</span><span class="p">),</span>
+    <span class="s">&#39;x_hdu&#39;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;Which HDU to use for the x_col. default is the global hdu value.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;y_hdu&#39;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;Which HDU to use for the y_col. default is the global hdu value.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;ra_hdu&#39;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;Which HDU to use for the ra_col. default is the global hdu value.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;dec_hdu&#39;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;Which HDU to use for the dec_col. default is the global hdu value.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;r_hdu&#39;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;Which HDU to use for the r_col. default is the global hdu value.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;g1_hdu&#39;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;Which HDU to use for the g1_col. default is the global hdu value.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;g2_hdu&#39;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;Which HDU to use for the g2_col. default is the global hdu value.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;k_hdu&#39;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;Which HDU to use for the k_col. default is the global hdu value.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;w_hdu&#39;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;Which HDU to use for the w_col. default is the global hdu value.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;flag_hdu&#39;</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;Which HDU to use for the flag_col. default is the global hdu value.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;flip_g1&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">bool</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;Whether to flip the sign of g1&#39;</span><span class="p">),</span>
+    <span class="s">&#39;flip_g2&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">bool</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;Whether to flip the sign of g2&#39;</span><span class="p">),</span>
+    <span class="s">&#39;pairwise&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">bool</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;Whether to do a pair-wise cross-correlation &#39;</span><span class="p">),</span>
+
+    <span class="c"># Parameters about the binned correlation function to be calculated</span>
+
+    <span class="s">&#39;min_sep&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;The minimum separation to include in the output.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;max_sep&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;The maximum separation to include in the output.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;nbins&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;The number of output bins to use.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;bin_size&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;The size of the output bins in log(sep).&#39;</span><span class="p">),</span>
+    <span class="s">&#39;sep_units&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">angle_units</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span>
+            <span class="s">&#39;The units to use for min_sep and max_sep.  Also the units of the output r columns&#39;</span><span class="p">),</span>
+    <span class="s">&#39;bin_slop&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;The fraction of a bin width by which it is ok to let the pairs miss the correct bin.&#39;</span><span class="p">),</span>
+
+    <span class="c"># Parameters about the output file(s)</span>
+
+    <span class="s">&#39;n2_file_name&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;The output filename for point-point correlation function.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;n2_statistic&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="s">&#39;compensated&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;compensated&#39;</span><span class="p">,</span><span class="s">&#39;simple&#39;</span><span class="p">],</span>
+            <span class="s">&#39;Which statistic to use for omega as the estimator fo the NN correlation function. &#39;</span><span class="p">),</span>
+    <span class="s">&#39;ng_file_name&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;The output filename for point-shear correlation function.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;ng_statistic&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;compensated&#39;</span><span class="p">,</span> <span class="s">&#39;simple&#39;</span><span class="p">],</span>
+            <span class="s">&#39;Which statistic to use for the mean shear estimator of the NG correlation function. &#39;</span><span class="p">,</span>
+            <span class="s">&#39;The default is compensated if rand_files is given, otherwise simple&#39;</span><span class="p">),</span>
+    <span class="s">&#39;g2_file_name&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;The output filename for shear-shear correlation function.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;nk_file_name&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;The output filename for point-kappa correlation function.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;nk_statistic&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;compensated&#39;</span><span class="p">,</span> <span class="s">&#39;simple&#39;</span><span class="p">],</span>
+            <span class="s">&#39;Which statistic to use for the mean kappa estimator of the NK correlation function. &#39;</span><span class="p">,</span>
+            <span class="s">&#39;The default is compensated if rand_files is given, otherwise simple&#39;</span><span class="p">),</span>
+    <span class="s">&#39;k2_file_name&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;The output filename for kappa-kappa correlation function.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;kg_file_name&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;The output filename for kappa-shear correlation function.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;precision&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;The number of digits after the decimal in the output.&#39;</span><span class="p">),</span>
+
+    <span class="c"># Derived output quantities</span>
+
+    <span class="s">&#39;m2_file_name&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;The output filename for the aperture mass statistics.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;m2_uform&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="s">&#39;Crittenden&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;Crittenden&#39;</span><span class="p">,</span> <span class="s">&#39;Schneider&#39;</span><span class="p">],</span>
+            <span class="s">&#39;The function form of the aperture.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;nm_file_name&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;The output filename for &lt;N Map&gt; and related values.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;norm_file_name&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>  <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;The output filename for &lt;N Map&gt;^2/&lt;N^2&gt;&lt;Map^2&gt; and related values.&#39;</span><span class="p">),</span>
+
+    <span class="c"># Miscellaneous parameters</span>
+
+    <span class="s">&#39;verbose&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+            <span class="s">&#39;How verbose the code should be during processing. &#39;</span><span class="p">,</span>
+            <span class="s">&#39;0 = Errors Only, 1 = Warnings, 2 = Progress, 3 = Debugging&#39;</span><span class="p">),</span>
+    <span class="s">&#39;num_threads&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;How many threads should be used. num_threads &lt;= 0 means auto based on num cores.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;split_method&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="s">&#39;mean&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;mean&#39;</span><span class="p">,</span> <span class="s">&#39;median&#39;</span><span class="p">,</span> <span class="s">&#39;middle&#39;</span><span class="p">],</span>
+            <span class="s">&#39;Which method to use for splitting cells.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;log_file&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;If desired, an output file for the logging output.&#39;</span><span class="p">,</span>
+            <span class="s">&#39;The default is to write the output to stdout.&#39;</span><span class="p">),</span>
+    <span class="s">&#39;output_dots&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">bool</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;Whether to output dots to the stdout during the C++-level computation.&#39;</span><span class="p">,</span>
+            <span class="s">&#39;The default is True if verbose &gt;= 2 and there is no log_file.  Else False.&#39;</span><span class="p">),</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="corr2"><a class="viewcode-back" href="../../treecorr.html#treecorr.corr2.corr2">[docs]</a><span class="k">def</span> <span class="nf">corr2</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Run the full two-point correlation function code based on the parameters in the</span>
+<span class="sd">    given config dict.</span>
+
+<span class="sd">    The function print_corr2_params() will output information about the valid parameters</span>
+<span class="sd">    that are expected to be in the config dict.</span>
+
+<span class="sd">    Optionally a logger parameter maybe given, in which case it is used for logging.</span>
+<span class="sd">    If not given, the logging will be based on the verbose and log_file parameters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># Check that config doesn&#39;t have any extra parameters.</span>
+    <span class="c"># (Such values are probably typos.)</span>
+    <span class="c"># Also convert the given parameters to the correct type, etc.</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">check_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">corr2_valid_params</span><span class="p">)</span>
+
+    <span class="c"># Setup logger based on config verbose value</span>
+    <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">verbose</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s">&#39;verbose&#39;</span><span class="p">]</span>
+        <span class="n">log_file</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;log_file&#39;</span><span class="p">,</span><span class="bp">None</span><span class="p">)</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">setup_logger</span><span class="p">(</span><span class="n">verbose</span><span class="p">,</span> <span class="n">log_file</span><span class="p">)</span>
+    <span class="kn">import</span> <span class="nn">pprint</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;Using configuration dict:</span><span class="se">\n</span><span class="si">%s</span><span class="s">&#39;</span><span class="p">,</span><span class="n">pprint</span><span class="o">.</span><span class="n">pformat</span><span class="p">(</span><span class="n">config</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="p">(</span> <span class="s">&#39;output_dots&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">config</span> 
+          <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;log_file&#39;</span><span class="p">,</span><span class="bp">None</span><span class="p">)</span> <span class="ow">is</span> <span class="bp">None</span> 
+          <span class="ow">and</span> <span class="n">config</span><span class="p">[</span><span class="s">&#39;verbose&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">2</span> <span class="p">):</span>
+        <span class="n">config</span><span class="p">[</span><span class="s">&#39;output_dots&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+
+    <span class="c"># Set the number of threads</span>
+    <span class="n">num_threads</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;num_threads&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">num_threads</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">multiprocessing</span>
+        <span class="n">num_threads</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">num_threads</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">num_threads</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">SetOMPThreads</span><span class="p">(</span><span class="n">num_threads</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">num_threads</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;Using </span><span class="si">%d</span><span class="s"> threads.&#39;</span><span class="p">,</span><span class="n">num_threads</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="s">&#39;num_threads&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
+            <span class="c"># Only warn if the user specifically asked for num_threads != 1.</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s">&#39;Unable to use multiple threads, since OpenMP is not enabled.&#39;</span><span class="p">)</span>
+
+    <span class="c"># Read in the input files.  Each of these is a list.</span>
+    <span class="n">cat1</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">read_catalogs</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s">&#39;file_name&#39;</span><span class="p">,</span> <span class="s">&#39;file_list&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cat1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s">&quot;Either file_name or file_list is required&quot;</span><span class="p">)</span>
+    <span class="n">cat2</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">read_catalogs</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s">&#39;file_name2&#39;</span><span class="p">,</span> <span class="s">&#39;rand_file_list2&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+    <span class="n">rand1</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">read_catalogs</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s">&#39;rand_file_name&#39;</span><span class="p">,</span> <span class="s">&#39;rand_file_list&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+    <span class="n">rand2</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">read_catalogs</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s">&#39;rand_file_name2&#39;</span><span class="p">,</span> <span class="s">&#39;rand_file_list2&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cat2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">rand2</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s">&quot;rand_file_name2 is invalid without file_name2&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Done reading input catalogs&quot;</span><span class="p">)</span>
+
+    <span class="c"># Do g2 correlation function if necessary</span>
+    <span class="k">if</span> <span class="s">&#39;g2_file_name&#39;</span> <span class="ow">in</span> <span class="n">config</span> <span class="ow">or</span> <span class="s">&#39;m2_file_name&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Start g2 calculations...&quot;</span><span class="p">)</span>
+        <span class="n">gg</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">G2Correlation</span><span class="p">(</span><span class="n">config</span><span class="p">,</span><span class="n">logger</span><span class="p">)</span>
+        <span class="n">gg</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span><span class="n">cat2</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Done g2 calculations.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s">&#39;g2_file_name&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
+            <span class="n">gg</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s">&#39;g2_file_name&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="s">&#39;m2_file_name&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
+            <span class="n">gg</span><span class="o">.</span><span class="n">writeMapSq</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s">&#39;m2_file_name&#39;</span><span class="p">])</span>
+
+    <span class="c"># Do ng correlation function if necessary</span>
+    <span class="k">if</span> <span class="s">&#39;ng_file_name&#39;</span> <span class="ow">in</span> <span class="n">config</span> <span class="ow">or</span> <span class="s">&#39;nm_file_name&#39;</span> <span class="ow">in</span> <span class="n">config</span> <span class="ow">or</span> <span class="s">&#39;norm_file_name&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cat2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s">&quot;file_name2 is required for ng correlation&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Start ng calculations...&quot;</span><span class="p">)</span>
+        <span class="n">ng</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">NGCorrelation</span><span class="p">(</span><span class="n">config</span><span class="p">,</span><span class="n">logger</span><span class="p">)</span>
+        <span class="n">ng</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span><span class="n">cat2</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Done ng calculation.&quot;</span><span class="p">)</span>
+
+        <span class="c"># The default ng_statistic is compensated _iff_ rand files are given.</span>
+        <span class="n">rg</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rand1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;ng_statistic&#39;</span><span class="p">,</span><span class="bp">None</span><span class="p">)</span> <span class="o">==</span> <span class="s">&#39;compensated&#39;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s">&quot;rand_files is required for ng_statistic = compensated&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;ng_statistic&#39;</span><span class="p">,</span><span class="s">&#39;compensated&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s">&#39;compensated&#39;</span><span class="p">:</span>
+            <span class="n">rg</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">NGCorrelation</span><span class="p">(</span><span class="n">config</span><span class="p">,</span><span class="n">logger</span><span class="p">)</span>
+            <span class="n">rg</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">rand1</span><span class="p">,</span><span class="n">cat2</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Done rg calculation.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s">&#39;ng_file_name&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
+            <span class="n">ng</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s">&#39;ng_file_name&#39;</span><span class="p">],</span> <span class="n">rg</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s">&#39;nm_file_name&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
+            <span class="n">ng</span><span class="o">.</span><span class="n">writeNMap</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s">&#39;nm_file_name&#39;</span><span class="p">],</span> <span class="n">rg</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s">&#39;norm_file_name&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
+            <span class="n">gg</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">G2Correlation</span><span class="p">(</span><span class="n">config</span><span class="p">,</span><span class="n">logger</span><span class="p">)</span>
+            <span class="n">gg</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">cat2</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Done gg calculation for norm&quot;</span><span class="p">)</span>
+            <span class="n">nn</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">N2Correlation</span><span class="p">(</span><span class="n">config</span><span class="p">,</span><span class="n">logger</span><span class="p">)</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">cat1</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Done nn calculation for norm&quot;</span><span class="p">)</span>
+            <span class="n">rr</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">N2Correlation</span><span class="p">(</span><span class="n">config</span><span class="p">,</span><span class="n">logger</span><span class="p">)</span>
+            <span class="n">rr</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">rand1</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Done rr calculation for norm&quot;</span><span class="p">)</span>
+            <span class="n">nr</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="k">if</span> <span class="n">config</span><span class="p">[</span><span class="s">&#39;n2_statistic&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;compensated&#39;</span><span class="p">:</span>
+                <span class="n">nr</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">N2Correlation</span><span class="p">(</span><span class="n">config</span><span class="p">,</span><span class="n">logger</span><span class="p">)</span>
+                <span class="n">nr</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span><span class="n">rand1</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Done nr calculation for norm&quot;</span><span class="p">)</span>
+            <span class="n">ng</span><span class="o">.</span><span class="n">writeNorm</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s">&#39;norm_file_name&#39;</span><span class="p">],</span><span class="n">gg</span><span class="p">,</span><span class="n">nn</span><span class="p">,</span><span class="n">rr</span><span class="p">,</span><span class="n">nr</span><span class="p">,</span><span class="n">rg</span><span class="p">)</span>
+
+    <span class="c"># Do n2 correlation function if necessary</span>
+    <span class="k">if</span> <span class="s">&#39;n2_file_name&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rand1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s">&quot;rand_file_name is required for n2 correlation&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cat2</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">rand2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s">&quot;rand_file_name2 is required for n2 cross-correlation&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Start n2 calculations...&quot;</span><span class="p">)</span>
+        <span class="n">nn</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">N2Correlation</span><span class="p">(</span><span class="n">config</span><span class="p">,</span><span class="n">logger</span><span class="p">)</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span><span class="n">cat2</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Done n2 calculations.&quot;</span><span class="p">)</span>
+
+        <span class="n">nr</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">rn</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cat2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">rr</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">N2Correlation</span><span class="p">(</span><span class="n">config</span><span class="p">,</span><span class="n">logger</span><span class="p">)</span>
+            <span class="n">rr</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">rand1</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Done r2 calculations.&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">config</span><span class="p">[</span><span class="s">&#39;n2_statistic&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;compensated&#39;</span><span class="p">:</span>
+                <span class="n">nr</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">N2Correlation</span><span class="p">(</span><span class="n">config</span><span class="p">,</span><span class="n">logger</span><span class="p">)</span>
+                <span class="n">nr</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span><span class="n">rand1</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Done nr calculations.&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">rr</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">N2Correlation</span><span class="p">(</span><span class="n">config</span><span class="p">,</span><span class="n">logger</span><span class="p">)</span>
+            <span class="n">rr</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">rand1</span><span class="p">,</span><span class="n">rand2</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Done r2 calculations.&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">config</span><span class="p">[</span><span class="s">&#39;n2_statistic&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;compensated&#39;</span><span class="p">:</span>
+                <span class="n">nr</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">N2Correlation</span><span class="p">(</span><span class="n">config</span><span class="p">,</span><span class="n">logger</span><span class="p">)</span>
+                <span class="n">nr</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span><span class="n">rand2</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Done nr calculations.&quot;</span><span class="p">)</span>
+                <span class="n">rn</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">N2Correlation</span><span class="p">(</span><span class="n">config</span><span class="p">,</span><span class="n">logger</span><span class="p">)</span>
+                <span class="n">rn</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">rand1</span><span class="p">,</span><span class="n">cat2</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Done rn calculations.&quot;</span><span class="p">)</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s">&#39;n2_file_name&#39;</span><span class="p">],</span><span class="n">rr</span><span class="p">,</span><span class="n">nr</span><span class="p">,</span><span class="n">rn</span><span class="p">)</span>
+
+    <span class="c"># Do k2 correlation function if necessary</span>
+    <span class="k">if</span> <span class="s">&#39;k2_file_name&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Start k2 calculations...&quot;</span><span class="p">)</span>
+        <span class="n">kk</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">K2Correlation</span><span class="p">(</span><span class="n">config</span><span class="p">,</span><span class="n">logger</span><span class="p">)</span>
+        <span class="n">kk</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span><span class="n">cat2</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Done k2 calculations.&quot;</span><span class="p">)</span>
+        <span class="n">kk</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s">&#39;k2_file_name&#39;</span><span class="p">])</span>
+
+    <span class="c"># Do ng correlation function if necessary</span>
+    <span class="k">if</span> <span class="s">&#39;nk_file_name&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cat2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s">&quot;file_name2 is required for nk correlation&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Start nk calculations...&quot;</span><span class="p">)</span>
+        <span class="n">nk</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">NKCorrelation</span><span class="p">(</span><span class="n">config</span><span class="p">,</span><span class="n">logger</span><span class="p">)</span>
+        <span class="n">nk</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span><span class="n">cat2</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Done nk calculation.&quot;</span><span class="p">)</span>
+
+        <span class="n">rk</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rand1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;nk_statistic&#39;</span><span class="p">,</span><span class="bp">None</span><span class="p">)</span> <span class="o">==</span> <span class="s">&#39;compensated&#39;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s">&quot;rand_files is required for nk_statistic = compensated&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;nk_statistic&#39;</span><span class="p">,</span><span class="s">&#39;compensated&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s">&#39;compensated&#39;</span><span class="p">:</span>
+            <span class="n">rk</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">NKCorrelation</span><span class="p">(</span><span class="n">config</span><span class="p">,</span><span class="n">logger</span><span class="p">)</span>
+            <span class="n">rk</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">rand1</span><span class="p">,</span><span class="n">cat2</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Done rk calculation.&quot;</span><span class="p">)</span>
+
+        <span class="n">nk</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s">&#39;nk_file_name&#39;</span><span class="p">],</span> <span class="n">rk</span><span class="p">)</span>
+
+    <span class="c"># Do kg correlation function if necessary</span>
+    <span class="k">if</span> <span class="s">&#39;kg_file_name&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cat2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s">&quot;file_name2 is required for kg correlation&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Start kg calculations...&quot;</span><span class="p">)</span>
+        <span class="n">kg</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">KGCorrelation</span><span class="p">(</span><span class="n">config</span><span class="p">,</span><span class="n">logger</span><span class="p">)</span>
+        <span class="n">kg</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span><span class="n">cat2</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Done kg calculation.&quot;</span><span class="p">)</span>
+        <span class="n">kg</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s">&#39;kg_file_name&#39;</span><span class="p">])</span>
+
+</div>
+<div class="viewcode-block" id="print_corr2_params"><a class="viewcode-back" href="../../treecorr.html#treecorr.corr2.print_corr2_params">[docs]</a><span class="k">def</span> <span class="nf">print_corr2_params</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Print information about the valid parameters that may be given to the corr2 function.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">treecorr</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">print_params</span><span class="p">(</span><span class="n">corr2_valid_params</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">treecorr  documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Mike Jarvis.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
