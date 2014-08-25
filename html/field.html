@@ -1,0 +1,186 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Fields &mdash; TreeCorr  documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="TreeCorr  documentation" href="index.html" />
+    <link rel="next" title="Celestial Coordinates" href="celestial.html" />
+    <link rel="prev" title="KG: Kappa-shear correlations" href="kg.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="celestial.html" title="Celestial Coordinates"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="kg.html" title="KG: Kappa-shear correlations"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">TreeCorr  documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-treecorr.field">
+<span id="fields"></span><h1>Fields<a class="headerlink" href="#module-treecorr.field" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="treecorr.field.GField">
+<em class="property">class </em><tt class="descclassname">treecorr.field.</tt><tt class="descname">GField</tt><big>(</big><em>cat</em>, <em>min_sep=None</em>, <em>max_sep=None</em>, <em>b=None</em>, <em>logger=None</em>, <em>config=None</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/treecorr/field.html#GField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.field.GField" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class stores the shear field in a tree structure from which it is efficient
+to compute the two-point correlation functions.</p>
+<p>A GField is typically created from a Catalog object using</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">gfield</span> <span class="o">=</span> <span class="n">cat</span><span class="o">.</span><span class="n">getGField</span><span class="p">(</span><span class="n">min_sep</span><span class="p">,</span> <span class="n">max_sep</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="treecorr.field.GSimpleField">
+<em class="property">class </em><tt class="descclassname">treecorr.field.</tt><tt class="descname">GSimpleField</tt><big>(</big><em>cat</em>, <em>logger=None</em>, <em>config=None</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/treecorr/field.html#GSimpleField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.field.GSimpleField" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class stores the shear field in a tree structure from which it is efficient
+to compute the two-point correlation functions.</p>
+<p>A GSimpleField is typically created from a Catalog object using</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">gfield</span> <span class="o">=</span> <span class="n">cat</span><span class="o">.</span><span class="n">getGSimpleField</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="treecorr.field.KField">
+<em class="property">class </em><tt class="descclassname">treecorr.field.</tt><tt class="descname">KField</tt><big>(</big><em>cat</em>, <em>min_sep=None</em>, <em>max_sep=None</em>, <em>b=None</em>, <em>logger=None</em>, <em>config=None</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/treecorr/field.html#KField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.field.KField" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class stores the kappa field in a tree structure from which it is efficient
+to compute the two-point correlation functions.</p>
+<p>A KField is typically created from a Catalog object using</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kfield</span> <span class="o">=</span> <span class="n">cat</span><span class="o">.</span><span class="n">getKField</span><span class="p">(</span><span class="n">min_sep</span><span class="p">,</span> <span class="n">max_sep</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="treecorr.field.KSimpleField">
+<em class="property">class </em><tt class="descclassname">treecorr.field.</tt><tt class="descname">KSimpleField</tt><big>(</big><em>cat</em>, <em>logger=None</em>, <em>config=None</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/treecorr/field.html#KSimpleField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.field.KSimpleField" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class stores the kappa field in a tree structure from which it is efficient
+to compute the two-point correlation functions.</p>
+<p>A KSimpleField is typically created from a Catalog object using</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kfield</span> <span class="o">=</span> <span class="n">cat</span><span class="o">.</span><span class="n">getKSimpleField</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="treecorr.field.NField">
+<em class="property">class </em><tt class="descclassname">treecorr.field.</tt><tt class="descname">NField</tt><big>(</big><em>cat</em>, <em>min_sep=None</em>, <em>max_sep=None</em>, <em>b=None</em>, <em>logger=None</em>, <em>config=None</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/treecorr/field.html#NField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.field.NField" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class stores the positions in a tree structure from which it is efficient
+to compute the two-point correlation functions.</p>
+<p>An NField is typically created from a Catalog object using</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">nfield</span> <span class="o">=</span> <span class="n">cat</span><span class="o">.</span><span class="n">getNField</span><span class="p">(</span><span class="n">min_sep</span><span class="p">,</span> <span class="n">max_sep</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="treecorr.field.NSimpleField">
+<em class="property">class </em><tt class="descclassname">treecorr.field.</tt><tt class="descname">NSimpleField</tt><big>(</big><em>cat</em>, <em>logger=None</em>, <em>config=None</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/treecorr/field.html#NSimpleField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.field.NSimpleField" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class stores the positions as a list, skipping all the tree stuff.</p>
+<p>An NSimpleField is typically created from a Catalog object using</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">nfield</span> <span class="o">=</span> <span class="n">cat</span><span class="o">.</span><span class="n">getNSimpleField</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="treecorr.field.parse_split_method">
+<tt class="descclassname">treecorr.field.</tt><tt class="descname">parse_split_method</tt><big>(</big><em>split_method</em><big>)</big><a class="reference internal" href="_modules/treecorr/field.html#parse_split_method"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.field.parse_split_method" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="kg.html"
+                        title="previous chapter">KG: Kappa-shear correlations</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="celestial.html"
+                        title="next chapter">Celestial Coordinates</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/field.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="celestial.html" title="Celestial Coordinates"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="kg.html" title="KG: Kappa-shear correlations"
+             >previous</a> |</li>
+        <li><a href="index.html">TreeCorr  documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Mike Jarvis.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

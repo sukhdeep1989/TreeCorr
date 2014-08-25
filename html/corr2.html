@@ -1,0 +1,238 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>corr2 &mdash; TreeCorr  documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="TreeCorr  documentation" href="index.html" />
+    <link rel="prev" title="Celestial Coordinates" href="celestial.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="celestial.html" title="Celestial Coordinates"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">TreeCorr  documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="corr2">
+<h1>corr2<a class="headerlink" href="#corr2" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="the-corr2-function-from-python">
+<h2>The corr2 function from python<a class="headerlink" href="#the-corr2-function-from-python" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="treecorr.corr2">
+<tt class="descclassname">treecorr.</tt><tt class="descname">corr2</tt><big>(</big><em>config</em>, <em>logger=None</em><big>)</big><a class="headerlink" href="#treecorr.corr2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the full two-point correlation function code based on the parameters in the
+given config dict.</p>
+<p>The function print_corr2_params() will output information about the valid parameters
+that are expected to be in the config dict.</p>
+<p>Optionally a logger parameter maybe given, in which case it is used for logging.
+If not given, the logging will be based on the verbose and log_file parameters.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="the-corr2-executable">
+<h2>The corr2 executable<a class="headerlink" href="#the-corr2-executable" title="Permalink to this headline">¶</a></h2>
+<p>Also installed with TreeCorr is an executable script, called corr2.
+The script takes one required command-line argument, which is the
+name of a configuration file:</p>
+<blockquote>
+<div>corr2 config_file</div></blockquote>
+<p>A sample configuration file is provided, called sample.params.  See the
+TreeCorr wiki page</p>
+<p><a class="reference external" href="https://github.com/rmjarvis/TreeCorr/wiki/Configuration-Parameters">https://github.com/rmjarvis/TreeCorr/wiki/Configuration-Parameters</a></p>
+<p>for the complete documentation about the allowed parameters.</p>
+<p>You can also specify parameters on the command line after the name of
+the configuration file. e.g.:</p>
+<blockquote>
+<div>corr2 config_file file_name=file1.dat g2_file_name=file1.out
+corr2 config_file file_name=file2.dat g2_file_name=file2.out
+...</div></blockquote>
+<p>This can be useful when running the program from a script for lots of input
+files.</p>
+</div>
+<div class="section" id="module-treecorr.corr2">
+<span id="other-utilities-related-to-corr2"></span><h2>Other utilities related to corr2<a class="headerlink" href="#module-treecorr.corr2" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="treecorr.corr2.print_corr2_params">
+<tt class="descclassname">treecorr.corr2.</tt><tt class="descname">print_corr2_params</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/treecorr/corr2.html#print_corr2_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.corr2.print_corr2_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print information about the valid parameters that may be given to the corr2 function.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-treecorr.config">
+<span id="utilities-related-to-the-configuration-dict"></span><h2>Utilities related to the configuration dict<a class="headerlink" href="#module-treecorr.config" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="treecorr.config.check_config">
+<tt class="descclassname">treecorr.config.</tt><tt class="descname">check_config</tt><big>(</big><em>config</em>, <em>params</em><big>)</big><a class="reference internal" href="_modules/treecorr/config.html#check_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.config.check_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check (and update) a config dict to conform to the given parameter rules.
+The params dict has an entry for each valid config parameter whose value is a tuple
+with the following items:</p>
+<blockquote>
+<div><ul class="simple">
+<li>type</li>
+<li>can be a list?</li>
+<li>default value</li>
+<li>valid values</li>
+<li>description (Multiple entries here are allowed for longer strings)</li>
+</ul>
+</div></blockquote>
+<p>Returns the updated config dict.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="treecorr.config.convert">
+<tt class="descclassname">treecorr.config.</tt><tt class="descname">convert</tt><big>(</big><em>value</em>, <em>value_type</em>, <em>key</em><big>)</big><a class="reference internal" href="_modules/treecorr/config.html#convert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.config.convert" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="treecorr.config.get">
+<tt class="descclassname">treecorr.config.</tt><tt class="descname">get</tt><big>(</big><em>config</em>, <em>key</em>, <em>value_type=&lt;type 'str'&gt;</em>, <em>default=None</em><big>)</big><a class="reference internal" href="_modules/treecorr/config.html#get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.config.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>A helper function to get a key from config converting to a particular type</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="treecorr.config.get_from_list">
+<tt class="descclassname">treecorr.config.</tt><tt class="descname">get_from_list</tt><big>(</big><em>config</em>, <em>key</em>, <em>num</em>, <em>value_type=&lt;type 'str'&gt;</em>, <em>default=None</em><big>)</big><a class="reference internal" href="_modules/treecorr/config.html#get_from_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.config.get_from_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>A helper function to get a key from config that is allowed to be a list</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="treecorr.config.merge_config">
+<tt class="descclassname">treecorr.config.</tt><tt class="descname">merge_config</tt><big>(</big><em>config</em>, <em>kwargs</em><big>)</big><a class="reference internal" href="_modules/treecorr/config.html#merge_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.config.merge_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="treecorr.config.parse_bool">
+<tt class="descclassname">treecorr.config.</tt><tt class="descname">parse_bool</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/treecorr/config.html#parse_bool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.config.parse_bool" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="treecorr.config.parse_unit">
+<tt class="descclassname">treecorr.config.</tt><tt class="descname">parse_unit</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/treecorr/config.html#parse_unit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.config.parse_unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the appropriate unit, allowing the value to merely start with one of the unit names.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="treecorr.config.parse_variable">
+<tt class="descclassname">treecorr.config.</tt><tt class="descname">parse_variable</tt><big>(</big><em>config</em>, <em>v</em><big>)</big><a class="reference internal" href="_modules/treecorr/config.html#parse_variable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.config.parse_variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="treecorr.config.print_params">
+<tt class="descclassname">treecorr.config.</tt><tt class="descname">print_params</tt><big>(</big><em>params</em><big>)</big><a class="reference internal" href="_modules/treecorr/config.html#print_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.config.print_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>List the information about the valid parameters, given by the given params dict.
+See check_config for the structure of the params dict.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="treecorr.config.read_config">
+<tt class="descclassname">treecorr.config.</tt><tt class="descname">read_config</tt><big>(</big><em>file_name</em><big>)</big><a class="reference internal" href="_modules/treecorr/config.html#read_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.config.read_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a configuration dict from a file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="treecorr.config.setup_logger">
+<tt class="descclassname">treecorr.config.</tt><tt class="descname">setup_logger</tt><big>(</big><em>verbose</em>, <em>log_file</em><big>)</big><a class="reference internal" href="_modules/treecorr/config.html#setup_logger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.config.setup_logger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse the integer verbosity level from the command line args into a logging_level string</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">corr2</a><ul>
+<li><a class="reference internal" href="#the-corr2-function-from-python">The corr2 function from python</a></li>
+<li><a class="reference internal" href="#the-corr2-executable">The corr2 executable</a></li>
+<li><a class="reference internal" href="#module-treecorr.corr2">Other utilities related to corr2</a></li>
+<li><a class="reference internal" href="#module-treecorr.config">Utilities related to the configuration dict</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="celestial.html"
+                        title="previous chapter">Celestial Coordinates</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/corr2.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="celestial.html" title="Celestial Coordinates"
+             >previous</a> |</li>
+        <li><a href="index.html">TreeCorr  documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Mike Jarvis.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

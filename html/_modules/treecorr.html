@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>treecorr &mdash; TreeCorr  documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="TreeCorr  documentation" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">TreeCorr  documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for treecorr</h1><div class="highlight"><pre>
+<span class="c"># Copyright (c) 2003-2014 by Mike Jarvis</span>
+<span class="c">#</span>
+<span class="c"># TreeCorr is free software: redistribution and use in source and binary forms,</span>
+<span class="c"># with or without modification, are permitted provided that the following</span>
+<span class="c"># conditions are met:</span>
+<span class="c">#</span>
+<span class="c"># 1. Redistributions of source code must retain the above copyright notice, this</span>
+<span class="c">#    list of conditions, and the disclaimer given in the accompanying LICENSE</span>
+<span class="c">#    file.</span>
+<span class="c"># 2. Redistributions in binary form must reproduce the above copyright notice,</span>
+<span class="c">#    this list of conditions, and the disclaimer given in the documentation</span>
+<span class="c">#    and/or other materials provided with the distribution.</span>
+
+
+<span class="n">version</span> <span class="o">=</span> <span class="s">&#39;3.0.2&#39;</span>
+
+<span class="kn">from</span> <span class="nn">.celestial</span> <span class="kn">import</span> <span class="n">CelestialCoord</span><span class="p">,</span> <span class="n">angle_units</span><span class="p">,</span> <span class="n">arcsec</span><span class="p">,</span> <span class="n">arcmin</span><span class="p">,</span> <span class="n">degrees</span><span class="p">,</span> <span class="n">hours</span><span class="p">,</span> <span class="n">radians</span>
+<span class="kn">from</span> <span class="nn">.config</span> <span class="kn">import</span> <span class="n">read_config</span>
+<span class="kn">from</span> <span class="nn">.corr2</span> <span class="kn">import</span> <span class="n">corr2</span><span class="p">,</span> <span class="n">print_corr2_params</span>
+<span class="kn">from</span> <span class="nn">.catalog</span> <span class="kn">import</span> <span class="n">Catalog</span><span class="p">,</span> <span class="n">read_catalogs</span><span class="p">,</span> <span class="n">calculateVarG</span><span class="p">,</span> <span class="n">calculateVarK</span>
+<span class="kn">from</span> <span class="nn">.binnedcorr2</span> <span class="kn">import</span> <span class="n">BinnedCorr2</span><span class="p">,</span> <span class="n">SetOMPThreads</span>
+<span class="kn">from</span> <span class="nn">.g2correlation</span> <span class="kn">import</span> <span class="n">G2Correlation</span>
+<span class="kn">from</span> <span class="nn">.n2correlation</span> <span class="kn">import</span> <span class="n">N2Correlation</span>
+<span class="kn">from</span> <span class="nn">.k2correlation</span> <span class="kn">import</span> <span class="n">K2Correlation</span>
+<span class="kn">from</span> <span class="nn">.ngcorrelation</span> <span class="kn">import</span> <span class="n">NGCorrelation</span>
+<span class="kn">from</span> <span class="nn">.nkcorrelation</span> <span class="kn">import</span> <span class="n">NKCorrelation</span>
+<span class="kn">from</span> <span class="nn">.kgcorrelation</span> <span class="kn">import</span> <span class="n">KGCorrelation</span>
+<span class="kn">from</span> <span class="nn">.field</span> <span class="kn">import</span> <span class="n">NField</span><span class="p">,</span> <span class="n">KField</span><span class="p">,</span> <span class="n">GField</span><span class="p">,</span> <span class="n">NSimpleField</span><span class="p">,</span> <span class="n">KSimpleField</span><span class="p">,</span> <span class="n">GSimpleField</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">TreeCorr  documentation</a> &raquo;</li>
+          <li><a href="index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Mike Jarvis.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>treecorr.field &mdash; treecorr  documentation</title>
+    <title>treecorr.field &mdash; TreeCorr  documentation</title>
     
     <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -23,8 +23,8 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <link rel="top" title="treecorr  documentation" href="../../index.html" />
-    <link rel="up" title="Module code" href="../index.html" /> 
+    <link rel="top" title="TreeCorr  documentation" href="../../index.html" />
+    <link rel="up" title="treecorr" href="../treecorr.html" /> 
   </head>
   <body>
     <div class="related">
@@ -36,8 +36,9 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../index.html">treecorr  documentation</a> &raquo;</li>
-          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+        <li><a href="../../index.html">TreeCorr  documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../treecorr.html" accesskey="U">treecorr</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -134,13 +135,13 @@
 <span class="n">_treecorr</span><span class="o">.</span><span class="n">DestroyGSimpleFieldFlat</span><span class="o">.</span><span class="n">argtypes</span> <span class="o">=</span> <span class="p">[</span> <span class="n">cvoid_ptr</span> <span class="p">]</span>
 
 
-<div class="viewcode-block" id="parse_split_method"><a class="viewcode-back" href="../../treecorr.html#treecorr.field.parse_split_method">[docs]</a><span class="k">def</span> <span class="nf">parse_split_method</span><span class="p">(</span><span class="n">split_method</span><span class="p">):</span>
+<div class="viewcode-block" id="parse_split_method"><a class="viewcode-back" href="../../field.html#treecorr.field.parse_split_method">[docs]</a><span class="k">def</span> <span class="nf">parse_split_method</span><span class="p">(</span><span class="n">split_method</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">split_method</span> <span class="o">==</span> <span class="s">&#39;middle&#39;</span><span class="p">:</span> <span class="k">return</span> <span class="n">cint</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">split_method</span> <span class="o">==</span> <span class="s">&#39;median&#39;</span><span class="p">:</span> <span class="k">return</span> <span class="n">cint</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span> <span class="k">return</span> <span class="n">cint</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 
 </div>
-<div class="viewcode-block" id="NField"><a class="viewcode-back" href="../../treecorr.html#treecorr.field.NField">[docs]</a><span class="k">class</span> <span class="nc">NField</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="NField"><a class="viewcode-back" href="../../field.html#treecorr.field.NField">[docs]</a><span class="k">class</span> <span class="nc">NField</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;This class stores the positions in a tree structure from which it is efficient</span>
 <span class="sd">    to compute the two-point correlation functions.  </span>
 
@@ -216,7 +217,7 @@
                 <span class="n">_treecorr</span><span class="o">.</span><span class="n">DestroyNFieldFlat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
 
 </div>
-<div class="viewcode-block" id="KField"><a class="viewcode-back" href="../../treecorr.html#treecorr.field.KField">[docs]</a><span class="k">class</span> <span class="nc">KField</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="KField"><a class="viewcode-back" href="../../field.html#treecorr.field.KField">[docs]</a><span class="k">class</span> <span class="nc">KField</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;This class stores the kappa field in a tree structure from which it is efficient</span>
 <span class="sd">    to compute the two-point correlation functions.  </span>
 
@@ -293,7 +294,7 @@
                 <span class="n">_treecorr</span><span class="o">.</span><span class="n">DestroyKFieldFlat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
 
 </div>
-<div class="viewcode-block" id="GField"><a class="viewcode-back" href="../../treecorr.html#treecorr.field.GField">[docs]</a><span class="k">class</span> <span class="nc">GField</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="GField"><a class="viewcode-back" href="../../field.html#treecorr.field.GField">[docs]</a><span class="k">class</span> <span class="nc">GField</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;This class stores the shear field in a tree structure from which it is efficient</span>
 <span class="sd">    to compute the two-point correlation functions.  </span>
 
@@ -371,7 +372,7 @@
                 <span class="n">_treecorr</span><span class="o">.</span><span class="n">DestroyGFieldFlat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
 
 </div>
-<div class="viewcode-block" id="NSimpleField"><a class="viewcode-back" href="../../treecorr.html#treecorr.field.NSimpleField">[docs]</a><span class="k">class</span> <span class="nc">NSimpleField</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="NSimpleField"><a class="viewcode-back" href="../../field.html#treecorr.field.NSimpleField">[docs]</a><span class="k">class</span> <span class="nc">NSimpleField</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;This class stores the positions as a list, skipping all the tree stuff.</span>
 
 <span class="sd">    An NSimpleField is typically created from a Catalog object using</span>
@@ -422,7 +423,7 @@
                 <span class="n">_treecorr</span><span class="o">.</span><span class="n">DestroyNSimpleFieldFlat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
 
 </div>
-<div class="viewcode-block" id="KSimpleField"><a class="viewcode-back" href="../../treecorr.html#treecorr.field.KSimpleField">[docs]</a><span class="k">class</span> <span class="nc">KSimpleField</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="KSimpleField"><a class="viewcode-back" href="../../field.html#treecorr.field.KSimpleField">[docs]</a><span class="k">class</span> <span class="nc">KSimpleField</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;This class stores the kappa field in a tree structure from which it is efficient</span>
 <span class="sd">    to compute the two-point correlation functions.  </span>
 
@@ -474,7 +475,7 @@
                 <span class="n">_treecorr</span><span class="o">.</span><span class="n">DestroyKSimpleFieldFlat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
 
 </div>
-<div class="viewcode-block" id="GSimpleField"><a class="viewcode-back" href="../../treecorr.html#treecorr.field.GSimpleField">[docs]</a><span class="k">class</span> <span class="nc">GSimpleField</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="GSimpleField"><a class="viewcode-back" href="../../field.html#treecorr.field.GSimpleField">[docs]</a><span class="k">class</span> <span class="nc">GSimpleField</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;This class stores the shear field in a tree structure from which it is efficient</span>
 <span class="sd">    to compute the two-point correlation functions.  </span>
 
@@ -558,8 +559,9 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../index.html">treecorr  documentation</a> &raquo;</li>
-          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+        <li><a href="../../index.html">TreeCorr  documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../treecorr.html" >treecorr</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

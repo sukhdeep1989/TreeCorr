@@ -1,0 +1,274 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>NG: Count-shear correlations &mdash; TreeCorr  documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="TreeCorr  documentation" href="index.html" />
+    <link rel="up" title="Two-point Correlation Functions" href="correlation.html" />
+    <link rel="next" title="KK: Kappa-kappa correlations" href="kk.html" />
+    <link rel="prev" title="GG: Shear-shear correlations" href="gg.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="kk.html" title="KK: Kappa-kappa correlations"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="gg.html" title="GG: Shear-shear correlations"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">TreeCorr  documentation</a> &raquo;</li>
+          <li><a href="correlation.html" accesskey="U">Two-point Correlation Functions</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="ng-count-shear-correlations">
+<h1>NG: Count-shear correlations<a class="headerlink" href="#ng-count-shear-correlations" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="treecorr.NGCorrelation">
+<em class="property">class </em><tt class="descclassname">treecorr.</tt><tt class="descname">NGCorrelation</tt><big>(</big><em>config=None</em>, <em>logger=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#treecorr.NGCorrelation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">treecorr.binnedcorr2.BinnedCorr2</span></tt></p>
+<p>This class handles the calculation and storage of a 2-point shear-shear correlation
+function.</p>
+<p>It holds the following attributes:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Logr:</th><td class="field-body">The nominal center of the bin in log(r).</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Meanlogr:</th><td class="field-body">The (weighted) mean value of log(r) for the pairs in each bin.
+If there are no pairs in a bin, then logr will be used instead.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Xi:</th><td class="field-body">The correlation function, xi(r) = &lt;gamma_T&gt;.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Xi_im:</th><td class="field-body">The imaginary part of xi(r).</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Varxi:</th><td class="field-body">The variance of xi, only including the shape noise propagated into the
+final correlation.  This does not include sample variance, so it is
+always an underestimate of the actual variance.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Weight:</th><td class="field-body">The total weight in each bin.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Npairs:</th><td class="field-body">The number of pairs going into each bin.</td>
+</tr>
+</tbody>
+</table>
+<p>The usage pattern is as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">ng</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">NGCorrelation</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ng</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span><span class="n">cat2</span><span class="p">)</span>   <span class="c"># Compute the cross-correlation.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ng</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>     <span class="c"># Write out to a file.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xi</span> <span class="o">=</span> <span class="n">gg</span><span class="o">.</span><span class="n">xi</span>              <span class="c"># Or access the correlation function directly.</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="treecorr.NGCorrelation.calculateNMap">
+<tt class="descname">calculateNMap</tt><big>(</big><em>rg=None</em>, <em>m2_uform=None</em><big>)</big><a class="headerlink" href="#treecorr.NGCorrelation.calculateNMap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the aperture mass statistics from the correlation function.</p>
+<p>&lt;NMap&gt;(R) = int_r=0..2R [s^2 dlogr Tx(s) &lt;gammaT&gt;(r)]
+&lt;NMx&gt;(R)  = int_r=0..2R [s^2 dlogr Tx(s) &lt;gammaX&gt;(r)]</p>
+<p>The m2_uform parameter sets which definition of the aperture mass to use.
+The default is to look in the config dict that was used to build the catalog,
+or use &#8216;Crittenden&#8217; if it is not specified.</p>
+<p>If m2_uform == &#8216;Crittenden&#8217;:</p>
+<blockquote>
+<div>Tx(s) = s^2/128 (12-s^2) exp(-s^2/4)</div></blockquote>
+<p>If m2_uform == &#8216;Schneider&#8217;:</p>
+<blockquote>
+<div>Tx(s) = 18/Pi s^2 arccos(s/s) - 3/40Pi s^3 sqrt(4-s^2) (196 - 74s^2 + 14s^4 - s^6)</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">(nmap, nmx, varnmap)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.NGCorrelation.calculateXi">
+<tt class="descname">calculateXi</tt><big>(</big><em>rg=None</em><big>)</big><a class="headerlink" href="#treecorr.NGCorrelation.calculateXi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the correlation function possibly given another correlation function
+that uses random points for the foreground objects.</p>
+<p>If rg is None, the simple correlation function &lt;gamma_T&gt; is returned.
+If rg is not None, then a compensated calculation is done: &lt;gamma_T&gt; = (dg - rg)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">(xi, xi_im, varxi)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.NGCorrelation.clear">
+<tt class="descname">clear</tt><big>(</big><big>)</big><a class="headerlink" href="#treecorr.NGCorrelation.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear the data vectors</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.NGCorrelation.finalize">
+<tt class="descname">finalize</tt><big>(</big><em>varg</em><big>)</big><a class="headerlink" href="#treecorr.NGCorrelation.finalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finalize the calculation of the correlation function.</p>
+<p>The process_cross command accumulates values in each bin, so it can be called
+multiple times if appropriate.  Afterwards, this command finishes the calculation
+by dividing each column by the total weight.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.NGCorrelation.process">
+<tt class="descname">process</tt><big>(</big><em>cat1</em>, <em>cat2</em><big>)</big><a class="headerlink" href="#treecorr.NGCorrelation.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the correlation function.</p>
+<p>Both arguments may be lists, in which case all items in the list are used 
+for that element of the correlation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.NGCorrelation.process_cross">
+<tt class="descname">process_cross</tt><big>(</big><em>cat1</em>, <em>cat2</em><big>)</big><a class="headerlink" href="#treecorr.NGCorrelation.process_cross" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process a single pair of catalogs, accumulating the cross-correlation.</p>
+<p>This accumulates the weighted sums into the bins, but does not finalize
+the calculation by dividing by the total weight at the end.  After
+calling this function as often as desired, the finalize() command will
+finish the calculation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.NGCorrelation.process_pairwise">
+<tt class="descname">process_pairwise</tt><big>(</big><em>cat1</em>, <em>cat2</em><big>)</big><a class="headerlink" href="#treecorr.NGCorrelation.process_pairwise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process a single pair of catalogs, accumulating the cross-correlation, only using
+the corresponding pairs of objects in each catalog.</p>
+<p>This accumulates the weighted sums into the bins, but does not finalize
+the calculation by dividing by the total weight at the end.  After
+calling this function as often as desired, the finalize() command will
+finish the calculation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.NGCorrelation.write">
+<tt class="descname">write</tt><big>(</big><em>file_name</em>, <em>rg=None</em><big>)</big><a class="headerlink" href="#treecorr.NGCorrelation.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the correlation function to the file, file_name.</p>
+<p>If rg is None, the simple correlation function &lt;gamma_T&gt; is used.
+If rg is not None, then a compensated calculation is done: &lt;gamma_T&gt; = (dg - rg)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.NGCorrelation.writeNMap">
+<tt class="descname">writeNMap</tt><big>(</big><em>file_name</em>, <em>rg=None</em>, <em>m2_uform=None</em><big>)</big><a class="headerlink" href="#treecorr.NGCorrelation.writeNMap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the cross correlation of the foreground galaxy counts with the aperture mass
+based on the correlation function to the file, file_name.</p>
+<p>if rg is provided, the compensated calculation will be used for xi.</p>
+<p>See calculateNMap for an explanation of the m2_uform parameter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.NGCorrelation.writeNorm">
+<tt class="descname">writeNorm</tt><big>(</big><em>file_name</em>, <em>gg</em>, <em>dd</em>, <em>rr</em>, <em>dr=None</em>, <em>rg=None</em>, <em>m2_uform=None</em><big>)</big><a class="headerlink" href="#treecorr.NGCorrelation.writeNorm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the normalized aperture mass cross-correlation to the file, file_name.</p>
+<p>The combination &lt;NMap&gt;^2 / &lt;Map^2&gt; &lt;N_ap^2&gt; is related to r^2, the galaxy-mass
+correlation coefficient.</p>
+<p>Similarly, &lt;N_ap^2&gt; / &lt;Map^2&gt; is related to b^2, the galaxy bias parameter.</p>
+<p>cf. Hoekstra et al, 2002: <a class="reference external" href="http://adsabs.harvard.edu/abs/2002ApJ...577..604H">http://adsabs.harvard.edu/abs/2002ApJ...577..604H</a></p>
+<p>if rg is provided, the compensated calculation will be used for NMap.
+if dr is provided, the compensated calculation will be used for N^2.</p>
+<p>See calculateNMap for an explanation of the m2_uform parameter.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="gg.html"
+                        title="previous chapter">GG: Shear-shear correlations</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="kk.html"
+                        title="next chapter">KK: Kappa-kappa correlations</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/ng.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="kk.html" title="KK: Kappa-kappa correlations"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="gg.html" title="GG: Shear-shear correlations"
+             >previous</a> |</li>
+        <li><a href="index.html">TreeCorr  documentation</a> &raquo;</li>
+          <li><a href="correlation.html" >Two-point Correlation Functions</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Mike Jarvis.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

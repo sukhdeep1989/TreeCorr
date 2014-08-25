@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>treecorr.config &mdash; treecorr  documentation</title>
+    <title>treecorr.config &mdash; TreeCorr  documentation</title>
     
     <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -23,8 +23,8 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <link rel="top" title="treecorr  documentation" href="../../index.html" />
-    <link rel="up" title="Module code" href="../index.html" /> 
+    <link rel="top" title="TreeCorr  documentation" href="../../index.html" />
+    <link rel="up" title="treecorr" href="../treecorr.html" /> 
   </head>
   <body>
     <div class="related">
@@ -36,8 +36,9 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../index.html">treecorr  documentation</a> &raquo;</li>
-          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+        <li><a href="../../index.html">TreeCorr  documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../treecorr.html" accesskey="U">treecorr</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -62,7 +63,7 @@
 
 <span class="kn">import</span> <span class="nn">treecorr</span>
 
-<div class="viewcode-block" id="parse_variable"><a class="viewcode-back" href="../../treecorr.html#treecorr.config.parse_variable">[docs]</a><span class="k">def</span> <span class="nf">parse_variable</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+<div class="viewcode-block" id="parse_variable"><a class="viewcode-back" href="../../corr2.html#treecorr.config.parse_variable">[docs]</a><span class="k">def</span> <span class="nf">parse_variable</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
     <span class="k">if</span> <span class="s">&#39;=&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
         <span class="k">print</span> <span class="s">&#39;trying to parse: &#39;</span><span class="p">,</span><span class="n">v</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;Improper variable specification.  Use syntax: item = value.&#39;</span><span class="p">)</span>
@@ -81,7 +82,7 @@
             <span class="n">config</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">values</span>
 
 </div>
-<div class="viewcode-block" id="parse_bool"><a class="viewcode-back" href="../../treecorr.html#treecorr.config.parse_bool">[docs]</a><span class="k">def</span> <span class="nf">parse_bool</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="parse_bool"><a class="viewcode-back" href="../../corr2.html#treecorr.config.parse_bool">[docs]</a><span class="k">def</span> <span class="nf">parse_bool</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span><span class="nb">str</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span> <span class="s">&#39;TRUE&#39;</span><span class="p">,</span> <span class="s">&#39;YES&#39;</span><span class="p">,</span> <span class="s">&#39;T&#39;</span><span class="p">,</span> <span class="s">&#39;Y&#39;</span> <span class="p">]:</span>
             <span class="k">return</span> <span class="bp">True</span>
@@ -100,7 +101,7 @@
         <span class="k">except</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Unable to parse </span><span class="si">%s</span><span class="s"> as a bool.&quot;</span><span class="o">%</span><span class="n">value</span><span class="p">)</span>
 </div>
-<div class="viewcode-block" id="parse_unit"><a class="viewcode-back" href="../../treecorr.html#treecorr.config.parse_unit">[docs]</a><span class="k">def</span> <span class="nf">parse_unit</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="parse_unit"><a class="viewcode-back" href="../../corr2.html#treecorr.config.parse_unit">[docs]</a><span class="k">def</span> <span class="nf">parse_unit</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Get the appropriate unit, allowing the value to merely start with one of the unit names.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">unit</span> <span class="ow">in</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">angle_units</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
@@ -108,7 +109,7 @@
     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Unable to parse </span><span class="si">%s</span><span class="s"> as an angle unit&quot;</span><span class="o">%</span><span class="n">value</span><span class="p">)</span>
 
 </div>
-<div class="viewcode-block" id="read_config"><a class="viewcode-back" href="../../treecorr.html#treecorr.config.read_config">[docs]</a><span class="k">def</span> <span class="nf">read_config</span><span class="p">(</span><span class="n">file_name</span><span class="p">):</span>
+<div class="viewcode-block" id="read_config"><a class="viewcode-back" href="../../corr2.html#treecorr.config.read_config">[docs]</a><span class="k">def</span> <span class="nf">read_config</span><span class="p">(</span><span class="n">file_name</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Read a configuration dict from a file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
@@ -125,7 +126,7 @@
     <span class="k">return</span> <span class="n">config</span>
 
 </div>
-<div class="viewcode-block" id="setup_logger"><a class="viewcode-back" href="../../treecorr.html#treecorr.config.setup_logger">[docs]</a><span class="k">def</span> <span class="nf">setup_logger</span><span class="p">(</span><span class="n">verbose</span><span class="p">,</span> <span class="n">log_file</span><span class="p">):</span>
+<div class="viewcode-block" id="setup_logger"><a class="viewcode-back" href="../../corr2.html#treecorr.config.setup_logger">[docs]</a><span class="k">def</span> <span class="nf">setup_logger</span><span class="p">(</span><span class="n">verbose</span><span class="p">,</span> <span class="n">log_file</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Parse the integer verbosity level from the command line args into a logging_level string</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">import</span> <span class="nn">logging</span>
@@ -144,10 +145,11 @@
     <span class="k">return</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&#39;treecorr&#39;</span><span class="p">)</span>
 
  </div>
-<div class="viewcode-block" id="check_config"><a class="viewcode-back" href="../../treecorr.html#treecorr.config.check_config">[docs]</a><span class="k">def</span> <span class="nf">check_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+<div class="viewcode-block" id="check_config"><a class="viewcode-back" href="../../corr2.html#treecorr.config.check_config">[docs]</a><span class="k">def</span> <span class="nf">check_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Check (and update) a config dict to conform to the given parameter rules.</span>
 <span class="sd">    The params dict has an entry for each valid config parameter whose value is a tuple</span>
 <span class="sd">    with the following items:</span>
+
 <span class="sd">     - type</span>
 <span class="sd">     - can be a list?</span>
 <span class="sd">     - default value</span>
@@ -196,7 +198,7 @@
     <span class="k">return</span> <span class="n">config</span>
 
 </div>
-<div class="viewcode-block" id="print_params"><a class="viewcode-back" href="../../treecorr.html#treecorr.config.print_params">[docs]</a><span class="k">def</span> <span class="nf">print_params</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+<div class="viewcode-block" id="print_params"><a class="viewcode-back" href="../../corr2.html#treecorr.config.print_params">[docs]</a><span class="k">def</span> <span class="nf">print_params</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;List the information about the valid parameters, given by the given params dict.</span>
 <span class="sd">    See check_config for the structure of the params dict.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -222,7 +224,7 @@
         <span class="k">print</span>
 
 </div>
-<div class="viewcode-block" id="convert"><a class="viewcode-back" href="../../treecorr.html#treecorr.config.convert">[docs]</a><span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">value_type</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+<div class="viewcode-block" id="convert"><a class="viewcode-back" href="../../corr2.html#treecorr.config.convert">[docs]</a><span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">value_type</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">value_type</span> <span class="o">==</span> <span class="nb">str</span> <span class="ow">and</span> <span class="s">&#39;unit&#39;</span> <span class="ow">in</span> <span class="n">key</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">parse_unit</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">value_type</span> <span class="o">==</span> <span class="nb">bool</span><span class="p">:</span>
@@ -230,7 +232,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">value_type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 </div>
-<div class="viewcode-block" id="get_from_list"><a class="viewcode-back" href="../../treecorr.html#treecorr.config.get_from_list">[docs]</a><span class="k">def</span> <span class="nf">get_from_list</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span> <span class="n">value_type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="get_from_list"><a class="viewcode-back" href="../../corr2.html#treecorr.config.get_from_list">[docs]</a><span class="k">def</span> <span class="nf">get_from_list</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span> <span class="n">value_type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;A helper function to get a key from config that is allowed to be a list</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
@@ -251,7 +253,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">default</span>
 </div>
-<div class="viewcode-block" id="get"><a class="viewcode-back" href="../../treecorr.html#treecorr.config.get">[docs]</a><span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value_type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="get"><a class="viewcode-back" href="../../corr2.html#treecorr.config.get">[docs]</a><span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value_type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;A helper function to get a key from config converting to a particular type</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
@@ -262,7 +264,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">default</span>
 </div>
-<div class="viewcode-block" id="merge_config"><a class="viewcode-back" href="../../treecorr.html#treecorr.config.merge_config">[docs]</a><span class="k">def</span> <span class="nf">merge_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="merge_config"><a class="viewcode-back" href="../../corr2.html#treecorr.config.merge_config">[docs]</a><span class="k">def</span> <span class="nf">merge_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span> <span class="n">config</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
         <span class="kn">import</span> <span class="nn">copy</span>
@@ -307,8 +309,9 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../index.html">treecorr  documentation</a> &raquo;</li>
-          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+        <li><a href="../../index.html">TreeCorr  documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../treecorr.html" >treecorr</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

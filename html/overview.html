@@ -1,0 +1,308 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Overview &mdash; TreeCorr  documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="TreeCorr  documentation" href="index.html" />
+    <link rel="next" title="Catalogs" href="catalog.html" />
+    <link rel="prev" title="TreeCorr Documentation" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="catalog.html" title="Catalogs"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="TreeCorr Documentation"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">TreeCorr  documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="overview">
+<h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
+<p>TreeCorr is a package for efficiently computing 2-point correlation functions.</p>
+<ul class="simple">
+<li>The code is hosted at <a class="reference external" href="https://github.com/rmjarvis/TreeCorr">https://github.com/rmjarvis/TreeCorr</a></li>
+<li>It can compute correlations of regular number counts, weak lensing shears, or
+scalar quantities such as convergence or CMB temperature fluctutations.</li>
+<li>2-point correlations may be auto-correlations or cross-correlations.  This
+includes shear-shear, count-shear, count-count, kappa-kappa, etc.  (Any
+combination of shear, kappa, and counts.)</li>
+<li>2-point functions can be done with correct curved-sky calculation using
+RA, Dec coordinates, on a Euclidean tangent plane, or in 3D using RA, Dec
+and a distance.</li>
+<li>The front end is in Python, which can be used as a Python module or as a
+standalone executable using configuration files.</li>
+<li>The actual computation of the correlation functions is done in C++ using ball
+trees (similar to kd trees), which make the calculation extremely
+efficient.</li>
+<li>When available, OpenMP is used to run in parallel on multi-core machines.</li>
+<li>Approximate running time for 2-point shear-shear is ~30 sec * (N/10^6) / core
+for a bin size of 0.1 in log(r).  It scales as b^(-2).  This is the slowest
+of the various kinds of correlations, so others will be a bit faster, but
+with the same scaling with N and b.</li>
+<li>3-point functions have not yet been migrated to the new API, but they should
+be available soon.</li>
+<li>Reference: Jarvis, Bernstein, &amp; Jain, 2004, MNRAS, 352, 338</li>
+</ul>
+<p>The code is licensed under a FreeBSD license.  Essentially, you can use the
+code in any way you want, but if you distribute it, you need to include the
+file <cite>TreeCorr_LICENSE</cite> with the distribution.  See that file for details.</p>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>The easiest way to install TreeCorr is with pip:</p>
+<blockquote>
+<div>sudo pip install TreeCorr</div></blockquote>
+<p>If you have previously installed TreeCorr, and want to upgrade to a new
+released version, you should do:</p>
+<blockquote>
+<div>sudo pip install TreeCorr &#8211;upgrade</div></blockquote>
+<p>To install TreeCorr on a system where you do not have sudo privileges,
+you can do:</p>
+<blockquote>
+<div>pip install TreeCorr &#8211;install-option=&#8221;&#8211;prefix=~&#8221;</div></blockquote>
+<p>NB: There is also a <cite>&#8211;user</cite> option with <cite>pip install</cite>, which installs into
+~/.local.  This is fine for the python module, but it puts the <cite>corr2</cite>
+executable into ~/.local/bin, which is probably not in your path.  The above
+command will instead install <cite>corr2</cite> into ~/bin.</p>
+<p>If you would rather download the tarball and install TreeCorr yourself,
+that is also relatively straightforward:</p>
+<ol class="arabic">
+<li><p class="first">Dependencies: All dependencies should be installed automatically for you by
+setup.py, so you should not need to worry about these.  But if you are
+interested, the dependencies are:</p>
+<blockquote>
+<div><ul class="simple">
+<li>numpy</li>
+<li>fitsio: TreeCorr can use either fitsio or pyfits (now part of astropy),
+so it will only install fitsio if none of these are present on your
+system.</li>
+<li>pandas: This package significantly speeds up the reading of ASCII
+input catalogs over the numpy functions loadtxt or genfromtxt.</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">Download the zip file or tarball of the current code from:</p>
+<p><a class="reference external" href="https://github.com/rmjarvis/TreeCorr/releases/tag/v3.0.2">https://github.com/rmjarvis/TreeCorr/releases/tag/v3.0.2</a></p>
+</li>
+<li><p class="first">Unzip the archive with either of the following (depending on which kind
+of archive you downloaded):</p>
+<blockquote>
+<div><p>unzip TreeCorr-3.0.2.zip
+tar xvzf TreeCorr-3.0.2.tar.gz</p>
+</div></blockquote>
+<p>It will unzip into the directory TreeCorr-3.0.2. Change to that directory:</p>
+<blockquote>
+<div><p>cd TreeCorr-3.0.2</p>
+</div></blockquote>
+</li>
+<li><p class="first">Install with the normal setup.py options.  Typically this would be the
+command</p>
+<blockquote>
+<div><p>python setup.py install &#8211;prefix=/your/home/directory</p>
+</div></blockquote>
+<p>This will install the executable <cite>corr2</cite> at</p>
+<blockquote>
+<div><p>/your/home/directory/bin/corr2</p>
+</div></blockquote>
+<p>It will also install the Python module called treecorr which you can use
+from within Python.</p>
+</li>
+<li><p class="first">(optional) If you want to run the unit tests, you can do the following:</p>
+<blockquote>
+<div><p>cd tests
+nosetests</p>
+</div></blockquote>
+<p>They do take a bit of time to run, since I use around 1 million galaxies
+for many of the tests.  On the order of 5-10 minutes when using a single
+core, or less when OpenMP is enabled.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="two-point-correlations">
+<h2>Two-point Correlations<a class="headerlink" href="#two-point-correlations" title="Permalink to this headline">¶</a></h2>
+<p>This software is able to compute several varieties of two-point correlations:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">NN:</th><td class="field-body">the normal two point correlation function of things like 2dF that
+correlate the galaxy counts at each position.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">NG:</th><td class="field-body">correlation of counts with shear.  This is what is often called
+galaxy-galaxy lensing.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">GG:</th><td class="field-body">two-point shear correlation function.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">NK:</th><td class="field-body">correlation of counts with kappa.  While kappa is nominally the lensing
+convergence, it could really be any scalar quantity, like temperature,
+size, etc.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">KG:</th><td class="field-body">correlation of convergence with shear.  Like the NG calculation, but
+weighting the pairs by the convergence values the foreground points.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">KK:</th><td class="field-body">two-point kappa correlation function.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="running-corr2">
+<h2>Running corr2<a class="headerlink" href="#running-corr2" title="Permalink to this headline">¶</a></h2>
+<p>The executable corr2 takes one required command-line argument, which is the
+name of a configuration file:</p>
+<blockquote>
+<div>corr2 config_file</div></blockquote>
+<p>A sample configuration file is provided, called sample.params.  See the
+TreeCorr wiki page</p>
+<p><a class="reference external" href="https://github.com/rmjarvis/TreeCorr/wiki/Configuration-Parameters">https://github.com/rmjarvis/TreeCorr/wiki/Configuration-Parameters</a></p>
+<p>for the complete documentation about the allowed parameters.</p>
+<p>You can also specify parameters on the command line after the name of
+the configuration file. e.g.:</p>
+<blockquote>
+<div>corr2 config_file file_name=file1.dat g2_file_name=file1.out
+corr2 config_file file_name=file2.dat g2_file_name=file2.out
+...</div></blockquote>
+<p>This can be useful when running the program from a script for lots of input
+files.</p>
+</div>
+<div class="section" id="using-the-python-module">
+<h2>Using the Python module<a class="headerlink" href="#using-the-python-module" title="Permalink to this headline">¶</a></h2>
+<p>The same functionality can be achieved from within Python using a Python dict
+for the configuration parameters:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">treecorr</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">read_config</span><span class="p">(</span><span class="n">config_file</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s">&#39;file_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;file1.dat&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s">&#39;g2_file_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;file1.out&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">treecorr</span><span class="o">.</span><span class="n">corr2</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s">&#39;file_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;file2.dat&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s">&#39;g2_file_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;file2.out&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">treecorr</span><span class="o">.</span><span class="n">corr2</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>However, the Python module gives you much more flexibility in how to specify
+the input and output, including going directly from and to numpy arrays within
+Python.  For more information, see the wiki page:</p>
+<p><a class="reference external" href="https://github.com/rmjarvis/TreeCorr/wiki/Guide-to-using-TreeCorr-in-Python">https://github.com/rmjarvis/TreeCorr/wiki/Guide-to-using-TreeCorr-in-Python</a></p>
+</div>
+<div class="section" id="reporting-bugs">
+<h2>Reporting bugs<a class="headerlink" href="#reporting-bugs" title="Permalink to this headline">¶</a></h2>
+<p>If you find a bug running the code, please report it at:</p>
+<p><a class="reference external" href="https://github.com/rmjarvis/TreeCorr/issues">https://github.com/rmjarvis/TreeCorr/issues</a></p>
+<p>Click &#8220;New Issue&#8221;, which will open up a form for you to fill in with the
+details of the problem you are having.</p>
+</div>
+<div class="section" id="requesting-features">
+<h2>Requesting features<a class="headerlink" href="#requesting-features" title="Permalink to this headline">¶</a></h2>
+<p>If you would like to request a new feature, do the same thing.  Open a new
+issue and fill in the details of the feature you would like added to TreeCorr.
+Or if there is already an issue for your desired feature, please add to the
+discussion, describing your use case.  The more people who say they want a
+feature, the more likely I am to get around to it sooner than later.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Overview</a><ul>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#two-point-correlations">Two-point Correlations</a></li>
+<li><a class="reference internal" href="#running-corr2">Running corr2</a></li>
+<li><a class="reference internal" href="#using-the-python-module">Using the Python module</a></li>
+<li><a class="reference internal" href="#reporting-bugs">Reporting bugs</a></li>
+<li><a class="reference internal" href="#requesting-features">Requesting features</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">TreeCorr Documentation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="catalog.html"
+                        title="next chapter">Catalogs</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/overview.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="catalog.html" title="Catalogs"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="TreeCorr Documentation"
+             >previous</a> |</li>
+        <li><a href="index.html">TreeCorr  documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Mike Jarvis.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

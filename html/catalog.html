@@ -1,0 +1,335 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Catalogs &mdash; TreeCorr  documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="TreeCorr  documentation" href="index.html" />
+    <link rel="next" title="Two-point Correlation Functions" href="correlation.html" />
+    <link rel="prev" title="Overview" href="overview.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="correlation.html" title="Two-point Correlation Functions"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="overview.html" title="Overview"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">TreeCorr  documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="catalogs">
+<h1>Catalogs<a class="headerlink" href="#catalogs" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="the-catalog-class">
+<h2>The Catalog class<a class="headerlink" href="#the-catalog-class" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="treecorr.Catalog">
+<em class="property">class </em><tt class="descclassname">treecorr.</tt><tt class="descname">Catalog</tt><big>(</big><em>file_name=None</em>, <em>config=None</em>, <em>num=0</em>, <em>logger=None</em>, <em>is_rand=False</em>, <em>x=None</em>, <em>y=None</em>, <em>ra=None</em>, <em>dec=None</em>, <em>r=None</em>, <em>w=None</em>, <em>flag=None</em>, <em>g1=None</em>, <em>g2=None</em>, <em>k=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#treecorr.Catalog" title="Permalink to this definition">¶</a></dt>
+<dd><p>A classs storing the catalog information for a particular set of objects
+to be correlated in some way.</p>
+<p>The usual way to build this is using a config dict:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cat</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">Catalog</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This uses the information in the config dict to read the input file, which may be either
+a FITS catalog or an ASCII catalog.  Normally the distinction is made according to the
+file_name&#8217;s extension, but it can also be set explicitly with config[&#8216;file_type&#8217;].</p>
+<p>See <a class="reference external" href="https://github.com/rmjarvis/TreeCorr/wiki/Configuration-Parameters">https://github.com/rmjarvis/TreeCorr/wiki/Configuration-Parameters</a>
+for a complete list of all of the relevant configuration parameters.  In particular,
+the first section &#8220;Parameters about the input file&#8221;.</p>
+<p>The num parameter is either 0 or 1 (default 0), which specifies whether this corresponds
+to the first or second file in the configuration file.  e.g. if you are doing an NG
+correlation function, then the first file is not required to have g1_col, g2_col set.
+Thus, you would define these as something like <cite>g1_col = 0 3</cite> and <cite>g2_col = 0 4</cite>.
+Then when reading the first file, you would use num=0 to indicate that you want to use the
+first elements of these vectors (i.e. no g1 or g2 columns), and for the second file, you
+would use num=1 to use columsn 3 and 4.</p>
+<p>An alternate way to build a Catalog is to provide the data vectors by hand.  This may
+be more convenient when using this as part of a longer script where you are building the
+data vectors in python and then want to compute the correlation function.  The syntax for this
+is:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cat</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">Catalog</span><span class="p">(</span><span class="n">g1</span><span class="o">=</span><span class="n">g1</span><span class="p">,</span> <span class="n">g2</span><span class="o">=</span><span class="n">g2</span><span class="p">,</span> <span class="n">ra</span><span class="o">=</span><span class="n">ra</span><span class="p">,</span> <span class="n">dec</span><span class="o">=</span><span class="n">dec</span><span class="p">,</span>
+<span class="go">                           ra_units=ra_units, dec_units=dec_units)</span>
+</pre></div>
+</div>
+<p>Each of these data vectors should be a numpy array.  For x,y, the units fields are optional,
+in which case the units are assumed to be arcsec.  But for ra,dec they are required.
+These units parameters may alternatively be provided in the config dict as above.
+Valid columns to include are: x,y,ra,dec,g1,g2,k,w.  As usual, exactly one of (x,y) or
+(ra,dec) must be given.  The others are optional, although if g1 or g2 is given, the other
+must also be given.  Flags may be included by setting w=0 for those objects.</p>
+<p>Attributes:</p>
+<blockquote>
+<div><p>A Catalog object will have available the following attributes:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">x:</th><td class="field-body">The x positions, if defined, as a numpy array. (None otherwise)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">y:</th><td class="field-body">The y positions, if defined, as a numpy array. (None otherwise)</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">ra:</th><td class="field-body">The right ascension, if defined, as a numpy array. (None otherwise)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">dec:</th><td class="field-body">The declination, if defined, as a numpy array. (None otherwise)</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">r:</th><td class="field-body">The distance, if defined, as a numpy array. (None otherwise)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">w:</th><td class="field-body">The weights, as a numpy array. (All 1&#8217;s if no weight column provided.)</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">g1:</th><td class="field-body">The g1 component of the shear, if defined, as a numpy array. (None otherwise)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">g2:</th><td class="field-body">The g2 component of the shear, if defined, as a numpy array. (None otherwise)</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">k:</th><td class="field-body">The convergence, kappa, if defined, as a numpy array. (None otherwise)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">nobj:</th><td class="field-body">The number of objects with non-zero weight</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">sumw:</th><td class="field-body">The sum of the weights</td>
+</tr>
+<tr class="field-even field"><th class="field-name">varg:</th><td class="field-body">The shear variance (aka shape noise) (0 if g1,g2 are not defined)</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">vark:</th><td class="field-body">The kappa variance (0 if k is not defined)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">name:</th><td class="field-body">When constructed from a file, this will be the file_name.  It is only used as
+a reference name in logging output  after construction, so if you construct it 
+from data vectors directly, it will be &#8216;&#8217;.  You may assign to it if you want to
+give this catalog a specific name.</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<dl class="method">
+<dt id="treecorr.Catalog.checkForNaN">
+<tt class="descname">checkForNaN</tt><big>(</big><em>col</em>, <em>col_str</em><big>)</big><a class="headerlink" href="#treecorr.Catalog.checkForNaN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="treecorr.Catalog.getGField">
+<tt class="descname">getGField</tt><big>(</big><em>min_sep</em>, <em>max_sep</em>, <em>b</em>, <em>logger=None</em>, <em>config=None</em><big>)</big><a class="headerlink" href="#treecorr.Catalog.getGField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a GField based on the g1,g2 values in this catalog.</p>
+<p>The GField object is cached, so this is efficient to call multiple times.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.Catalog.getGSimpleField">
+<tt class="descname">getGSimpleField</tt><big>(</big><em>logger=None</em>, <em>config=None</em><big>)</big><a class="headerlink" href="#treecorr.Catalog.getGSimpleField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a GSimpleField based on the g1,g2 values in this catalog.</p>
+<p>The GSimpleField object is cached, so this is efficient to call multiple times.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.Catalog.getKField">
+<tt class="descname">getKField</tt><big>(</big><em>min_sep</em>, <em>max_sep</em>, <em>b</em>, <em>logger=None</em>, <em>config=None</em><big>)</big><a class="headerlink" href="#treecorr.Catalog.getKField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a KField based on the k values in this catalog.</p>
+<p>The KField object is cached, so this is efficient to call multiple times.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.Catalog.getKSimpleField">
+<tt class="descname">getKSimpleField</tt><big>(</big><em>logger=None</em>, <em>config=None</em><big>)</big><a class="headerlink" href="#treecorr.Catalog.getKSimpleField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a KSimpleField based on the k values in this catalog.</p>
+<p>The KSimpleField object is cached, so this is efficient to call multiple times.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.Catalog.getNField">
+<tt class="descname">getNField</tt><big>(</big><em>min_sep</em>, <em>max_sep</em>, <em>b</em>, <em>logger=None</em>, <em>config=None</em><big>)</big><a class="headerlink" href="#treecorr.Catalog.getNField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an NField based on the positions in this catalog.</p>
+<p>The NField object is cached, so this is efficient to call multiple times.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.Catalog.getNSimpleField">
+<tt class="descname">getNSimpleField</tt><big>(</big><em>logger=None</em>, <em>config=None</em><big>)</big><a class="headerlink" href="#treecorr.Catalog.getNSimpleField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an NSimpleField based on the positions in this catalog.</p>
+<p>The NSimpleField object is cached, so this is efficient to call multiple times.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.Catalog.read_ascii">
+<tt class="descname">read_ascii</tt><big>(</big><em>file_name</em>, <em>num=0</em>, <em>is_rand=False</em><big>)</big><a class="headerlink" href="#treecorr.Catalog.read_ascii" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the catalog from an ASCII file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.Catalog.read_fits">
+<tt class="descname">read_fits</tt><big>(</big><em>file_name</em>, <em>num=0</em>, <em>is_rand=False</em><big>)</big><a class="headerlink" href="#treecorr.Catalog.read_fits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the catalog from a FITS file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.Catalog.read_fitsio">
+<tt class="descname">read_fitsio</tt><big>(</big><em>file_name</em>, <em>num</em>, <em>is_rand</em>, <em>x_col</em>, <em>y_col</em>, <em>ra_col</em>, <em>dec_col</em>, <em>r_col</em>, <em>w_col</em>, <em>flag_col</em>, <em>g1_col</em>, <em>g2_col</em>, <em>k_col</em><big>)</big><a class="headerlink" href="#treecorr.Catalog.read_fitsio" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="treecorr.Catalog.read_pyfits">
+<tt class="descname">read_pyfits</tt><big>(</big><em>file_name</em>, <em>num</em>, <em>is_rand</em>, <em>x_col</em>, <em>y_col</em>, <em>ra_col</em>, <em>dec_col</em>, <em>r_col</em>, <em>w_col</em>, <em>flag_col</em>, <em>g1_col</em>, <em>g2_col</em>, <em>k_col</em><big>)</big><a class="headerlink" href="#treecorr.Catalog.read_pyfits" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="treecorr.Catalog.write">
+<tt class="descname">write</tt><big>(</big><em>file_name</em><big>)</big><a class="headerlink" href="#treecorr.Catalog.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the catalog to a file.  Currently only ASCII output is supported.</p>
+<p>Note that the x,y,ra,dec columns are output using the same units as were used when
+building the Catalog.  If you want to use a different unit, you can set the catalog&#8217;s
+units directly before writing.  e.g.:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cat</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">Catalog</span><span class="p">(</span><span class="s">&#39;cat.dat&#39;</span><span class="p">,</span> <span class="n">ra</span><span class="o">=</span><span class="n">ra</span><span class="p">,</span> <span class="n">dec</span><span class="o">=</span><span class="n">dec</span><span class="p">,</span>
+<span class="go">                           ra_units=&#39;hours&#39;, dec_units=&#39;degrees&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cat</span><span class="o">.</span><span class="n">ra_units</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">degrees</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cat</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;new_cat.dat&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-treecorr.catalog">
+<span id="other-utilities-related-to-catalogs"></span><h2>Other utilities related to catalogs<a class="headerlink" href="#module-treecorr.catalog" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-catalog"></span><dl class="function">
+<dt id="treecorr.catalog.calculateVarG">
+<tt class="descclassname">treecorr.catalog.</tt><tt class="descname">calculateVarG</tt><big>(</big><em>cat_list</em><big>)</big><a class="reference internal" href="_modules/treecorr/catalog.html#calculateVarG"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.catalog.calculateVarG" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the overall shear variance from a list of catalogs.</p>
+<p>The catalogs are assumed to be equivalent, so this is just the average shear
+variance weighted by the number of objects in each catalog.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="treecorr.catalog.calculateVarK">
+<tt class="descclassname">treecorr.catalog.</tt><tt class="descname">calculateVarK</tt><big>(</big><em>cat_list</em><big>)</big><a class="reference internal" href="_modules/treecorr/catalog.html#calculateVarK"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.catalog.calculateVarK" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the overall kappa variance from a list of catalogs.</p>
+<p>The catalogs are assumed to be equivalent, so this is just the average kappa
+variance weighted by the number of objects in each catalog.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="treecorr.catalog.isGColRequired">
+<tt class="descclassname">treecorr.catalog.</tt><tt class="descname">isGColRequired</tt><big>(</big><em>config</em>, <em>num</em><big>)</big><a class="reference internal" href="_modules/treecorr/catalog.html#isGColRequired"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.catalog.isGColRequired" title="Permalink to this definition">¶</a></dt>
+<dd><p>A quick helper function that checks whether we need to bother reading the g1,g2 columns.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="treecorr.catalog.isKColRequired">
+<tt class="descclassname">treecorr.catalog.</tt><tt class="descname">isKColRequired</tt><big>(</big><em>config</em>, <em>num</em><big>)</big><a class="reference internal" href="_modules/treecorr/catalog.html#isKColRequired"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.catalog.isKColRequired" title="Permalink to this definition">¶</a></dt>
+<dd><p>A quick helper function that checks whether we need to bother reading the k column.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="treecorr.catalog.read_catalogs">
+<tt class="descclassname">treecorr.catalog.</tt><tt class="descname">read_catalogs</tt><big>(</big><em>config</em>, <em>key=None</em>, <em>list_key=None</em>, <em>num=0</em>, <em>logger=None</em>, <em>is_rand=None</em><big>)</big><a class="reference internal" href="_modules/treecorr/catalog.html#read_catalogs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.catalog.read_catalogs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read in a list of catalogs for the given key.</p>
+<p>key should be the file_name parameter or similar key word.
+list_key should be be corresponging file_list parameter, if appropriate.
+At least one of key or list_key must be provided.  If both are provided, then only
+one of these should be in the config dict.</p>
+<p>If neither key nor list_key is found in the config dict, then a null list [] is returned.</p>
+<p>num indicates which key to use if any of the fields like x_col, flip_g1, etc. are lists.
+The default is 0, which means to use the first item in the list if they are lists.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Catalogs</a><ul>
+<li><a class="reference internal" href="#the-catalog-class">The Catalog class</a></li>
+<li><a class="reference internal" href="#module-treecorr.catalog">Other utilities related to catalogs</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="overview.html"
+                        title="previous chapter">Overview</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="correlation.html"
+                        title="next chapter">Two-point Correlation Functions</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/catalog.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="correlation.html" title="Two-point Correlation Functions"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="overview.html" title="Overview"
+             >previous</a> |</li>
+        <li><a href="index.html">TreeCorr  documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Mike Jarvis.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,303 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>GG: Shear-shear correlations &mdash; TreeCorr  documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="TreeCorr  documentation" href="index.html" />
+    <link rel="up" title="Two-point Correlation Functions" href="correlation.html" />
+    <link rel="next" title="NG: Count-shear correlations" href="ng.html" />
+    <link rel="prev" title="NN: Count-count correlations" href="nn.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ng.html" title="NG: Count-shear correlations"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="nn.html" title="NN: Count-count correlations"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">TreeCorr  documentation</a> &raquo;</li>
+          <li><a href="correlation.html" accesskey="U">Two-point Correlation Functions</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="gg-shear-shear-correlations">
+<h1>GG: Shear-shear correlations<a class="headerlink" href="#gg-shear-shear-correlations" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="treecorr.G2Correlation">
+<em class="property">class </em><tt class="descclassname">treecorr.</tt><tt class="descname">G2Correlation</tt><big>(</big><em>config=None</em>, <em>logger=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#treecorr.G2Correlation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">treecorr.binnedcorr2.BinnedCorr2</span></tt></p>
+<p>This class handles the calculation and storage of a 2-point shear-shear correlation
+function.</p>
+<p>It holds the following attributes:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Logr:</th><td class="field-body">The nominal center of the bin in log(r).</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Meanlogr:</th><td class="field-body">The (weighted) mean value of log(r) for the pairs in each bin.
+If there are no pairs in a bin, then logr will be used instead.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Xip:</th><td class="field-body">The correlation function, xi_plus(r).</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Xim:</th><td class="field-body">The correlation funciton, xi_minus(r).</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Xip_im:</th><td class="field-body">The imaginary part of xi_plus(r).</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Xim_im:</th><td class="field-body">The imaginary part of xi_plus(r).</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Varxi:</th><td class="field-body">The variance of xip and xim, only including the shape noise propagated
+into the final correlation.  This does not include sample variance, so
+it is always an underestimate of the actual variance.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Weight:</th><td class="field-body">The total weight in each bin.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Npairs:</th><td class="field-body">The number of pairs going into each bin.</td>
+</tr>
+</tbody>
+</table>
+<p>The usage pattern is as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">gg</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">G2Correlation</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gg</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">cat1</span><span class="p">)</span>        <span class="c"># For auto-correlation.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gg</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span><span class="n">cat2</span><span class="p">)</span>   <span class="c"># For cross-correlation.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gg</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>     <span class="c"># Write out to a file.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xip</span> <span class="o">=</span> <span class="n">gg</span><span class="o">.</span><span class="n">xip</span>            <span class="c"># Or access the correlation function directly.</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="treecorr.G2Correlation.calculateGamSq">
+<tt class="descname">calculateGamSq</tt><big>(</big><em>eb=False</em><big>)</big><a class="headerlink" href="#treecorr.G2Correlation.calculateGamSq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the tophat shear variance from the correlation function.</p>
+<dl class="docutils">
+<dt>::</dt>
+<dd>&lt;Gam^2&gt;(R) = int_r=0..2R [s^2 dlogr S+(s) xi+(r)]
+&lt;Gam^2_E&gt;(R) = int_r=0..2R [1/2 s^2 dlogr (S+(s) xi+(r) + S-(s) xi-(r)]
+&lt;Gam^2_B&gt;(R) = int_r=0..2R [1/2 s^2 dlogr (S+(s) xi+(r) - S-(s) xi-(r)]</dd>
+</dl>
+<dl class="docutils">
+<dt>::</dt>
+<dd>S+(s) = 1/Pi * (4*arccos(s/2) - s sqrt(4-s^2) )
+S-(s) (s&lt;=2):  1/(Pi s^4) * ( s sqrt(4-s^2) (6-s^2) - 8(3-s^2) arcsin(s/2) )
+.     (s&gt;=2):  4(s^2-3)/s^4</dd>
+</dl>
+<p>cf Schneider, et al, 2001: <a class="reference external" href="http://adsabs.harvard.edu/abs/2002A%26A...389..729S">http://adsabs.harvard.edu/abs/2002A%26A...389..729S</a></p>
+<p>The default behavior is not to compute the E/B versions.  They are calculated if
+eb is set to True.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">(gamsq, vargamsq)                                if eb == False
+(gamsq, vargamsq, gamsq_e, gamsq_b, vargamsq_e)  if eb == True</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.G2Correlation.calculateMapSq">
+<tt class="descname">calculateMapSq</tt><big>(</big><em>m2_uform=None</em><big>)</big><a class="headerlink" href="#treecorr.G2Correlation.calculateMapSq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the aperture mass statistics from the correlation function.</p>
+<dl class="docutils">
+<dt>::</dt>
+<dd>&lt;Map^2&gt;(R) = int_r=0..rmax [ 1/2 (r/R)^2 dlogr (T+(r/R) xi+(r) + T-(r/R) xi-(r)) ]
+&lt;Mx^2&gt;(R)  = int_r=0..rmax [ 1/2 (r/R)^2 dlogr (T+(r/R) xi+(r) - T-(r/R) xi-(r)) ]</dd>
+</dl>
+<p>The m2_uform parameter sets which definition of the aperture mass to use.
+The default is to look in the config dict that was used to build the catalog,
+or use &#8216;Crittenden&#8217; if it is not specified.</p>
+<p>If m2_uform == &#8216;Crittenden&#8217;:</p>
+<div class="highlight-python"><div class="highlight"><pre>U(r) = 1/2Pi (1-r^2) exp(-r^2/2)
+Q(r) = 1/4Pi r^2 exp(-r^2/2)
+T+(s) = (s^4 - 16s^2 + 32)/128 exp(-s^2/4)
+T-(s) = s^4/128 exp(-s^2/4)
+rmax = infinity
+</pre></div>
+</div>
+<p>If m2_uform == &#8216;Schneider&#8217;:</p>
+<div class="highlight-python"><div class="highlight"><pre>U(r) = 9/Pi (1-r^2) (1/3-r^2)
+Q(r) = 6/Pi r^2 (1-r^2)
+T+(s) = 12/5Pi (2-15s^2) arccos(s/2) \
+          + 1/(100Pi) s sqrt(4-s^2) (120 + 2320s^2 - 754s^4 + 132s^6 - 9s^8)
+T-(s) = 3/70Pi s^3 (4-s^2)^(7/2)
+rmax = 2R
+</pre></div>
+</div>
+<p>cf. Schneider, et al (2001): <a class="reference external" href="http://xxx.lanl.gov/abs/astro-ph/0112441">http://xxx.lanl.gov/abs/astro-ph/0112441</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">(mapsq, mapsq_im, mxsq, mxsq_im, varmapsq)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.G2Correlation.clear">
+<tt class="descname">clear</tt><big>(</big><big>)</big><a class="headerlink" href="#treecorr.G2Correlation.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear the data vectors</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.G2Correlation.finalize">
+<tt class="descname">finalize</tt><big>(</big><em>varg1</em>, <em>varg2</em><big>)</big><a class="headerlink" href="#treecorr.G2Correlation.finalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finalize the calculation of the correlation function.</p>
+<p>The process_auto and process_cross commands accumulate values in each bin,
+so they can be called multiple times if appropriate.  Afterwards, this command
+finishes the calculation by dividing each column by the total weight.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.G2Correlation.process">
+<tt class="descname">process</tt><big>(</big><em>cat1</em>, <em>cat2=None</em><big>)</big><a class="headerlink" href="#treecorr.G2Correlation.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the correlation function.</p>
+<p>If only 1 argument is given, then compute an auto-correlation function.
+If 2 arguments are given, then compute a cross-correlation function.</p>
+<p>Both arguments may be lists, in which case all items in the list are used 
+for that element of the correlation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.G2Correlation.process_auto">
+<tt class="descname">process_auto</tt><big>(</big><em>cat1</em><big>)</big><a class="headerlink" href="#treecorr.G2Correlation.process_auto" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process a single catalog, accumulating the auto-correlation.</p>
+<p>This accumulates the weighted sums into the bins, but does not finalize
+the calculation by dividing by the total weight at the end.  After
+calling this function as often as desired, the finalize() command will
+finish the calculation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.G2Correlation.process_cross">
+<tt class="descname">process_cross</tt><big>(</big><em>cat1</em>, <em>cat2</em><big>)</big><a class="headerlink" href="#treecorr.G2Correlation.process_cross" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process a single pair of catalogs, accumulating the cross-correlation.</p>
+<p>This accumulates the weighted sums into the bins, but does not finalize
+the calculation by dividing by the total weight at the end.  After
+calling this function as often as desired, the finalize() command will
+finish the calculation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.G2Correlation.process_pairwise">
+<tt class="descname">process_pairwise</tt><big>(</big><em>cat1</em>, <em>cat2</em><big>)</big><a class="headerlink" href="#treecorr.G2Correlation.process_pairwise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process a single pair of catalogs, accumulating the cross-correlation, only using
+the corresponding pairs of objects in each catalog.</p>
+<p>This accumulates the weighted sums into the bins, but does not finalize
+the calculation by dividing by the total weight at the end.  After
+calling this function as often as desired, the finalize() command will
+finish the calculation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.G2Correlation.write">
+<tt class="descname">write</tt><big>(</big><em>file_name</em><big>)</big><a class="headerlink" href="#treecorr.G2Correlation.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the correlation function to the file, file_name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.G2Correlation.writeMapSq">
+<tt class="descname">writeMapSq</tt><big>(</big><em>file_name</em>, <em>m2_uform=None</em><big>)</big><a class="headerlink" href="#treecorr.G2Correlation.writeMapSq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the aperture mass statistics based on the correlation function to the
+file, file_name.</p>
+<p>See calculateMapSq for an explanation of the m2_uform parameter.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="nn.html"
+                        title="previous chapter">NN: Count-count correlations</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ng.html"
+                        title="next chapter">NG: Count-shear correlations</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/gg.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ng.html" title="NG: Count-shear correlations"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="nn.html" title="NN: Count-count correlations"
+             >previous</a> |</li>
+        <li><a href="index.html">TreeCorr  documentation</a> &raquo;</li>
+          <li><a href="correlation.html" >Two-point Correlation Functions</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Mike Jarvis.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

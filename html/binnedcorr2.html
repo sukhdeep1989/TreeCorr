@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>BinnedCorr2 &mdash; TreeCorr  documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="TreeCorr  documentation" href="index.html" />
+    <link rel="up" title="Two-point Correlation Functions" href="correlation.html" />
+    <link rel="next" title="NN: Count-count correlations" href="nn.html" />
+    <link rel="prev" title="Two-point Correlation Functions" href="correlation.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="nn.html" title="NN: Count-count correlations"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="correlation.html" title="Two-point Correlation Functions"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">TreeCorr  documentation</a> &raquo;</li>
+          <li><a href="correlation.html" accesskey="U">Two-point Correlation Functions</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="binnedcorr2">
+<h1>BinnedCorr2<a class="headerlink" href="#binnedcorr2" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="treecorr.BinnedCorr2">
+<em class="property">class </em><tt class="descclassname">treecorr.</tt><tt class="descname">BinnedCorr2</tt><big>(</big><em>config=None</em>, <em>logger=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#treecorr.BinnedCorr2" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class stores the results of a 2-point correlation calculation, along with some
+ancillary data.</p>
+<p>This is a base class that is not intended to be constructed directly.  But it has a few
+helper functions that derived classes can use to help perform their calculations.  See
+the derived classes for more details:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">G2Correlation</span></tt> handles shear-shear correlation functions</li>
+<li><tt class="docutils literal"><span class="pre">N2Correlation</span></tt> handles count-count correlation functions</li>
+<li><tt class="docutils literal"><span class="pre">K2Correlation</span></tt> handles kappa-kappa correlation functions</li>
+<li><tt class="docutils literal"><span class="pre">NGCorrelation</span></tt> handles count-shear correlation functions</li>
+<li><tt class="docutils literal"><span class="pre">NKCorrelation</span></tt> handles count-kappa correlation functions</li>
+<li><tt class="docutils literal"><span class="pre">KGCorrelation</span></tt> handles kappa-shear correlation functions</li>
+</ul>
+<p>Note that when we refer to kappa in the correlation function, that is because I
+come from a weak lensing perspective.  But really any scalar quantity may be used
+here.  CMB temperature fluctuations for example.</p>
+<p>The constructor for all derived classes take a config dict as the first argument,
+since this is often how we keep track of parameters, but if you don&#8217;t want to 
+use one or if you want to change some parameters from what are in a config dict,
+then you can use normal kwargs, which take precedence over anything in the config dict.</p>
+<p>Exactly three of the following 4 parameters are required either in the config dict or
+in kwargs:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>nbins</strong> &#8211; How many bins to use</li>
+<li><strong>bin_size</strong> &#8211; The width of the bins in log(separation)</li>
+<li><strong>min_sep</strong> &#8211; The minimum separation; the left edge of the first bin</li>
+<li><strong>max_sep</strong> &#8211; The maximum separation; the right edge of the last bin</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Any three of these may be provided.  The fourth number will be calculated from them.</p>
+<p>Note that if bin_size, min_sep, and max_sep are specified, then the nominal number of
+bins is not necessarily and integer.  In this case, nbins will be rounded up to the 
+next higher integer, and max_sep will be updated to account for this.</p>
+<dl class="method">
+<dt id="treecorr.BinnedCorr2.gen_write">
+<tt class="descname">gen_write</tt><big>(</big><em>file_name</em>, <em>headers</em>, <em>columns</em><big>)</big><a class="headerlink" href="#treecorr.BinnedCorr2.gen_write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write some columns to an output file with the given headers.</p>
+<p>We do this basic functionality a lot, so put the code to do it in one place.</p>
+<p>headers should be a list of strings.
+columns should be a list of numpy arrays.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="correlation.html"
+                        title="previous chapter">Two-point Correlation Functions</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="nn.html"
+                        title="next chapter">NN: Count-count correlations</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/binnedcorr2.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="nn.html" title="NN: Count-count correlations"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="correlation.html" title="Two-point Correlation Functions"
+             >previous</a> |</li>
+        <li><a href="index.html">TreeCorr  documentation</a> &raquo;</li>
+          <li><a href="correlation.html" >Two-point Correlation Functions</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Mike Jarvis.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

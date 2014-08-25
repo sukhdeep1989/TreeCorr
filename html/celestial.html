@@ -1,0 +1,330 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Celestial Coordinates &mdash; TreeCorr  documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="TreeCorr  documentation" href="index.html" />
+    <link rel="next" title="corr2" href="corr2.html" />
+    <link rel="prev" title="Fields" href="field.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="corr2.html" title="corr2"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="field.html" title="Fields"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">TreeCorr  documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="celestial-coordinates">
+<h1>Celestial Coordinates<a class="headerlink" href="#celestial-coordinates" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="the-celestialcoord-class">
+<h2>The CelestialCoord class<a class="headerlink" href="#the-celestialcoord-class" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="treecorr.CelestialCoord">
+<em class="property">class </em><tt class="descclassname">treecorr.</tt><tt class="descname">CelestialCoord</tt><big>(</big><em>ra</em>, <em>dec</em><big>)</big><a class="headerlink" href="#treecorr.CelestialCoord" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class defines a position on the celestial sphere, normally given by
+two angles, <cite>ra</cite> and <cite>dec</cite>.</p>
+<p>Mostly this class exists to enforce the units when a position is really a location on
+the celestial sphere rather than using PositionD as we normally do for positions.
+In that role, it can be considered a lightweight wrapper around two angles, <cite>ra</cite> and <cite>dec</cite>.
+They are accessible as <cite>coord.ra</cite> and <cite>coord.dec</cite>.</p>
+<p>However, there are a few useful functions that we provide.</p>
+<p>The distance between two coordinate positions can be calculated with</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">coord</span><span class="o">.</span><span class="n">distanceTo</span><span class="p">(</span><span class="n">other_coord</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>There are several tangent plane projections you can use:</dt>
+<dd><ul class="first last simple">
+<li>a Lambert projection, which preserves area</li>
+<li>a stereographic projection, which preserves angles</li>
+<li>a gnomonic projection, which makes all great circles straight lines</li>
+<li>a Postel projection, which preserves distances from the tangent point</li>
+</ul>
+</dd>
+</dl>
+<p>See the project() and deproject() functions for details.</p>
+<p>You can also precess a coordinate from one epoch to another and get galactic coordinates
+with, e.g.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">coord1950</span> <span class="o">=</span> <span class="n">coord2000</span><span class="o">.</span><span class="n">precess</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span> <span class="mi">1950</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">el</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">coord</span><span class="o">.</span><span class="n">galactic</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We don&#8217;t use either of these for anything within TreeCorr, but I had the code to do it
+lying around, so I included it here in case someone might find it useful.</p>
+<p><em>Initialization:</em></p>
+<p>A CelestialCoord object is initialized with the following command:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">coord</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">CelestialCoord</span><span class="p">(</span><span class="n">ra</span><span class="p">,</span> <span class="n">dec</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ra</strong> &#8211; The right ascension in radians.</li>
+<li><strong>dec</strong> &#8211; The declination in radian.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="treecorr.CelestialCoord.angleBetween">
+<tt class="descname">angleBetween</tt><big>(</big><em>coord1</em>, <em>coord2</em><big>)</big><a class="headerlink" href="#treecorr.CelestialCoord.angleBetween" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the open angle at the location of the current coord between <cite>coord1</cite> and <cite>coord2</cite>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.CelestialCoord.area">
+<tt class="descname">area</tt><big>(</big><em>coord1</em>, <em>coord2</em><big>)</big><a class="headerlink" href="#treecorr.CelestialCoord.area" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the area of the spherical triangle defined by the current coord, <cite>coord1</cite>,
+and <cite>coord2</cite>, returning the area in steradians.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.CelestialCoord.copy">
+<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#treecorr.CelestialCoord.copy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="treecorr.CelestialCoord.dec">
+<tt class="descname">dec</tt><a class="headerlink" href="#treecorr.CelestialCoord.dec" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="treecorr.CelestialCoord.deproject">
+<tt class="descname">deproject</tt><big>(</big><em>u</em>, <em>v</em>, <em>projection='lambert'</em><big>)</big><a class="headerlink" href="#treecorr.CelestialCoord.deproject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do the reverse process from the project() function.</p>
+<p>i.e. This takes in a position (u,v) as a tuple and returns the corresponding celestial
+coordinate, using the current coordinate as the center point of the tangent plane
+projection.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.CelestialCoord.deproject_jac">
+<tt class="descname">deproject_jac</tt><big>(</big><em>u</em>, <em>v</em>, <em>projection='lambert'</em><big>)</big><a class="headerlink" href="#treecorr.CelestialCoord.deproject_jac" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the jacobian of the deprojection.</p>
+<p>i.e. if the input position is (u,v) (in radians) then the return matrix is</p>
+<dl class="docutils">
+<dt>J = ( dra/du cos(dec)  dra/dv cos(dec) )</dt>
+<dd>(    ddec/du          ddec/dv      )</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the matrix as a tuple (J00, J01, J10, J11)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.CelestialCoord.deproject_rad">
+<tt class="descname">deproject_rad</tt><big>(</big><em>u</em>, <em>v</em>, <em>projection='lambert'</em><big>)</big><a class="headerlink" href="#treecorr.CelestialCoord.deproject_rad" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is basically identical to the deproject() function except that the output <cite>ra</cite>,
+<cite>dec</cite> are returned as a tuple (ra, dec) in radians rather than packaged as a CelestialCoord
+object.</p>
+<p>The main advantage to this is that it will work if <cite>u</cite> and <cite>v</cite> are NumPy arrays, in which 
+case the output <cite>ra</cite>, <cite>dec</cite> will also be NumPy arrays.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.CelestialCoord.distanceTo">
+<tt class="descname">distanceTo</tt><big>(</big><em>other</em><big>)</big><a class="headerlink" href="#treecorr.CelestialCoord.distanceTo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the great circle distance between this coord and another one.
+The return value is in radians.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.CelestialCoord.galactic">
+<tt class="descname">galactic</tt><big>(</big><em>epoch=2000.0</em><big>)</big><a class="headerlink" href="#treecorr.CelestialCoord.galactic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the longitude and latitude in galactic coordinates corresponding to this position.</p>
+<p>The formulae are implemented in terms of the 1950 coordinates, so we need to
+precess from the current epoch to 1950.  The current epoch is assumed to be 2000
+by default, but you may also specify a different value with the epoch parameter.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the longitude and latitude as a tuple (el, b) in radians.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.CelestialCoord.precess">
+<tt class="descname">precess</tt><big>(</big><em>from_epoch</em>, <em>to_epoch</em><big>)</big><a class="headerlink" href="#treecorr.CelestialCoord.precess" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function precesses equatorial ra and dec from one epoch to another.
+It is adapted from a set of fortran subroutines based on (a) pages 30-34 of
+the Explanatory Supplement to the AE, (b) Lieske, et al. (1977) A&amp;A 58, 1-16,
+and (c) Lieske (1979) A&amp;A 73, 282-284.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.CelestialCoord.project">
+<tt class="descname">project</tt><big>(</big><em>other</em>, <em>projection='lambert'</em><big>)</big><a class="headerlink" href="#treecorr.CelestialCoord.project" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use the currect coord as the center point of a tangent plane projection to project
+the <cite>other</cite> coordinate onto that plane.</p>
+<p>This function returns the position (u,v) in the Euclidean coordinate system defined by
+a tangent plane projection around the current coordinate, with +v pointing north and
++u pointing west.</p>
+<p>There are currently four options for the projection, which you can specify with the
+optional <cite>projection</cite> keyword argument:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>&#8216;lambert&#8217; [default] uses a Lambert azimuthal projection, which preserves</dt>
+<dd>area, but not angles.  For more information, see
+<a class="reference external" href="http://mathworld.wolfram.com/LambertAzimuthalEqual-AreaProjection.html">http://mathworld.wolfram.com/LambertAzimuthalEqual-AreaProjection.html</a></dd>
+<dt>&#8216;stereographic&#8217; uses a stereographic proejection, which preserves angles, but</dt>
+<dd>not area.  For more information, see
+<a class="reference external" href="http://mathworld.wolfram.com/StereographicProjection.html">http://mathworld.wolfram.com/StereographicProjection.html</a></dd>
+<dt>&#8216;gnomonic&#8217; uses a gnomonic projection (i.e. a projection from the center of the</dt>
+<dd>sphere), which has the property that all great circles become straight 
+lines.  For more information, see
+<a class="reference external" href="http://mathworld.wolfram.com/GnomonicProjection.html">http://mathworld.wolfram.com/GnomonicProjection.html</a></dd>
+<dt>&#8216;postel&#8217; uses a Postel equidistant proejection, which preserves distances from</dt>
+<dd>the projection point, but not area or angles.  For more information, see
+<a class="reference external" href="http://mathworld.wolfram.com/AzimuthalEquidistantProjection.html">http://mathworld.wolfram.com/AzimuthalEquidistantProjection.html</a></dd>
+</dl>
+</div></blockquote>
+<p>The distance or angle errors increase with distance from the projection point of course.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">(u,v) in radians as a tuple.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.CelestialCoord.project_rad">
+<tt class="descname">project_rad</tt><big>(</big><em>ra</em>, <em>dec</em>, <em>projection</em><big>)</big><a class="headerlink" href="#treecorr.CelestialCoord.project_rad" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is basically identical to the project() function except that the input <cite>ra</cite>, <cite>dec</cite>
+are given in radians rather than packaged as a CelestialCoord object.</p>
+<p>Also, the output is returned as a tuple (x,y), rather than packaged as a PositionD object.</p>
+<p>The main advantage to this is that it will work if <cite>ra</cite> and <cite>dec</cite> are NumPy arrays, in which
+case the output <cite>x</cite>, <cite>y</cite> will also be NumPy arrays.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="treecorr.CelestialCoord.ra">
+<tt class="descname">ra</tt><a class="headerlink" href="#treecorr.CelestialCoord.ra" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-treecorr.celestial">
+<span id="other-utilities-related-to-celestial-coordinates"></span><h2>Other utilities related to celestial coordinates<a class="headerlink" href="#module-treecorr.celestial" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Celestial Coordinates</a><ul>
+<li><a class="reference internal" href="#the-celestialcoord-class">The CelestialCoord class</a></li>
+<li><a class="reference internal" href="#module-treecorr.celestial">Other utilities related to celestial coordinates</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="field.html"
+                        title="previous chapter">Fields</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="corr2.html"
+                        title="next chapter">corr2</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/celestial.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="corr2.html" title="corr2"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="field.html" title="Fields"
+             >previous</a> |</li>
+        <li><a href="index.html">TreeCorr  documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Mike Jarvis.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

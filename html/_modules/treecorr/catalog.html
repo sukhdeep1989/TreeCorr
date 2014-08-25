@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>treecorr.catalog &mdash; treecorr  documentation</title>
+    <title>treecorr.catalog &mdash; TreeCorr  documentation</title>
     
     <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -23,8 +23,8 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <link rel="top" title="treecorr  documentation" href="../../index.html" />
-    <link rel="up" title="Module code" href="../index.html" /> 
+    <link rel="top" title="TreeCorr  documentation" href="../../index.html" />
+    <link rel="up" title="treecorr" href="../treecorr.html" /> 
   </head>
   <body>
     <div class="related">
@@ -36,8 +36,9 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../index.html">treecorr  documentation</a> &raquo;</li>
-          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+        <li><a href="../../index.html">TreeCorr  documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../treecorr.html" accesskey="U">treecorr</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -59,18 +60,21 @@
 <span class="c"># 2. Redistributions in binary form must reproduce the above copyright notice,</span>
 <span class="c">#    this list of conditions, and the disclaimer given in the documentation</span>
 <span class="c">#    and/or other materials provided with the distribution.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. module:: catalog</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">treecorr</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
 
-<div class="viewcode-block" id="isKColRequired"><a class="viewcode-back" href="../../treecorr.html#treecorr.catalog.isKColRequired">[docs]</a><span class="k">def</span> <span class="nf">isKColRequired</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">num</span><span class="p">):</span>
+<div class="viewcode-block" id="isKColRequired"><a class="viewcode-back" href="../../catalog.html#treecorr.catalog.isKColRequired">[docs]</a><span class="k">def</span> <span class="nf">isKColRequired</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">num</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;A quick helper function that checks whether we need to bother reading the k column.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">(</span> <span class="s">&#39;k2_file_name&#39;</span> <span class="ow">in</span> <span class="n">config</span>
              <span class="ow">or</span> <span class="p">(</span><span class="n">num</span><span class="o">==</span><span class="mi">0</span> <span class="ow">and</span> <span class="s">&#39;kg_file_name&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">)</span>
              <span class="ow">or</span> <span class="p">(</span><span class="n">num</span><span class="o">==</span><span class="mi">1</span> <span class="ow">and</span> <span class="s">&#39;nk_file_name&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">)</span> <span class="p">)</span>
 </div>
-<div class="viewcode-block" id="isGColRequired"><a class="viewcode-back" href="../../treecorr.html#treecorr.catalog.isGColRequired">[docs]</a><span class="k">def</span> <span class="nf">isGColRequired</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">num</span><span class="p">):</span>
+<div class="viewcode-block" id="isGColRequired"><a class="viewcode-back" href="../../catalog.html#treecorr.catalog.isGColRequired">[docs]</a><span class="k">def</span> <span class="nf">isGColRequired</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">num</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;A quick helper function that checks whether we need to bother reading the g1,g2 columns.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">(</span> <span class="s">&#39;g2_file_name&#39;</span> <span class="ow">in</span> <span class="n">config</span>
@@ -81,13 +85,13 @@
              <span class="ow">or</span> <span class="p">(</span><span class="n">num</span><span class="o">==</span><span class="mi">1</span> <span class="ow">and</span> <span class="s">&#39;kg_file_name&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">)</span> <span class="p">)</span>
 
 </div>
-<div class="viewcode-block" id="Catalog"><a class="viewcode-back" href="../../treecorr.html#treecorr.catalog.Catalog">[docs]</a><span class="k">class</span> <span class="nc">Catalog</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">Catalog</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;A classs storing the catalog information for a particular set of objects</span>
 <span class="sd">    to be correlated in some way.</span>
 
 <span class="sd">    The usual way to build this is using a config dict:</span>
 <span class="sd">    </span>
-<span class="sd">        &gt;&gt;&gt; cat = treecorr.Catalog(file_name, config, num=0)</span>
+<span class="sd">    &gt;&gt;&gt; cat = treecorr.Catalog(file_name, config, num=0)</span>
 
 <span class="sd">    This uses the information in the config dict to read the input file, which may be either</span>
 <span class="sd">    a FITS catalog or an ASCII catalog.  Normally the distinction is made according to the</span>
@@ -110,8 +114,8 @@
 <span class="sd">    data vectors in python and then want to compute the correlation function.  The syntax for this</span>
 <span class="sd">    is:</span>
 
-<span class="sd">        &gt;&gt;&gt; cat = treecorr.Catalog(g1=g1, g2=g2, ra=ra, dec=dec,</span>
-<span class="sd">                                   ra_units=ra_units, dec_units=dec_units)</span>
+<span class="sd">    &gt;&gt;&gt; cat = treecorr.Catalog(g1=g1, g2=g2, ra=ra, dec=dec,</span>
+<span class="sd">                               ra_units=ra_units, dec_units=dec_units)</span>
 
 <span class="sd">    Each of these data vectors should be a numpy array.  For x,y, the units fields are optional,</span>
 <span class="sd">    in which case the units are assumed to be arcsec.  But for ra,dec they are required.</span>
@@ -120,26 +124,30 @@
 <span class="sd">    (ra,dec) must be given.  The others are optional, although if g1 or g2 is given, the other</span>
 <span class="sd">    must also be given.  Flags may be included by setting w=0 for those objects.</span>
 
-<span class="sd">    A Catalog object will have available the following attributes:</span>
+<span class="sd">    Attributes:</span>
+<span class="sd">    </span>
+<span class="sd">        A Catalog object will have available the following attributes:</span>
 
-<span class="sd">        x           The x positions, if defined, as a numpy array. (None otherwise)</span>
-<span class="sd">        y           The y positions, if defined, as a numpy array. (None otherwise)</span>
-<span class="sd">        ra          The right ascension, if defined, as a numpy array. (None otherwise)</span>
-<span class="sd">        dec         The declination, if defined, as a numpy array. (None otherwise)</span>
-<span class="sd">        r           The distance, if defined, as a numpy array. (None otherwise)</span>
-<span class="sd">        w           The weights, as a numpy array. (All 1&#39;s if no weight column provided.)</span>
-<span class="sd">        g1          The g1 component of the shear, if defined, as a numpy array. (None otherwise)</span>
-<span class="sd">        g2          The g2 component of the shear, if defined, as a numpy array. (None otherwise)</span>
-<span class="sd">        k           The convergence, kappa, if defined, as a numpy array. (None otherwise)</span>
+<span class="sd">        :x:      The x positions, if defined, as a numpy array. (None otherwise)</span>
+<span class="sd">        :y:      The y positions, if defined, as a numpy array. (None otherwise)</span>
+<span class="sd">        :ra:     The right ascension, if defined, as a numpy array. (None otherwise)</span>
+<span class="sd">        :dec:    The declination, if defined, as a numpy array. (None otherwise)</span>
+<span class="sd">        :r:      The distance, if defined, as a numpy array. (None otherwise)</span>
+<span class="sd">        :w:      The weights, as a numpy array. (All 1&#39;s if no weight column provided.)</span>
+<span class="sd">        :g1:     The g1 component of the shear, if defined, as a numpy array. (None otherwise)</span>
+<span class="sd">        :g2:     The g2 component of the shear, if defined, as a numpy array. (None otherwise)</span>
+<span class="sd">        :k:      The convergence, kappa, if defined, as a numpy array. (None otherwise)</span>
 
-<span class="sd">        nobj        The number of objects with non-zero weight</span>
-<span class="sd">        sumw        The sum of the weights</span>
-<span class="sd">        varg        The shear variance (aka shape noise)</span>
-<span class="sd">        vark        The kappa variance</span>
-<span class="sd">        name        When constructed from a file, this will be the file_name.  It is only used as</span>
-<span class="sd">                    a reference name in logging output  after construction, so if you construct it </span>
-<span class="sd">                    from data vectors directly, it will be &#39;&#39;.  You may assign to it if you want to</span>
-<span class="sd">                    give this catalog a specific name.</span>
+<span class="sd">        :nobj:   The number of objects with non-zero weight</span>
+<span class="sd">        :sumw:   The sum of the weights</span>
+<span class="sd">        :varg:   The shear variance (aka shape noise) (0 if g1,g2 are not defined)</span>
+<span class="sd">        :vark:   The kappa variance (0 if k is not defined)</span>
+
+<span class="sd">        :name:   When constructed from a file, this will be the file_name.  It is only used as</span>
+<span class="sd">                 a reference name in logging output  after construction, so if you construct it </span>
+<span class="sd">                 from data vectors directly, it will be &#39;&#39;.  You may assign to it if you want to</span>
+<span class="sd">                 give this catalog a specific name.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">is_rand</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
                  <span class="n">x</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ra</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">dec</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">flag</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
@@ -350,7 +358,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;   nobj = </span><span class="si">%d</span><span class="s">&quot;</span><span class="p">,</span><span class="n">nobj</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="Catalog.checkForNaN"><a class="viewcode-back" href="../../treecorr.html#treecorr.catalog.Catalog.checkForNaN">[docs]</a>    <span class="k">def</span> <span class="nf">checkForNaN</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">col_str</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">checkForNaN</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">col_str</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">col</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">col</span><span class="p">)):</span>
             <span class="n">index</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">col</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s">&quot;Warning: NaNs found in </span><span class="si">%s</span><span class="s"> column.  Skipping rows </span><span class="si">%s</span><span class="s">.&quot;</span><span class="p">,</span>
@@ -359,8 +367,8 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">w</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
 
-</div>
-<div class="viewcode-block" id="Catalog.read_ascii"><a class="viewcode-back" href="../../treecorr.html#treecorr.catalog.Catalog.read_ascii">[docs]</a>    <span class="k">def</span> <span class="nf">read_ascii</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_rand</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">read_ascii</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_rand</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Read the catalog from an ASCII file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">import</span> <span class="nn">numpy</span>
@@ -491,8 +499,8 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span><span class="n">k_col</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;read k = </span><span class="si">%s</span><span class="s">&#39;</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">))</span>
 
-</div>
-<div class="viewcode-block" id="Catalog.read_fits"><a class="viewcode-back" href="../../treecorr.html#treecorr.catalog.Catalog.read_fits">[docs]</a>    <span class="k">def</span> <span class="nf">read_fits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_rand</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">read_fits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_rand</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Read the catalog from a FITS file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c"># Get the column names</span>
@@ -548,8 +556,8 @@
                              <span class="n">x_col</span><span class="p">,</span> <span class="n">y_col</span><span class="p">,</span> <span class="n">ra_col</span><span class="p">,</span> <span class="n">dec_col</span><span class="p">,</span> <span class="n">r_col</span><span class="p">,</span> <span class="n">w_col</span><span class="p">,</span> <span class="n">flag_col</span><span class="p">,</span>
                              <span class="n">g1_col</span><span class="p">,</span> <span class="n">g2_col</span><span class="p">,</span> <span class="n">k_col</span><span class="p">)</span>
 
-</div>
-<div class="viewcode-block" id="Catalog.read_fitsio"><a class="viewcode-back" href="../../treecorr.html#treecorr.catalog.Catalog.read_fitsio">[docs]</a>    <span class="k">def</span> <span class="nf">read_fitsio</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span> <span class="n">is_rand</span><span class="p">,</span>
+
+    <span class="k">def</span> <span class="nf">read_fitsio</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span> <span class="n">is_rand</span><span class="p">,</span>
                     <span class="n">x_col</span><span class="p">,</span> <span class="n">y_col</span><span class="p">,</span> <span class="n">ra_col</span><span class="p">,</span> <span class="n">dec_col</span><span class="p">,</span> <span class="n">r_col</span><span class="p">,</span> <span class="n">w_col</span><span class="p">,</span> <span class="n">flag_col</span><span class="p">,</span>
                     <span class="n">g1_col</span><span class="p">,</span> <span class="n">g2_col</span><span class="p">,</span> <span class="n">k_col</span><span class="p">):</span>
         <span class="kn">import</span> <span class="nn">fitsio</span>
@@ -638,8 +646,8 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="n">fits</span><span class="p">[</span><span class="n">k_hdu</span><span class="p">]</span><span class="o">.</span><span class="n">read_column</span><span class="p">(</span><span class="n">k_col</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;read k = </span><span class="si">%s</span><span class="s">&#39;</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">))</span>
 
- </div>
-<div class="viewcode-block" id="Catalog.read_pyfits"><a class="viewcode-back" href="../../treecorr.html#treecorr.catalog.Catalog.read_pyfits">[docs]</a>    <span class="k">def</span> <span class="nf">read_pyfits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span> <span class="n">is_rand</span><span class="p">,</span>
+ 
+    <span class="k">def</span> <span class="nf">read_pyfits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span> <span class="n">is_rand</span><span class="p">,</span>
                     <span class="n">x_col</span><span class="p">,</span> <span class="n">y_col</span><span class="p">,</span> <span class="n">ra_col</span><span class="p">,</span> <span class="n">dec_col</span><span class="p">,</span> <span class="n">r_col</span><span class="p">,</span> <span class="n">w_col</span><span class="p">,</span> <span class="n">flag_col</span><span class="p">,</span>
                     <span class="n">g1_col</span><span class="p">,</span> <span class="n">g2_col</span><span class="p">,</span> <span class="n">k_col</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
@@ -731,8 +739,8 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="n">hdu_list</span><span class="p">[</span><span class="n">k_hdu</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">k_col</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;read k = </span><span class="si">%s</span><span class="s">&#39;</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">))</span>
 
-</div>
-<div class="viewcode-block" id="Catalog.getNField"><a class="viewcode-back" href="../../treecorr.html#treecorr.catalog.Catalog.getNField">[docs]</a>    <span class="k">def</span> <span class="nf">getNField</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_sep</span><span class="p">,</span> <span class="n">max_sep</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">getNField</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_sep</span><span class="p">,</span> <span class="n">max_sep</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return an NField based on the positions in this catalog.</span>
 
 <span class="sd">        The NField object is cached, so this is efficient to call multiple times.</span>
@@ -750,8 +758,8 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nfield</span>
 
-</div>
-<div class="viewcode-block" id="Catalog.getKField"><a class="viewcode-back" href="../../treecorr.html#treecorr.catalog.Catalog.getKField">[docs]</a>    <span class="k">def</span> <span class="nf">getKField</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_sep</span><span class="p">,</span> <span class="n">max_sep</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">getKField</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_sep</span><span class="p">,</span> <span class="n">max_sep</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return a KField based on the k values in this catalog.</span>
 
 <span class="sd">        The KField object is cached, so this is efficient to call multiple times.</span>
@@ -771,8 +779,8 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">kfield</span>
 
-</div>
-<div class="viewcode-block" id="Catalog.getGField"><a class="viewcode-back" href="../../treecorr.html#treecorr.catalog.Catalog.getGField">[docs]</a>    <span class="k">def</span> <span class="nf">getGField</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_sep</span><span class="p">,</span> <span class="n">max_sep</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">getGField</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_sep</span><span class="p">,</span> <span class="n">max_sep</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return a GField based on the g1,g2 values in this catalog.</span>
 
 <span class="sd">        The GField object is cached, so this is efficient to call multiple times.</span>
@@ -792,8 +800,8 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">gfield</span>
 
-</div>
-<div class="viewcode-block" id="Catalog.getNSimpleField"><a class="viewcode-back" href="../../treecorr.html#treecorr.catalog.Catalog.getNSimpleField">[docs]</a>    <span class="k">def</span> <span class="nf">getNSimpleField</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">getNSimpleField</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return an NSimpleField based on the positions in this catalog.</span>
 
 <span class="sd">        The NSimpleField object is cached, so this is efficient to call multiple times.</span>
@@ -807,8 +815,8 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nsimplefield</span>
 
-</div>
-<div class="viewcode-block" id="Catalog.getKSimpleField"><a class="viewcode-back" href="../../treecorr.html#treecorr.catalog.Catalog.getKSimpleField">[docs]</a>    <span class="k">def</span> <span class="nf">getKSimpleField</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">getKSimpleField</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return a KSimpleField based on the k values in this catalog.</span>
 
 <span class="sd">        The KSimpleField object is cached, so this is efficient to call multiple times.</span>
@@ -824,8 +832,8 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ksimplefield</span>
 
-</div>
-<div class="viewcode-block" id="Catalog.getGSimpleField"><a class="viewcode-back" href="../../treecorr.html#treecorr.catalog.Catalog.getGSimpleField">[docs]</a>    <span class="k">def</span> <span class="nf">getGSimpleField</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">getGSimpleField</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return a GSimpleField based on the g1,g2 values in this catalog.</span>
 
 <span class="sd">        The GSimpleField object is cached, so this is efficient to call multiple times.</span>
@@ -840,8 +848,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">gsimplefield</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">GSimpleField</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">logger</span><span class="p">,</span><span class="n">config</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">gsimplefield</span>
-</div>
-<div class="viewcode-block" id="Catalog.write"><a class="viewcode-back" href="../../treecorr.html#treecorr.catalog.Catalog.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Write the catalog to a file.  Currently only ASCII output is supported.</span>
 
 <span class="sd">        Note that the x,y,ra,dec columns are output using the same units as were used when</span>
@@ -905,8 +913,8 @@
                 <span class="n">fid</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;#&#39;</span> <span class="o">+</span> <span class="n">header</span> <span class="o">+</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
                 <span class="n">numpy</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">fid</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="n">fmt</span><span class="p">)</span> 
 
-</div></div>
-<div class="viewcode-block" id="read_catalogs"><a class="viewcode-back" href="../../treecorr.html#treecorr.catalog.read_catalogs">[docs]</a><span class="k">def</span> <span class="nf">read_catalogs</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">list_key</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">is_rand</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="read_catalogs"><a class="viewcode-back" href="../../catalog.html#treecorr.catalog.read_catalogs">[docs]</a><span class="k">def</span> <span class="nf">read_catalogs</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">list_key</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">is_rand</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Read in a list of catalogs for the given key.</span>
 
 <span class="sd">    key should be the file_name parameter or similar key word.</span>
@@ -941,7 +949,7 @@
     <span class="k">return</span> <span class="p">[</span> <span class="n">Catalog</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">is_rand</span><span class="p">)</span> <span class="k">for</span> <span class="n">file_name</span> <span class="ow">in</span> <span class="n">file_names</span> <span class="p">]</span>
 
 </div>
-<div class="viewcode-block" id="calculateVarG"><a class="viewcode-back" href="../../treecorr.html#treecorr.catalog.calculateVarG">[docs]</a><span class="k">def</span> <span class="nf">calculateVarG</span><span class="p">(</span><span class="n">cat_list</span><span class="p">):</span>
+<div class="viewcode-block" id="calculateVarG"><a class="viewcode-back" href="../../catalog.html#treecorr.catalog.calculateVarG">[docs]</a><span class="k">def</span> <span class="nf">calculateVarG</span><span class="p">(</span><span class="n">cat_list</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Calculate the overall shear variance from a list of catalogs.</span>
 <span class="sd">        </span>
 <span class="sd">    The catalogs are assumed to be equivalent, so this is just the average shear</span>
@@ -957,7 +965,7 @@
             <span class="n">ntot</span> <span class="o">+=</span> <span class="n">cat</span><span class="o">.</span><span class="n">nobj</span>
         <span class="k">return</span> <span class="n">varg</span> <span class="o">/</span> <span class="n">ntot</span>
 </div>
-<div class="viewcode-block" id="calculateVarK"><a class="viewcode-back" href="../../treecorr.html#treecorr.catalog.calculateVarK">[docs]</a><span class="k">def</span> <span class="nf">calculateVarK</span><span class="p">(</span><span class="n">cat_list</span><span class="p">):</span>
+<div class="viewcode-block" id="calculateVarK"><a class="viewcode-back" href="../../catalog.html#treecorr.catalog.calculateVarK">[docs]</a><span class="k">def</span> <span class="nf">calculateVarK</span><span class="p">(</span><span class="n">cat_list</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Calculate the overall kappa variance from a list of catalogs.</span>
 <span class="sd">        </span>
 <span class="sd">    The catalogs are assumed to be equivalent, so this is just the average kappa</span>
@@ -1005,8 +1013,9 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../index.html">treecorr  documentation</a> &raquo;</li>
-          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+        <li><a href="../../index.html">TreeCorr  documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../treecorr.html" >treecorr</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
