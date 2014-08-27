@@ -23,6 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="TreeCorr  documentation" href="index.html" />
     <link rel="up" title="Two-point Correlation Functions" href="correlation.html" />
     <link rel="next" title="NK: Count-kappa correlations" href="nk.html" />
@@ -57,8 +58,8 @@
   <div class="section" id="kk-kappa-kappa-correlations">
 <h1>KK: Kappa-kappa correlations<a class="headerlink" href="#kk-kappa-kappa-correlations" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
-<dt id="treecorr.K2Correlation">
-<em class="property">class </em><tt class="descclassname">treecorr.</tt><tt class="descname">K2Correlation</tt><big>(</big><em>config=None</em>, <em>logger=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#treecorr.K2Correlation" title="Permalink to this definition">¶</a></dt>
+<dt id="treecorr.KKCorrelation">
+<em class="property">class </em><tt class="descclassname">treecorr.</tt><tt class="descname">KKCorrelation</tt><big>(</big><em>config=None</em>, <em>logger=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#treecorr.KKCorrelation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">treecorr.binnedcorr2.BinnedCorr2</span></tt></p>
 <p>This class handles the calculation and storage of a 2-point kappa-kappa correlation
 function.</p>
@@ -66,95 +67,178 @@ function.</p>
 any scalar field will work here.  For example, you can use this to compute correlations
 of the CMB temperature fluctuations, where &#8220;kappa&#8221; would really be delta T.</p>
 <p>It holds the following attributes:</p>
-<table class="docutils field-list" frame="void" rules="none">
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Logr:</th><td class="field-body">The nominal center of the bin in log(r).</td>
+<tr class="field-odd field"><th class="field-name">logr:</th><td class="field-body">The nominal center of the bin in log(r).</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Meanlogr:</th><td class="field-body">The (weighted) mean value of log(r) for the pairs in each bin.
+<tr class="field-even field"><th class="field-name">meanlogr:</th><td class="field-body">The (weighted) mean value of log(r) for the pairs in each bin.
 If there are no pairs in a bin, then logr will be used instead.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Xi:</th><td class="field-body">The correlation function, xi(r).</td>
+<tr class="field-odd field"><th class="field-name">xi:</th><td class="field-body">The correlation function, xi(r).</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Varxi:</th><td class="field-body">The variance of xi, only including the shot noise propagated into the
+<tr class="field-even field"><th class="field-name">varxi:</th><td class="field-body">The variance of xi, only including the shot noise propagated into the
 final correlation.  This does not include sample variance, so it is always
 an underestimate of the actual variance.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Weight:</th><td class="field-body">The total weight in each bin.</td>
+<tr class="field-odd field"><th class="field-name">weight:</th><td class="field-body">The total weight in each bin.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Npairs:</th><td class="field-body">The number of pairs going into each bin.</td>
+<tr class="field-even field"><th class="field-name">npairs:</th><td class="field-body">The number of pairs going into each bin.</td>
 </tr>
 </tbody>
 </table>
+</div></blockquote>
 <p>The usage pattern is as follows:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kk</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">K2Correlation</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">kk</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">cat1</span><span class="p">)</span>        <span class="c"># For auto-correlation.</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kk</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">KKCorrelation</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kk</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">cat</span><span class="p">)</span>         <span class="c"># For auto-correlation.</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">kk</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span><span class="n">cat2</span><span class="p">)</span>   <span class="c"># For cross-correlation.</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">kk</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>     <span class="c"># Write out to a file.</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">xi</span> <span class="o">=</span> <span class="n">kk</span><span class="o">.</span><span class="n">xi</span>              <span class="c"># Or access the correlation function directly.</span>
 </pre></div>
 </div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>config</strong> &#8211; The configuration dict which defines attributes about how to read the file.
+Any kwargs that are not those listed here will be added to the config, 
+so you can even omit the config dict and just enter all parameters you
+want as kwargs.  (default: None)</li>
+<li><strong>logger</strong> &#8211; If desired, a logger object for logging. (default: None, in which case
+one will be built according to the config dict&#8217;s verbose level.)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
-<dt id="treecorr.K2Correlation.clear">
-<tt class="descname">clear</tt><big>(</big><big>)</big><a class="headerlink" href="#treecorr.K2Correlation.clear" title="Permalink to this definition">¶</a></dt>
+<dt id="treecorr.KKCorrelation.clear">
+<tt class="descname">clear</tt><big>(</big><big>)</big><a class="headerlink" href="#treecorr.KKCorrelation.clear" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clear the data vectors</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="treecorr.K2Correlation.finalize">
-<tt class="descname">finalize</tt><big>(</big><em>vark1</em>, <em>vark2</em><big>)</big><a class="headerlink" href="#treecorr.K2Correlation.finalize" title="Permalink to this definition">¶</a></dt>
+<dt id="treecorr.KKCorrelation.finalize">
+<tt class="descname">finalize</tt><big>(</big><em>vark1</em>, <em>vark2</em><big>)</big><a class="headerlink" href="#treecorr.KKCorrelation.finalize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Finalize the calculation of the correlation function.</p>
 <p>The process_auto and process_cross commands accumulate values in each bin,
 so they can be called multiple times if appropriate.  Afterwards, this command
 finishes the calculation by dividing each column by the total weight.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>vark1</strong> &#8211; The kappa variance for the first field.</li>
+<li><strong>vark2</strong> &#8211; The kappa variance for the second field.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
-<dt id="treecorr.K2Correlation.process">
-<tt class="descname">process</tt><big>(</big><em>cat1</em>, <em>cat2=None</em><big>)</big><a class="headerlink" href="#treecorr.K2Correlation.process" title="Permalink to this definition">¶</a></dt>
+<dt id="treecorr.KKCorrelation.process">
+<tt class="descname">process</tt><big>(</big><em>cat1</em>, <em>cat2=None</em><big>)</big><a class="headerlink" href="#treecorr.KKCorrelation.process" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the correlation function.</p>
 <p>If only 1 argument is given, then compute an auto-correlation function.
 If 2 arguments are given, then compute a cross-correlation function.</p>
 <p>Both arguments may be lists, in which case all items in the list are used 
 for that element of the correlation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cat1</strong> &#8211; A catalog or list of catalogs for the first K field.</li>
+<li><strong>cat2</strong> &#8211; A catalog or list of catalogs for the second K field, if any.
+(default: None)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
-<dt id="treecorr.K2Correlation.process_auto">
-<tt class="descname">process_auto</tt><big>(</big><em>cat1</em><big>)</big><a class="headerlink" href="#treecorr.K2Correlation.process_auto" title="Permalink to this definition">¶</a></dt>
+<dt id="treecorr.KKCorrelation.process_auto">
+<tt class="descname">process_auto</tt><big>(</big><em>cat</em><big>)</big><a class="headerlink" href="#treecorr.KKCorrelation.process_auto" title="Permalink to this definition">¶</a></dt>
 <dd><p>Process a single catalog, accumulating the auto-correlation.</p>
 <p>This accumulates the weighted sums into the bins, but does not finalize
 the calculation by dividing by the total weight at the end.  After
 calling this function as often as desired, the finalize() command will
 finish the calculation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>cat</strong> &#8211; The catalog to process</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
-<dt id="treecorr.K2Correlation.process_cross">
-<tt class="descname">process_cross</tt><big>(</big><em>cat1</em>, <em>cat2</em><big>)</big><a class="headerlink" href="#treecorr.K2Correlation.process_cross" title="Permalink to this definition">¶</a></dt>
+<dt id="treecorr.KKCorrelation.process_cross">
+<tt class="descname">process_cross</tt><big>(</big><em>cat1</em>, <em>cat2</em><big>)</big><a class="headerlink" href="#treecorr.KKCorrelation.process_cross" title="Permalink to this definition">¶</a></dt>
 <dd><p>Process a single pair of catalogs, accumulating the cross-correlation.</p>
 <p>This accumulates the weighted sums into the bins, but does not finalize
 the calculation by dividing by the total weight at the end.  After
 calling this function as often as desired, the finalize() command will
 finish the calculation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cat1</strong> &#8211; The first catalog to process</li>
+<li><strong>cat2</strong> &#8211; The second catalog to process</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
-<dt id="treecorr.K2Correlation.process_pairwise">
-<tt class="descname">process_pairwise</tt><big>(</big><em>cat1</em>, <em>cat2</em><big>)</big><a class="headerlink" href="#treecorr.K2Correlation.process_pairwise" title="Permalink to this definition">¶</a></dt>
+<dt id="treecorr.KKCorrelation.process_pairwise">
+<tt class="descname">process_pairwise</tt><big>(</big><em>cat1</em>, <em>cat2</em><big>)</big><a class="headerlink" href="#treecorr.KKCorrelation.process_pairwise" title="Permalink to this definition">¶</a></dt>
 <dd><p>Process a single pair of catalogs, accumulating the cross-correlation, only using
 the corresponding pairs of objects in each catalog.</p>
 <p>This accumulates the weighted sums into the bins, but does not finalize
 the calculation by dividing by the total weight at the end.  After
 calling this function as often as desired, the finalize() command will
 finish the calculation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cat1</strong> &#8211; The first catalog to process</li>
+<li><strong>cat2</strong> &#8211; The second catalog to process</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
-<dt id="treecorr.K2Correlation.write">
-<tt class="descname">write</tt><big>(</big><em>file_name</em><big>)</big><a class="headerlink" href="#treecorr.K2Correlation.write" title="Permalink to this definition">¶</a></dt>
+<dt id="treecorr.KKCorrelation.write">
+<tt class="descname">write</tt><big>(</big><em>file_name</em><big>)</big><a class="headerlink" href="#treecorr.KKCorrelation.write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write the correlation function to the file, file_name.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file_name</strong> &#8211; The name of the file to write to.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>

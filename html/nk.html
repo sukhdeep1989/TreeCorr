@@ -23,6 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="TreeCorr  documentation" href="index.html" />
     <link rel="up" title="Two-point Correlation Functions" href="correlation.html" />
     <link rel="next" title="KG: Kappa-shear correlations" href="kg.html" />
@@ -60,30 +61,32 @@
 <dt id="treecorr.NKCorrelation">
 <em class="property">class </em><tt class="descclassname">treecorr.</tt><tt class="descname">NKCorrelation</tt><big>(</big><em>config=None</em>, <em>logger=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#treecorr.NKCorrelation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">treecorr.binnedcorr2.BinnedCorr2</span></tt></p>
-<p>This class handles the calculation and storage of a 2-point shear-shear correlation
+<p>This class handles the calculation and storage of a 2-point cound-kappa correlation
 function.</p>
 <p>It holds the following attributes:</p>
-<table class="docutils field-list" frame="void" rules="none">
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Logr:</th><td class="field-body">The nominal center of the bin in log(r).</td>
+<tr class="field-odd field"><th class="field-name">logr:</th><td class="field-body">The nominal center of the bin in log(r).</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Meanlogr:</th><td class="field-body">The (weighted) mean value of log(r) for the pairs in each bin.
+<tr class="field-even field"><th class="field-name">meanlogr:</th><td class="field-body">The (weighted) mean value of log(r) for the pairs in each bin.
 If there are no pairs in a bin, then logr will be used instead.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Xi:</th><td class="field-body">The correlation function, xi(r).</td>
+<tr class="field-odd field"><th class="field-name">xi:</th><td class="field-body">The correlation function, xi(r).</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Varxi:</th><td class="field-body">The variance of xi, only including the shot noise propagated into the
+<tr class="field-even field"><th class="field-name">varxi:</th><td class="field-body">The variance of xi, only including the shot noise propagated into the
 final correlation.  This does not include sample variance, so it is
 always an underestimate of the actual variance.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Weight:</th><td class="field-body">The total weight in each bin.</td>
+<tr class="field-odd field"><th class="field-name">weight:</th><td class="field-body">The total weight in each bin.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Npairs:</th><td class="field-body">The number of pairs going into each bin.</td>
+<tr class="field-even field"><th class="field-name">npairs:</th><td class="field-body">The number of pairs going into each bin.</td>
 </tr>
 </tbody>
 </table>
+</div></blockquote>
 <p>The usage pattern is as follows:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">nk</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">NKCorrelation</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">nk</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span><span class="n">cat2</span><span class="p">)</span>   <span class="c"># Compute the cross-correlation function.</span>
@@ -91,6 +94,22 @@ always an underestimate of the actual variance.</td>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">xi</span> <span class="o">=</span> <span class="n">nk</span><span class="o">.</span><span class="n">xi</span>              <span class="c"># Or access the correlation function directly.</span>
 </pre></div>
 </div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>config</strong> &#8211; The configuration dict which defines attributes about how to read the file.
+Any kwargs that are not those listed here will be added to the config, 
+so you can even omit the config dict and just enter all parameters you
+want as kwargs.  (default: None)</li>
+<li><strong>logger</strong> &#8211; If desired, a logger object for logging. (default: None, in which case
+one will be built according to the config dict&#8217;s verbose level.)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="treecorr.NKCorrelation.calculateXi">
 <tt class="descname">calculateXi</tt><big>(</big><em>rk=None</em><big>)</big><a class="headerlink" href="#treecorr.NKCorrelation.calculateXi" title="Permalink to this definition">¶</a></dt>
@@ -102,7 +121,10 @@ If rk is not None, then a compensated calculation is done: &lt;kappa&gt; = (dk -
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a tuple (xi, varxi)</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rk</strong> &#8211; An NKCorrelation using random locations as the lenses, if desired. 
+(default: None)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(xi, varxi) as a tuple</td>
 </tr>
 </tbody>
 </table>
@@ -121,6 +143,14 @@ If rk is not None, then a compensated calculation is done: &lt;kappa&gt; = (dk -
 <p>The process_cross command accumulates values in each bin, so it can be called
 multiple times if appropriate.  Afterwards, this command finishes the calculation
 by dividing each column by the total weight.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>vark</strong> &#8211; The kappa variance for the second field.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -129,6 +159,18 @@ by dividing each column by the total weight.</p>
 <dd><p>Compute the correlation function.</p>
 <p>Both arguments may be lists, in which case all items in the list are used 
 for that element of the correlation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cat1</strong> &#8211; A catalog or list of catalogs for the N field.</li>
+<li><strong>cat2</strong> &#8211; A catalog or list of catalogs for the K field.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -139,6 +181,18 @@ for that element of the correlation.</p>
 the calculation by dividing by the total weight at the end.  After
 calling this function as often as desired, the finalize() command will
 finish the calculation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cat1</strong> &#8211; The first catalog to process</li>
+<li><strong>cat2</strong> &#8211; The second catalog to process</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -150,6 +204,18 @@ the corresponding pairs of objects in each catalog.</p>
 the calculation by dividing by the total weight at the end.  After
 calling this function as often as desired, the finalize() command will
 finish the calculation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cat1</strong> &#8211; The first catalog to process</li>
+<li><strong>cat2</strong> &#8211; The second catalog to process</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -158,6 +224,19 @@ finish the calculation.</p>
 <dd><p>Write the correlation function to the file, file_name.</p>
 <p>If rk is None, the simple correlation function &lt;kappa&gt;(R) is used.
 If rk is not None, then a compensated calculation is done: &lt;kappa&gt;(R) = (dk - rk)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>file_name</strong> &#8211; The name of the file to write to.</li>
+<li><strong>rk</strong> &#8211; An NKCorrelation using random locations as the lenses, if desired. 
+(default: None)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>corr2 &mdash; TreeCorr  documentation</title>
+    <title>The corr2 driver script &mdash; TreeCorr  documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -23,7 +23,9 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="TreeCorr  documentation" href="index.html" />
+    <link rel="next" title="History" href="history.html" />
     <link rel="prev" title="Celestial Coordinates" href="celestial.html" /> 
   </head>
   <body>
@@ -37,6 +39,9 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
+          <a href="history.html" title="History"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
           <a href="celestial.html" title="Celestial Coordinates"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">TreeCorr  documentation</a> &raquo;</li> 
@@ -48,8 +53,8 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="corr2">
-<h1>corr2<a class="headerlink" href="#corr2" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="the-corr2-driver-script">
+<h1>The corr2 driver script<a class="headerlink" href="#the-corr2-driver-script" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="the-corr2-function-from-python">
 <h2>The corr2 function from python<a class="headerlink" href="#the-corr2-function-from-python" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
@@ -61,6 +66,19 @@ given config dict.</p>
 that are expected to be in the config dict.</p>
 <p>Optionally a logger parameter maybe given, in which case it is used for logging.
 If not given, the logging will be based on the verbose and log_file parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>config</strong> &#8211; The configuration dict which defines what to do.</li>
+<li><strong>logger</strong> &#8211; If desired, a logger object for logging. (default: None, in which case
+one will be built according to the config dict&#8217;s verbose level.)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
@@ -78,8 +96,8 @@ TreeCorr wiki page</p>
 <p>You can also specify parameters on the command line after the name of
 the configuration file. e.g.:</p>
 <blockquote>
-<div>corr2 config_file file_name=file1.dat g2_file_name=file1.out
-corr2 config_file file_name=file2.dat g2_file_name=file2.out
+<div>corr2 config_file file_name=file1.dat gg_file_name=file1.out
+corr2 config_file file_name=file2.dat gg_file_name=file2.out
 ...</div></blockquote>
 <p>This can be useful when running the program from a script for lots of input
 files.</p>
@@ -97,77 +115,270 @@ files.</p>
 <span id="utilities-related-to-the-configuration-dict"></span><h2>Utilities related to the configuration dict<a class="headerlink" href="#module-treecorr.config" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="treecorr.config.check_config">
-<tt class="descclassname">treecorr.config.</tt><tt class="descname">check_config</tt><big>(</big><em>config</em>, <em>params</em><big>)</big><a class="reference internal" href="_modules/treecorr/config.html#check_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.config.check_config" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">treecorr.config.</tt><tt class="descname">check_config</tt><big>(</big><em>config</em>, <em>params</em>, <em>aliases=None</em>, <em>logger=None</em><big>)</big><a class="reference internal" href="_modules/treecorr/config.html#check_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.config.check_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check (and update) a config dict to conform to the given parameter rules.
 The params dict has an entry for each valid config parameter whose value is a tuple
 with the following items:</p>
-<blockquote>
-<div><ul class="simple">
+<ul class="simple">
 <li>type</li>
 <li>can be a list?</li>
 <li>default value</li>
 <li>valid values</li>
 <li>description (Multiple entries here are allowed for longer strings)</li>
 </ul>
-</div></blockquote>
-<p>Returns the updated config dict.</p>
+<p>The file corr2.py has a list of parameters for the corr2 program.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>config</strong> &#8211; The config dict to check.</li>
+<li><strong>params</strong> &#8211; A dict of valid parameters with information about each one.</li>
+<li><strong>aliases</strong> &#8211; A dict of deprecated parameters that are still aliases for new names.
+(default: None)</li>
+<li><strong>logger</strong> &#8211; If desired, a logger object for logging any warnings here. (default: None)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The updated config dict.  The input config may be modified by this function.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="treecorr.config.convert">
 <tt class="descclassname">treecorr.config.</tt><tt class="descname">convert</tt><big>(</big><em>value</em>, <em>value_type</em>, <em>key</em><big>)</big><a class="reference internal" href="_modules/treecorr/config.html#convert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.config.convert" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Convert the given value to the given type.</p>
+<p>The key helps determine what kind of conversion should be performed.
+Specifically if &#8216;unit&#8217; is in the key value, then a unit conversion is done.
+Otherwise, it just parses</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>value</strong> &#8211; The input value to be converted.  Usually a string.</li>
+<li><strong>value_type</strong> &#8211; The type to convert to.</li>
+<li><strong>key</strong> &#8211; The key for this value.  Only used to see if it includes &#8216;unit&#8217;.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The converted value.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="treecorr.config.get">
 <tt class="descclassname">treecorr.config.</tt><tt class="descname">get</tt><big>(</big><em>config</em>, <em>key</em>, <em>value_type=&lt;type 'str'&gt;</em>, <em>default=None</em><big>)</big><a class="reference internal" href="_modules/treecorr/config.html#get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.config.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>A helper function to get a key from config converting to a particular type</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>config</strong> &#8211; The configuration dict from which to get the key value.</li>
+<li><strong>key</strong> &#8211; Which key to get from config.</li>
+<li><strong>value_type</strong> &#8211; Which type should the value be converted to. (default: str)</li>
+<li><strong>default</strong> &#8211; What value should be used if the key is not in the config dict.
+(default: None)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The specified value, converted as needed.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="treecorr.config.get_from_list">
 <tt class="descclassname">treecorr.config.</tt><tt class="descname">get_from_list</tt><big>(</big><em>config</em>, <em>key</em>, <em>num</em>, <em>value_type=&lt;type 'str'&gt;</em>, <em>default=None</em><big>)</big><a class="reference internal" href="_modules/treecorr/config.html#get_from_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.config.get_from_list" title="Permalink to this definition">¶</a></dt>
 <dd><p>A helper function to get a key from config that is allowed to be a list</p>
+<p>Some of the config values are allowed to be lists of values, in which case we take the 
+<cite>num</cite> item from the list.  If they are not a list, then the given value is used for 
+all values of <cite>num</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>config</strong> &#8211; The configuration dict from which to get the key value.</li>
+<li><strong>key</strong> &#8211; What key to get from config.</li>
+<li><strong>num</strong> &#8211; Which number element to use if the item is a list.</li>
+<li><strong>value_type</strong> &#8211; What type should the value be converted to. (default: str)</li>
+<li><strong>default</strong> &#8211; What value should be used if the key is not in the config dict.
+(default: None)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The specified value, converted as needed.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="treecorr.config.merge_config">
 <tt class="descclassname">treecorr.config.</tt><tt class="descname">merge_config</tt><big>(</big><em>config</em>, <em>kwargs</em><big>)</big><a class="reference internal" href="_modules/treecorr/config.html#merge_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.config.merge_config" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Merge in the values from kwargs into config.</p>
+<p>If either of these is None, then the other one is returned.
+If they are both dicts, then the values in kwargs take precedence over ones in config
+if there are any keys that are in both.</p>
+<p>Note: neither input dict will be modified in this process.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>config</strong> &#8211; The root config</li>
+<li><strong>kwargs</strong> &#8211; A second dict with more or updated values</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The merged dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="treecorr.config.parse_bool">
 <tt class="descclassname">treecorr.config.</tt><tt class="descname">parse_bool</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/treecorr/config.html#parse_bool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.config.parse_bool" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Parse a value as a boolean.</p>
+<p>Valid string values for True are: &#8216;true&#8217;, &#8216;yes&#8217;, &#8216;t&#8217;, &#8216;y&#8217;
+Valid string values for False are: &#8216;false&#8217;, &#8216;no&#8217;, &#8216;f&#8217;, &#8216;n&#8217;, &#8216;none&#8217;
+Capitalization is ignored.</p>
+<p>If value is a number, it is converted to a bool in the usual way.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> &#8211; The value to parse.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The value converted to a bool.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="treecorr.config.parse_unit">
 <tt class="descclassname">treecorr.config.</tt><tt class="descname">parse_unit</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/treecorr/config.html#parse_unit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.config.parse_unit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the appropriate unit, allowing the value to merely start with one of the unit names.</p>
+<dd><p>Parse the input value as a string that should be one of our valid angle units in
+the treecorr.angle_units dict.</p>
+<p>The value is allowed to merely start with one of the unit names.  So &#8216;deg&#8217;, &#8216;degree&#8217;,
+&#8216;degrees&#8217; all convert to &#8216;deg&#8217; which is the key in the angle_units dict.
+The return value in this case would be treecorr.angle_units[&#8216;deg&#8217;], which has the 
+value pi/180.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> &#8211; The unit as a string value to parse.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The given unit in radians.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="treecorr.config.parse_variable">
 <tt class="descclassname">treecorr.config.</tt><tt class="descname">parse_variable</tt><big>(</big><em>config</em>, <em>v</em><big>)</big><a class="reference internal" href="_modules/treecorr/config.html#parse_variable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.config.parse_variable" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Parse a configuration variable from a string that should look like &#8216;key = value&#8217;
+and write that value to config[key].</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>config</strong> &#8211; The configuration dict to wich to write the key,value pair</li>
+<li><strong>v</strong> &#8211; A string of the form &#8216;key = value&#8217;</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="treecorr.config.print_params">
 <tt class="descclassname">treecorr.config.</tt><tt class="descname">print_params</tt><big>(</big><em>params</em><big>)</big><a class="reference internal" href="_modules/treecorr/config.html#print_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.config.print_params" title="Permalink to this definition">¶</a></dt>
-<dd><p>List the information about the valid parameters, given by the given params dict.
+<dd><p>Print the information about the valid parameters, given by the given params dict.
 See check_config for the structure of the params dict.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>params</strong> &#8211; A dict of valid parameters with information about each one.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="treecorr.config.read_config">
 <tt class="descclassname">treecorr.config.</tt><tt class="descname">read_config</tt><big>(</big><em>file_name</em><big>)</big><a class="reference internal" href="_modules/treecorr/config.html#read_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.config.read_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a configuration dict from a file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file_name</strong> &#8211; The file name from which the configuration dict should be read.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="treecorr.config.set_omp_threads">
+<tt class="descclassname">treecorr.config.</tt><tt class="descname">set_omp_threads</tt><big>(</big><em>num_threads</em><big>)</big><a class="reference internal" href="_modules/treecorr/config.html#set_omp_threads"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.config.set_omp_threads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the number of OpenMP threads to use in the C++ layer.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>num_threads</strong> &#8211; The target number of threads to use</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The  number of threads OpenMP reports that it will use.  Typically this
+matches the input, but OpenMP reserves the right not to comply with
+the requested number of threads.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="treecorr.config.setup_logger">
-<tt class="descclassname">treecorr.config.</tt><tt class="descname">setup_logger</tt><big>(</big><em>verbose</em>, <em>log_file</em><big>)</big><a class="reference internal" href="_modules/treecorr/config.html#setup_logger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.config.setup_logger" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">treecorr.config.</tt><tt class="descname">setup_logger</tt><big>(</big><em>verbose</em>, <em>log_file=None</em><big>)</big><a class="reference internal" href="_modules/treecorr/config.html#setup_logger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.config.setup_logger" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse the integer verbosity level from the command line args into a logging_level string</p>
+<p>Note: This will update the verbosity if a previous call to setup_logger used a different
+value for verbose.  However, it will not update the handler to use a different log_file
+or switch between using a log_file and stdout.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>verbose</strong> &#8211; An integer indicating what verbosity level to use.</li>
+<li><strong>log_file</strong> &#8211; If given, a file name to which to write the logging output.
+If omitted or None, then output to stdout.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The logging.Logger object to use.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
@@ -181,7 +392,7 @@ See check_config for the structure of the params dict.</p>
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">corr2</a><ul>
+<li><a class="reference internal" href="#">The corr2 driver script</a><ul>
 <li><a class="reference internal" href="#the-corr2-function-from-python">The corr2 function from python</a></li>
 <li><a class="reference internal" href="#the-corr2-executable">The corr2 executable</a></li>
 <li><a class="reference internal" href="#module-treecorr.corr2">Other utilities related to corr2</a></li>
@@ -193,6 +404,9 @@ See check_config for the structure of the params dict.</p>
   <h4>Previous topic</h4>
   <p class="topless"><a href="celestial.html"
                         title="previous chapter">Celestial Coordinates</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="history.html"
+                        title="next chapter">History</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/corr2.txt"
@@ -224,6 +438,9 @@ See check_config for the structure of the params dict.</p>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
+        <li class="right" >
+          <a href="history.html" title="History"
+             >next</a> |</li>
         <li class="right" >
           <a href="celestial.html" title="Celestial Coordinates"
              >previous</a> |</li>

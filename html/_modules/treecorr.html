@@ -23,6 +23,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="TreeCorr  documentation" href="../index.html" />
     <link rel="up" title="Module code" href="index.html" /> 
   </head>
@@ -64,13 +65,13 @@
 <span class="n">version</span> <span class="o">=</span> <span class="s">&#39;3.0.2&#39;</span>
 
 <span class="kn">from</span> <span class="nn">.celestial</span> <span class="kn">import</span> <span class="n">CelestialCoord</span><span class="p">,</span> <span class="n">angle_units</span><span class="p">,</span> <span class="n">arcsec</span><span class="p">,</span> <span class="n">arcmin</span><span class="p">,</span> <span class="n">degrees</span><span class="p">,</span> <span class="n">hours</span><span class="p">,</span> <span class="n">radians</span>
-<span class="kn">from</span> <span class="nn">.config</span> <span class="kn">import</span> <span class="n">read_config</span>
+<span class="kn">from</span> <span class="nn">.config</span> <span class="kn">import</span> <span class="n">read_config</span><span class="p">,</span> <span class="n">set_omp_threads</span>
 <span class="kn">from</span> <span class="nn">.corr2</span> <span class="kn">import</span> <span class="n">corr2</span><span class="p">,</span> <span class="n">print_corr2_params</span>
 <span class="kn">from</span> <span class="nn">.catalog</span> <span class="kn">import</span> <span class="n">Catalog</span><span class="p">,</span> <span class="n">read_catalogs</span><span class="p">,</span> <span class="n">calculateVarG</span><span class="p">,</span> <span class="n">calculateVarK</span>
-<span class="kn">from</span> <span class="nn">.binnedcorr2</span> <span class="kn">import</span> <span class="n">BinnedCorr2</span><span class="p">,</span> <span class="n">SetOMPThreads</span>
-<span class="kn">from</span> <span class="nn">.g2correlation</span> <span class="kn">import</span> <span class="n">G2Correlation</span>
-<span class="kn">from</span> <span class="nn">.n2correlation</span> <span class="kn">import</span> <span class="n">N2Correlation</span>
-<span class="kn">from</span> <span class="nn">.k2correlation</span> <span class="kn">import</span> <span class="n">K2Correlation</span>
+<span class="kn">from</span> <span class="nn">.binnedcorr2</span> <span class="kn">import</span> <span class="n">BinnedCorr2</span>
+<span class="kn">from</span> <span class="nn">.ggcorrelation</span> <span class="kn">import</span> <span class="n">GGCorrelation</span>
+<span class="kn">from</span> <span class="nn">.nncorrelation</span> <span class="kn">import</span> <span class="n">NNCorrelation</span>
+<span class="kn">from</span> <span class="nn">.kkcorrelation</span> <span class="kn">import</span> <span class="n">KKCorrelation</span>
 <span class="kn">from</span> <span class="nn">.ngcorrelation</span> <span class="kn">import</span> <span class="n">NGCorrelation</span>
 <span class="kn">from</span> <span class="nn">.nkcorrelation</span> <span class="kn">import</span> <span class="n">NKCorrelation</span>
 <span class="kn">from</span> <span class="nn">.kgcorrelation</span> <span class="kn">import</span> <span class="n">KGCorrelation</span>

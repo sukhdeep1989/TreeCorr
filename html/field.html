@@ -23,9 +23,10 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="TreeCorr  documentation" href="index.html" />
-    <link rel="next" title="Celestial Coordinates" href="celestial.html" />
-    <link rel="prev" title="KG: Kappa-shear correlations" href="kg.html" /> 
+    <link rel="next" title="Two-point Correlation Functions" href="correlation.html" />
+    <link rel="prev" title="Catalogs" href="catalog.html" /> 
   </head>
   <body>
     <div class="related">
@@ -38,10 +39,10 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="celestial.html" title="Celestial Coordinates"
+          <a href="correlation.html" title="Two-point Correlation Functions"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="kg.html" title="KG: Kappa-shear correlations"
+          <a href="catalog.html" title="Catalogs"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">TreeCorr  documentation</a> &raquo;</li> 
       </ul>
@@ -52,78 +53,179 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-treecorr.field">
-<span id="fields"></span><h1>Fields<a class="headerlink" href="#module-treecorr.field" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="fields">
+<h1>Fields<a class="headerlink" href="#fields" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="nfield">
+<h2>NField<a class="headerlink" href="#nfield" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="treecorr.field.GField">
-<em class="property">class </em><tt class="descclassname">treecorr.field.</tt><tt class="descname">GField</tt><big>(</big><em>cat</em>, <em>min_sep=None</em>, <em>max_sep=None</em>, <em>b=None</em>, <em>logger=None</em>, <em>config=None</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/treecorr/field.html#GField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.field.GField" title="Permalink to this definition">¶</a></dt>
-<dd><p>This class stores the shear field in a tree structure from which it is efficient
-to compute the two-point correlation functions.</p>
-<p>A GField is typically created from a Catalog object using</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">gfield</span> <span class="o">=</span> <span class="n">cat</span><span class="o">.</span><span class="n">getGField</span><span class="p">(</span><span class="n">min_sep</span><span class="p">,</span> <span class="n">max_sep</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="class">
-<dt id="treecorr.field.GSimpleField">
-<em class="property">class </em><tt class="descclassname">treecorr.field.</tt><tt class="descname">GSimpleField</tt><big>(</big><em>cat</em>, <em>logger=None</em>, <em>config=None</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/treecorr/field.html#GSimpleField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.field.GSimpleField" title="Permalink to this definition">¶</a></dt>
-<dd><p>This class stores the shear field in a tree structure from which it is efficient
-to compute the two-point correlation functions.</p>
-<p>A GSimpleField is typically created from a Catalog object using</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">gfield</span> <span class="o">=</span> <span class="n">cat</span><span class="o">.</span><span class="n">getGSimpleField</span><span class="p">()</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="class">
-<dt id="treecorr.field.KField">
-<em class="property">class </em><tt class="descclassname">treecorr.field.</tt><tt class="descname">KField</tt><big>(</big><em>cat</em>, <em>min_sep=None</em>, <em>max_sep=None</em>, <em>b=None</em>, <em>logger=None</em>, <em>config=None</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/treecorr/field.html#KField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.field.KField" title="Permalink to this definition">¶</a></dt>
-<dd><p>This class stores the kappa field in a tree structure from which it is efficient
-to compute the two-point correlation functions.</p>
-<p>A KField is typically created from a Catalog object using</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kfield</span> <span class="o">=</span> <span class="n">cat</span><span class="o">.</span><span class="n">getKField</span><span class="p">(</span><span class="n">min_sep</span><span class="p">,</span> <span class="n">max_sep</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="class">
-<dt id="treecorr.field.KSimpleField">
-<em class="property">class </em><tt class="descclassname">treecorr.field.</tt><tt class="descname">KSimpleField</tt><big>(</big><em>cat</em>, <em>logger=None</em>, <em>config=None</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/treecorr/field.html#KSimpleField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.field.KSimpleField" title="Permalink to this definition">¶</a></dt>
-<dd><p>This class stores the kappa field in a tree structure from which it is efficient
-to compute the two-point correlation functions.</p>
-<p>A KSimpleField is typically created from a Catalog object using</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kfield</span> <span class="o">=</span> <span class="n">cat</span><span class="o">.</span><span class="n">getKSimpleField</span><span class="p">()</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="class">
-<dt id="treecorr.field.NField">
-<em class="property">class </em><tt class="descclassname">treecorr.field.</tt><tt class="descname">NField</tt><big>(</big><em>cat</em>, <em>min_sep=None</em>, <em>max_sep=None</em>, <em>b=None</em>, <em>logger=None</em>, <em>config=None</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/treecorr/field.html#NField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.field.NField" title="Permalink to this definition">¶</a></dt>
+<dt id="treecorr.NField">
+<em class="property">class </em><tt class="descclassname">treecorr.</tt><tt class="descname">NField</tt><big>(</big><em>cat</em>, <em>min_sep</em>, <em>max_sep</em>, <em>b</em>, <em>split_method='mean'</em>, <em>logger=None</em><big>)</big><a class="headerlink" href="#treecorr.NField" title="Permalink to this definition">¶</a></dt>
 <dd><p>This class stores the positions in a tree structure from which it is efficient
 to compute the two-point correlation functions.</p>
 <p>An NField is typically created from a Catalog object using</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">nfield</span> <span class="o">=</span> <span class="n">cat</span><span class="o">.</span><span class="n">getNField</span><span class="p">(</span><span class="n">min_sep</span><span class="p">,</span> <span class="n">max_sep</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
 </pre></div>
 </div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cat</strong> &#8211; The catalog from which to make the field.</li>
+<li><strong>min_sep</strong> &#8211; The minimum separation between points that will be needed.</li>
+<li><strong>max_sep</strong> &#8211; The maximum separation between points that will be needed.</li>
+<li><strong>b</strong> &#8211; The b parameter that will be used for the correlation function.
+This should be bin_size * bin_slop.</li>
+<li><strong>split_method</strong> &#8211; Which split method to use (&#8216;mean&#8217;, &#8216;median&#8217;, or &#8216;middle&#8217;)
+(default: &#8216;mean&#8217;)</li>
+<li><strong>logger</strong> &#8211; A logger file if desired (default: None)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
+</div>
+<div class="section" id="gfield">
+<h2>GField<a class="headerlink" href="#gfield" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="treecorr.field.NSimpleField">
-<em class="property">class </em><tt class="descclassname">treecorr.field.</tt><tt class="descname">NSimpleField</tt><big>(</big><em>cat</em>, <em>logger=None</em>, <em>config=None</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/treecorr/field.html#NSimpleField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.field.NSimpleField" title="Permalink to this definition">¶</a></dt>
+<dt id="treecorr.GField">
+<em class="property">class </em><tt class="descclassname">treecorr.</tt><tt class="descname">GField</tt><big>(</big><em>cat</em>, <em>min_sep</em>, <em>max_sep</em>, <em>b</em>, <em>split_method='mean'</em>, <em>logger=None</em><big>)</big><a class="headerlink" href="#treecorr.GField" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class stores the shear field in a tree structure from which it is efficient
+to compute the two-point correlation functions.</p>
+<p>A GField is typically created from a Catalog object using</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">gfield</span> <span class="o">=</span> <span class="n">cat</span><span class="o">.</span><span class="n">getGField</span><span class="p">(</span><span class="n">min_sep</span><span class="p">,</span> <span class="n">max_sep</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cat</strong> &#8211; The catalog from which to make the field.</li>
+<li><strong>min_sep</strong> &#8211; The minimum separation between points that will be needed.</li>
+<li><strong>max_sep</strong> &#8211; The maximum separation between points that will be needed.</li>
+<li><strong>b</strong> &#8211; The b parameter that will be used for the correlation function.
+This should be bin_size * bin_slop.</li>
+<li><strong>split_method</strong> &#8211; Which split method to use (&#8216;mean&#8217;, &#8216;median&#8217;, or &#8216;middle&#8217;)
+(default: &#8216;mean&#8217;)</li>
+<li><strong>logger</strong> &#8211; A logger file if desired (default: None)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="kfield">
+<h2>KField<a class="headerlink" href="#kfield" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="treecorr.KField">
+<em class="property">class </em><tt class="descclassname">treecorr.</tt><tt class="descname">KField</tt><big>(</big><em>cat</em>, <em>min_sep</em>, <em>max_sep</em>, <em>b</em>, <em>split_method='mean'</em>, <em>logger=None</em><big>)</big><a class="headerlink" href="#treecorr.KField" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class stores the kappa field in a tree structure from which it is efficient
+to compute the two-point correlation functions.</p>
+<p>A KField is typically created from a Catalog object using</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kfield</span> <span class="o">=</span> <span class="n">cat</span><span class="o">.</span><span class="n">getKField</span><span class="p">(</span><span class="n">min_sep</span><span class="p">,</span> <span class="n">max_sep</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cat</strong> &#8211; The catalog from which to make the field.</li>
+<li><strong>min_sep</strong> &#8211; The minimum separation between points that will be needed.</li>
+<li><strong>max_sep</strong> &#8211; The maximum separation between points that will be needed.</li>
+<li><strong>b</strong> &#8211; The b parameter that will be used for the correlation function.
+This should be bin_size * bin_slop.</li>
+<li><strong>split_method</strong> &#8211; Which split method to use (&#8216;mean&#8217;, &#8216;median&#8217;, or &#8216;middle&#8217;)
+(default: &#8216;mean&#8217;)</li>
+<li><strong>logger</strong> &#8211; A logger file if desired (default: None)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="nsimplefield">
+<h2>NSimpleField<a class="headerlink" href="#nsimplefield" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="treecorr.NSimpleField">
+<em class="property">class </em><tt class="descclassname">treecorr.</tt><tt class="descname">NSimpleField</tt><big>(</big><em>cat</em>, <em>logger=None</em><big>)</big><a class="headerlink" href="#treecorr.NSimpleField" title="Permalink to this definition">¶</a></dt>
 <dd><p>This class stores the positions as a list, skipping all the tree stuff.</p>
 <p>An NSimpleField is typically created from a Catalog object using</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">nfield</span> <span class="o">=</span> <span class="n">cat</span><span class="o">.</span><span class="n">getNSimpleField</span><span class="p">()</span>
 </pre></div>
 </div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cat</strong> &#8211; The catalog from which to make the field.</li>
+<li><strong>logger</strong> &#8211; A logger file if desired (default: None)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="function">
-<dt id="treecorr.field.parse_split_method">
-<tt class="descclassname">treecorr.field.</tt><tt class="descname">parse_split_method</tt><big>(</big><em>split_method</em><big>)</big><a class="reference internal" href="_modules/treecorr/field.html#parse_split_method"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treecorr.field.parse_split_method" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+</div>
+<div class="section" id="gsimplefield">
+<h2>GSimpleField<a class="headerlink" href="#gsimplefield" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="treecorr.GSimpleField">
+<em class="property">class </em><tt class="descclassname">treecorr.</tt><tt class="descname">GSimpleField</tt><big>(</big><em>cat</em>, <em>logger=None</em><big>)</big><a class="headerlink" href="#treecorr.GSimpleField" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class stores the shear field as a list, skipping all the tree stuff.</p>
+<p>A GSimpleField is typically created from a Catalog object using</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">gfield</span> <span class="o">=</span> <span class="n">cat</span><span class="o">.</span><span class="n">getGSimpleField</span><span class="p">()</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cat</strong> &#8211; The catalog from which to make the field.</li>
+<li><strong>logger</strong> &#8211; A logger file if desired (default: None)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
+</div>
+<div class="section" id="ksimplefield">
+<h2>KSimpleField<a class="headerlink" href="#ksimplefield" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="treecorr.KSimpleField">
+<em class="property">class </em><tt class="descclassname">treecorr.</tt><tt class="descname">KSimpleField</tt><big>(</big><em>cat</em>, <em>logger=None</em><big>)</big><a class="headerlink" href="#treecorr.KSimpleField" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class stores the kappa field as a list, skipping all the tree stuff.</p>
+<p>A KSimpleField is typically created from a Catalog object using</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kfield</span> <span class="o">=</span> <span class="n">cat</span><span class="o">.</span><span class="n">getKSimpleField</span><span class="p">()</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cat</strong> &#8211; The catalog from which to make the field.</li>
+<li><strong>logger</strong> &#8211; A logger file if desired (default: None)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
 </div>
 
 
@@ -132,12 +234,25 @@ to compute the two-point correlation functions.</p>
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Fields</a><ul>
+<li><a class="reference internal" href="#nfield">NField</a></li>
+<li><a class="reference internal" href="#gfield">GField</a></li>
+<li><a class="reference internal" href="#kfield">KField</a></li>
+<li><a class="reference internal" href="#nsimplefield">NSimpleField</a></li>
+<li><a class="reference internal" href="#gsimplefield">GSimpleField</a></li>
+<li><a class="reference internal" href="#ksimplefield">KSimpleField</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
-  <p class="topless"><a href="kg.html"
-                        title="previous chapter">KG: Kappa-shear correlations</a></p>
+  <p class="topless"><a href="catalog.html"
+                        title="previous chapter">Catalogs</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="celestial.html"
-                        title="next chapter">Celestial Coordinates</a></p>
+  <p class="topless"><a href="correlation.html"
+                        title="next chapter">Two-point Correlation Functions</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/field.txt"
@@ -170,10 +285,10 @@ to compute the two-point correlation functions.</p>
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="celestial.html" title="Celestial Coordinates"
+          <a href="correlation.html" title="Two-point Correlation Functions"
              >next</a> |</li>
         <li class="right" >
-          <a href="kg.html" title="KG: Kappa-shear correlations"
+          <a href="catalog.html" title="Catalogs"
              >previous</a> |</li>
         <li><a href="index.html">TreeCorr  documentation</a> &raquo;</li> 
       </ul>

@@ -23,6 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="TreeCorr  documentation" href="index.html" />
     <link rel="up" title="Two-point Correlation Functions" href="correlation.html" />
     <link rel="next" title="GG: Shear-shear correlations" href="gg.html" />
@@ -57,31 +58,33 @@
   <div class="section" id="nn-count-count-correlations">
 <h1>NN: Count-count correlations<a class="headerlink" href="#nn-count-count-correlations" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
-<dt id="treecorr.N2Correlation">
-<em class="property">class </em><tt class="descclassname">treecorr.</tt><tt class="descname">N2Correlation</tt><big>(</big><em>config=None</em>, <em>logger=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#treecorr.N2Correlation" title="Permalink to this definition">¶</a></dt>
+<dt id="treecorr.NNCorrelation">
+<em class="property">class </em><tt class="descclassname">treecorr.</tt><tt class="descname">NNCorrelation</tt><big>(</big><em>config=None</em>, <em>logger=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#treecorr.NNCorrelation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">treecorr.binnedcorr2.BinnedCorr2</span></tt></p>
-<p>This class handles the calculation and storage of a 2-point shear-shear correlation
-function.</p>
+<p>This class handles the calculation and storage of a 2-point count-count correlation
+function.  i.e. the regular density correlation function.</p>
 <p>It holds the following attributes:</p>
-<table class="docutils field-list" frame="void" rules="none">
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Logr:</th><td class="field-body">The nominal center of the bin in log(r).</td>
+<tr class="field-odd field"><th class="field-name">logr:</th><td class="field-body">The nominal center of the bin in log(r).</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Meanlogr:</th><td class="field-body">The (weighted) mean value of log(r) for the pairs in each bin.
+<tr class="field-even field"><th class="field-name">meanlogr:</th><td class="field-body">The (weighted) mean value of log(r) for the pairs in each bin.
 If there are no pairs in a bin, then logr will be used instead.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Npairs:</th><td class="field-body">The number of pairs going into each bin.</td>
+<tr class="field-odd field"><th class="field-name">npairs:</th><td class="field-body">The number of pairs going into each bin.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Tot:</th><td class="field-body">The total number of pairs processed, which is used to normalize
+<tr class="field-even field"><th class="field-name">tot:</th><td class="field-body">The total number of pairs processed, which is used to normalize
 the randoms if they have a different number of pairs.</td>
 </tr>
 </tbody>
 </table>
+</div></blockquote>
 <p>The usage pattern is as follows:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">nn</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">N2Correlation</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">nn</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">cat1</span><span class="p">)</span>        <span class="c"># For auto-correlation.</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">nn</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">NNCorrelation</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nn</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">cat</span><span class="p">)</span>         <span class="c"># For auto-correlation.</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">nn</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span><span class="n">cat2</span><span class="p">)</span>   <span class="c"># For cross-correlation.</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">rr</span><span class="o">.</span><span class="n">process</span><span class="o">...</span>           <span class="c"># Likewise for random-random correlations</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dr</span><span class="o">.</span><span class="n">process</span><span class="o">...</span>           <span class="c"># If desired, also do data-random correlations</span>
@@ -90,30 +93,57 @@ the randoms if they have a different number of pairs.</td>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">xi</span><span class="p">,</span><span class="n">varxi</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">calculateXi</span><span class="p">(</span><span class="n">rr</span><span class="p">,</span><span class="n">dr</span><span class="p">,</span><span class="n">rd</span><span class="p">)</span>  <span class="c"># Or get the correlation function directly.</span>
 </pre></div>
 </div>
-<dl class="method">
-<dt id="treecorr.N2Correlation.calculateNapSq">
-<tt class="descname">calculateNapSq</tt><big>(</big><em>rr</em>, <em>dr=None</em>, <em>rd=None</em>, <em>m2_uform=None</em><big>)</big><a class="headerlink" href="#treecorr.N2Correlation.calculateNapSq" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate the correlary to the aperture mass statistics for counts.</p>
-<p>This is used by NGCorrelation.writeNorm.  See that function and also 
-G2Correlation.calculateMapSq() for more details.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">(nsq, varnsq)</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>config</strong> &#8211; The configuration dict which defines attributes about how to read the file.
+Any kwargs that are not those listed here will be added to the config, 
+so you can even omit the config dict and just enter all parameters you
+want as kwargs.  (default: None)</li>
+<li><strong>logger</strong> &#8211; If desired, a logger object for logging. (default: None, in which case
+one will be built according to the config dict&#8217;s verbose level.)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="treecorr.NNCorrelation.calculateNapSq">
+<tt class="descname">calculateNapSq</tt><big>(</big><em>rr</em>, <em>dr=None</em>, <em>rd=None</em>, <em>m2_uform=None</em><big>)</big><a class="headerlink" href="#treecorr.NNCorrelation.calculateNapSq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the correlary to the aperture mass statistics for counts.</p>
+<p>This is used by NGCorrelation.writeNorm.  See that function and also 
+GGCorrelation.calculateMapSq() for more details.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>rr</strong> &#8211; An NNCorrelation object for the random-random pairs.</li>
+<li><strong>dr</strong> &#8211; An NNCorrelation object for the data-random pairs, if desired, in which
+case the Landy-Szalay estimator will be calculated.  (default: None)</li>
+<li><strong>rd</strong> &#8211; An NNCorrelation object for the random-data pairs, if desired and 
+different from dr.  (default: None, which mean use rd=dr)</li>
+<li><strong>m2_uform</strong> &#8211; Which form to use for the aperture mass.  (default: None)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(nsq, varnsq)</p>
+</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <dl class="method">
-<dt id="treecorr.N2Correlation.calculateXi">
-<tt class="descname">calculateXi</tt><big>(</big><em>rr</em>, <em>dr=None</em>, <em>rd=None</em><big>)</big><a class="headerlink" href="#treecorr.N2Correlation.calculateXi" title="Permalink to this definition">¶</a></dt>
+<dt id="treecorr.NNCorrelation.calculateXi">
+<tt class="descname">calculateXi</tt><big>(</big><em>rr</em>, <em>dr=None</em>, <em>rd=None</em><big>)</big><a class="headerlink" href="#treecorr.NNCorrelation.calculateXi" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the correlation function given another correlation function of random
 points using the same mask, and possibly cross correlations of the data and random.</p>
 <p>For a signal that involves a cross correlations, there should be two random
 cross-correlations: data-random and random-data, given as dr and rd.</p>
-<p>rr is the N2Correlation function for random points.
+<p>rr is the NNCorrelation function for random points.
 If dr is None, the simple correlation function (nn/rr - 1) is used.
 if dr is given and rd is None, then (nn - 2dr + rr)/rr is used.
 If dr and rd are both given, then (nn - dr - rd + rr)/rr is used.</p>
@@ -121,21 +151,31 @@ If dr and rd are both given, then (nn - dr - rd + rr)/rr is used.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">(xi, varxi)</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>rr</strong> &#8211; An NNCorrelation object for the random-random pairs.</li>
+<li><strong>dr</strong> &#8211; An NNCorrelation object for the data-random pairs, if desired, in which
+case the Landy-Szalay estimator will be calculated.  (default: None)</li>
+<li><strong>rd</strong> &#8211; An NNCorrelation object for the random-data pairs, if desired and 
+different from dr.  (default: None, which mean use rd=dr)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(xi, varxi) as a tuple</p>
+</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <dl class="method">
-<dt id="treecorr.N2Correlation.clear">
-<tt class="descname">clear</tt><big>(</big><big>)</big><a class="headerlink" href="#treecorr.N2Correlation.clear" title="Permalink to this definition">¶</a></dt>
+<dt id="treecorr.NNCorrelation.clear">
+<tt class="descname">clear</tt><big>(</big><big>)</big><a class="headerlink" href="#treecorr.NNCorrelation.clear" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clear the data vectors</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="treecorr.N2Correlation.finalize">
-<tt class="descname">finalize</tt><big>(</big><big>)</big><a class="headerlink" href="#treecorr.N2Correlation.finalize" title="Permalink to this definition">¶</a></dt>
+<dt id="treecorr.NNCorrelation.finalize">
+<tt class="descname">finalize</tt><big>(</big><big>)</big><a class="headerlink" href="#treecorr.NNCorrelation.finalize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Finalize the calculation of the correlation function.</p>
 <p>The process_auto and process_cross commands accumulate values in each bin,
 so they can be called multiple times if appropriate.  Afterwards, this command
@@ -143,52 +183,113 @@ finishes the calculation of meanlogr by dividing each column by the total weight
 </dd></dl>
 
 <dl class="method">
-<dt id="treecorr.N2Correlation.process">
-<tt class="descname">process</tt><big>(</big><em>cat1</em>, <em>cat2=None</em><big>)</big><a class="headerlink" href="#treecorr.N2Correlation.process" title="Permalink to this definition">¶</a></dt>
+<dt id="treecorr.NNCorrelation.process">
+<tt class="descname">process</tt><big>(</big><em>cat1</em>, <em>cat2=None</em><big>)</big><a class="headerlink" href="#treecorr.NNCorrelation.process" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the correlation function.</p>
 <p>If only 1 argument is given, then compute an auto-correlation function.
 If 2 arguments are given, then compute a cross-correlation function.</p>
 <p>Both arguments may be lists, in which case all items in the list are used 
 for that element of the correlation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cat1</strong> &#8211; A catalog or list of catalogs for the first N field.</li>
+<li><strong>cat2</strong> &#8211; A catalog or list of catalogs for the second N field, if any.
+(default: None)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
-<dt id="treecorr.N2Correlation.process_auto">
-<tt class="descname">process_auto</tt><big>(</big><em>cat1</em><big>)</big><a class="headerlink" href="#treecorr.N2Correlation.process_auto" title="Permalink to this definition">¶</a></dt>
+<dt id="treecorr.NNCorrelation.process_auto">
+<tt class="descname">process_auto</tt><big>(</big><em>cat</em><big>)</big><a class="headerlink" href="#treecorr.NNCorrelation.process_auto" title="Permalink to this definition">¶</a></dt>
 <dd><p>Process a single catalog, accumulating the auto-correlation.</p>
 <p>This accumulates the auto-correlation for the given catalog.  After
 calling this function as often as desired, the finalize() command will
 finish the calculation of meanlogr.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>cat</strong> &#8211; The catalog to process</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
-<dt id="treecorr.N2Correlation.process_cross">
-<tt class="descname">process_cross</tt><big>(</big><em>cat1</em>, <em>cat2</em><big>)</big><a class="headerlink" href="#treecorr.N2Correlation.process_cross" title="Permalink to this definition">¶</a></dt>
+<dt id="treecorr.NNCorrelation.process_cross">
+<tt class="descname">process_cross</tt><big>(</big><em>cat1</em>, <em>cat2</em><big>)</big><a class="headerlink" href="#treecorr.NNCorrelation.process_cross" title="Permalink to this definition">¶</a></dt>
 <dd><p>Process a single pair of catalogs, accumulating the cross-correlation.</p>
 <p>This accumulates the cross-correlation for the given catalogs.  After
 calling this function as often as desired, the finalize() command will
 finish the calculation of meanlogr.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cat1</strong> &#8211; The first catalog to process</li>
+<li><strong>cat2</strong> &#8211; The second catalog to process</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
-<dt id="treecorr.N2Correlation.process_pairwise">
-<tt class="descname">process_pairwise</tt><big>(</big><em>cat1</em>, <em>cat2</em><big>)</big><a class="headerlink" href="#treecorr.N2Correlation.process_pairwise" title="Permalink to this definition">¶</a></dt>
+<dt id="treecorr.NNCorrelation.process_pairwise">
+<tt class="descname">process_pairwise</tt><big>(</big><em>cat1</em>, <em>cat2</em><big>)</big><a class="headerlink" href="#treecorr.NNCorrelation.process_pairwise" title="Permalink to this definition">¶</a></dt>
 <dd><p>Process a single pair of catalogs, accumulating the cross-correlation, only using
 the corresponding pairs of objects in each catalog.</p>
 <p>This accumulates the weighted sums into the bins, but does not finalize
 the calculation by dividing by the total weight at the end.  After
 calling this function as often as desired, the finalize() command will
 finish the calculation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cat1</strong> &#8211; The first catalog to process</li>
+<li><strong>cat2</strong> &#8211; The second catalog to process</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
-<dt id="treecorr.N2Correlation.write">
-<tt class="descname">write</tt><big>(</big><em>file_name</em>, <em>rr</em>, <em>dr=None</em>, <em>rd=None</em><big>)</big><a class="headerlink" href="#treecorr.N2Correlation.write" title="Permalink to this definition">¶</a></dt>
+<dt id="treecorr.NNCorrelation.write">
+<tt class="descname">write</tt><big>(</big><em>file_name</em>, <em>rr</em>, <em>dr=None</em>, <em>rd=None</em><big>)</big><a class="headerlink" href="#treecorr.NNCorrelation.write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write the correlation function to the file, file_name.</p>
-<p>rr is the N2Correlation function for random points.
+<p>rr is the NNCorrelation function for random points.
 If dr is None, the simple correlation function (nn - rr)/rr is used.
 if dr is given and rd is None, then (nn - 2dr + rr)/rr is used.
 If dr and rd are both given, then (nn - dr - rd + rr)/rr is used.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>file_name</strong> &#8211; The name of the file to write to.</li>
+<li><strong>rr</strong> &#8211; An NNCorrelation object for the random-random pairs.</li>
+<li><strong>dr</strong> &#8211; An NNCorrelation object for the data-random pairs, if desired, in which
+case the Landy-Szalay estimator will be calculated.  (default: None)</li>
+<li><strong>rd</strong> &#8211; An NNCorrelation object for the random-data pairs, if desired and 
+different from dr.  (default: None, which mean use rd=dr)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>

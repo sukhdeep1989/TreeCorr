@@ -23,6 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="TreeCorr  documentation" href="index.html" />
     <link rel="up" title="Two-point Correlation Functions" href="correlation.html" />
     <link rel="next" title="KK: Kappa-kappa correlations" href="kk.html" />
@@ -60,32 +61,35 @@
 <dt id="treecorr.NGCorrelation">
 <em class="property">class </em><tt class="descclassname">treecorr.</tt><tt class="descname">NGCorrelation</tt><big>(</big><em>config=None</em>, <em>logger=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#treecorr.NGCorrelation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">treecorr.binnedcorr2.BinnedCorr2</span></tt></p>
-<p>This class handles the calculation and storage of a 2-point shear-shear correlation
-function.</p>
+<p>This class handles the calculation and storage of a 2-point count-shear correlation
+function.  This is the tangential shear profile around lenses, commonly referred to as
+galaxy-galaxy lensing.</p>
 <p>It holds the following attributes:</p>
-<table class="docutils field-list" frame="void" rules="none">
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Logr:</th><td class="field-body">The nominal center of the bin in log(r).</td>
+<tr class="field-odd field"><th class="field-name">logr:</th><td class="field-body">The nominal center of the bin in log(r).</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Meanlogr:</th><td class="field-body">The (weighted) mean value of log(r) for the pairs in each bin.
+<tr class="field-even field"><th class="field-name">meanlogr:</th><td class="field-body">The (weighted) mean value of log(r) for the pairs in each bin.
 If there are no pairs in a bin, then logr will be used instead.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Xi:</th><td class="field-body">The correlation function, xi(r) = &lt;gamma_T&gt;.</td>
+<tr class="field-odd field"><th class="field-name">xi:</th><td class="field-body">The correlation function, xi(r) = &lt;gamma_T&gt;.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Xi_im:</th><td class="field-body">The imaginary part of xi(r).</td>
+<tr class="field-even field"><th class="field-name">xi_im:</th><td class="field-body">The imaginary part of xi(r).</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Varxi:</th><td class="field-body">The variance of xi, only including the shape noise propagated into the
+<tr class="field-odd field"><th class="field-name">varxi:</th><td class="field-body">The variance of xi, only including the shape noise propagated into the
 final correlation.  This does not include sample variance, so it is
 always an underestimate of the actual variance.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Weight:</th><td class="field-body">The total weight in each bin.</td>
+<tr class="field-even field"><th class="field-name">weight:</th><td class="field-body">The total weight in each bin.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Npairs:</th><td class="field-body">The number of pairs going into each bin.</td>
+<tr class="field-odd field"><th class="field-name">npairs:</th><td class="field-body">The number of pairs going into each bin.</td>
 </tr>
 </tbody>
 </table>
+</div></blockquote>
 <p>The usage pattern is as follows:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">ng</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">NGCorrelation</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ng</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span><span class="n">cat2</span><span class="p">)</span>   <span class="c"># Compute the cross-correlation.</span>
@@ -93,26 +97,59 @@ always an underestimate of the actual variance.</td>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">xi</span> <span class="o">=</span> <span class="n">gg</span><span class="o">.</span><span class="n">xi</span>              <span class="c"># Or access the correlation function directly.</span>
 </pre></div>
 </div>
-<dl class="method">
-<dt id="treecorr.NGCorrelation.calculateNMap">
-<tt class="descname">calculateNMap</tt><big>(</big><em>rg=None</em>, <em>m2_uform=None</em><big>)</big><a class="headerlink" href="#treecorr.NGCorrelation.calculateNMap" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate the aperture mass statistics from the correlation function.</p>
-<p>&lt;NMap&gt;(R) = int_r=0..2R [s^2 dlogr Tx(s) &lt;gammaT&gt;(r)]
-&lt;NMx&gt;(R)  = int_r=0..2R [s^2 dlogr Tx(s) &lt;gammaX&gt;(r)]</p>
-<p>The m2_uform parameter sets which definition of the aperture mass to use.
-The default is to look in the config dict that was used to build the catalog,
-or use &#8216;Crittenden&#8217; if it is not specified.</p>
-<p>If m2_uform == &#8216;Crittenden&#8217;:</p>
-<blockquote>
-<div>Tx(s) = s^2/128 (12-s^2) exp(-s^2/4)</div></blockquote>
-<p>If m2_uform == &#8216;Schneider&#8217;:</p>
-<blockquote>
-<div>Tx(s) = 18/Pi s^2 arccos(s/s) - 3/40Pi s^3 sqrt(4-s^2) (196 - 74s^2 + 14s^4 - s^6)</div></blockquote>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">(nmap, nmx, varnmap)</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>config</strong> &#8211; The configuration dict which defines attributes about how to read the file.
+Any kwargs that are not those listed here will be added to the config, 
+so you can even omit the config dict and just enter all parameters you
+want as kwargs.  (default: None)</li>
+<li><strong>logger</strong> &#8211; If desired, a logger object for logging. (default: None, in which case
+one will be built according to the config dict&#8217;s verbose level.)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="treecorr.NGCorrelation.calculateNMap">
+<tt class="descname">calculateNMap</tt><big>(</big><em>rg=None</em>, <em>m2_uform=None</em><big>)</big><a class="headerlink" href="#treecorr.NGCorrelation.calculateNMap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the aperture mass statistics from the correlation function.</p>
+<div class="math">
+\[\begin{split}\langle N M_{ap} \rangle(R) &amp;= \int_{0}^{rmax} \frac{r dr}{R^2} 
+T_\times\left(\frac{r}{R}\right) \Re\xi(r) \\
+\langle N M_{\times} \rangle(R) &amp;= \int_{0}^{rmax} \frac{r dr}{R^2}
+T_\times\left(\frac{r}{R}\right) \Im\xi(r)\end{split}\]</div>
+<p>The m2_uform parameter sets which definition of the aperture mass to use.
+The default is to look in the config dict that was used to build the catalog,
+or use &#8216;Crittenden&#8217; if it is not specified.</p>
+<p>If m2_uform == &#8216;Crittenden&#8217;:</p>
+<div class="math">
+\[T_\times(s) = \frac{s^2}{128} (12-s^2) \exp(-s^2/4)\]</div>
+<p>If m2_uform == &#8216;Schneider&#8217;:</p>
+<div class="math">
+\[T_\times(s) = \frac{18}{\pi} s^2 \arccos(s/2) -
+\frac{3}{40\pi} s^3 \sqrt{4-s^2} (196 - 74s^2 + 14s^4 - s^6)\]</div>
+<p>cf. Schneider, et al (2001): <a class="reference external" href="http://xxx.lanl.gov/abs/astro-ph/0112441">http://xxx.lanl.gov/abs/astro-ph/0112441</a>
+These formulae are not in there, but the derivation is similar to the derivations
+of T+ and T- in that paper.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>rg</strong> &#8211; An NGCorrelation using random locations as the lenses, if desired. 
+(default: None)</li>
+<li><strong>m2_uform</strong> &#8211; Which form to use for the aperture mass.  (default: None, in which
+case it looks in the object&#8217;s config file for config[&#8216;mu_uform&#8217;],
+or &#8216;Crittenden&#8217; if it is not provided.)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(nmap, nmx, varnmap) as a tuple</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -129,7 +166,10 @@ If rg is not None, then a compensated calculation is done: &lt;gamma_T&gt; = (dg
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">(xi, xi_im, varxi)</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rg</strong> &#8211; An NGCorrelation using random locations as the lenses, if desired. 
+(default: None)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(xi, xi_im, varxi) as a tuple.</td>
 </tr>
 </tbody>
 </table>
@@ -148,6 +188,14 @@ If rg is not None, then a compensated calculation is done: &lt;gamma_T&gt; = (dg
 <p>The process_cross command accumulates values in each bin, so it can be called
 multiple times if appropriate.  Afterwards, this command finishes the calculation
 by dividing each column by the total weight.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>varg</strong> &#8211; The shear variance per component for the second field.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -156,6 +204,18 @@ by dividing each column by the total weight.</p>
 <dd><p>Compute the correlation function.</p>
 <p>Both arguments may be lists, in which case all items in the list are used 
 for that element of the correlation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cat1</strong> &#8211; A catalog or list of catalogs for the N field.</li>
+<li><strong>cat2</strong> &#8211; A catalog or list of catalogs for the G field.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -166,6 +226,18 @@ for that element of the correlation.</p>
 the calculation by dividing by the total weight at the end.  After
 calling this function as often as desired, the finalize() command will
 finish the calculation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cat1</strong> &#8211; The first catalog to process</li>
+<li><strong>cat2</strong> &#8211; The second catalog to process</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -177,6 +249,18 @@ the corresponding pairs of objects in each catalog.</p>
 the calculation by dividing by the total weight at the end.  After
 calling this function as often as desired, the finalize() command will
 finish the calculation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cat1</strong> &#8211; The first catalog to process</li>
+<li><strong>cat2</strong> &#8211; The second catalog to process</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -185,6 +269,19 @@ finish the calculation.</p>
 <dd><p>Write the correlation function to the file, file_name.</p>
 <p>If rg is None, the simple correlation function &lt;gamma_T&gt; is used.
 If rg is not None, then a compensated calculation is done: &lt;gamma_T&gt; = (dg - rg)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>file_name</strong> &#8211; The name of the file to write to.</li>
+<li><strong>rg</strong> &#8211; An NGCorrelation using random locations as the lenses, if desired. 
+(default: None)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -194,19 +291,56 @@ If rg is not None, then a compensated calculation is done: &lt;gamma_T&gt; = (dg
 based on the correlation function to the file, file_name.</p>
 <p>if rg is provided, the compensated calculation will be used for xi.</p>
 <p>See calculateNMap for an explanation of the m2_uform parameter.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>file_name</strong> &#8211; The name of the file to write to.</li>
+<li><strong>rg</strong> &#8211; An NGCorrelation using random locations as the lenses, if desired. 
+(default: None)</li>
+<li><strong>m2_uform</strong> &#8211; Which form to use for the aperture mass.  (default: None)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="treecorr.NGCorrelation.writeNorm">
 <tt class="descname">writeNorm</tt><big>(</big><em>file_name</em>, <em>gg</em>, <em>dd</em>, <em>rr</em>, <em>dr=None</em>, <em>rg=None</em>, <em>m2_uform=None</em><big>)</big><a class="headerlink" href="#treecorr.NGCorrelation.writeNorm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write the normalized aperture mass cross-correlation to the file, file_name.</p>
-<p>The combination &lt;NMap&gt;^2 / &lt;Map^2&gt; &lt;N_ap^2&gt; is related to r^2, the galaxy-mass
-correlation coefficient.</p>
-<p>Similarly, &lt;N_ap^2&gt; / &lt;Map^2&gt; is related to b^2, the galaxy bias parameter.</p>
-<p>cf. Hoekstra et al, 2002: <a class="reference external" href="http://adsabs.harvard.edu/abs/2002ApJ...577..604H">http://adsabs.harvard.edu/abs/2002ApJ...577..604H</a></p>
+<p>The combination <span class="math">\(\langle N M_{ap}\rangle^2 / \langle M_{ap}^2\rangle
+\langle N_{ap}^2\rangle\)</span> is related to <span class="math">\(r\)</span>, the galaxy-mass correlation 
+coefficient.  Similarly, <span class="math">\(\langle N_{ap}^2\rangle / \langle M_{ap}^2\rangle\)</span>
+is related to <span class="math">\(b\)</span>, the galaxy bias parameter.  cf. Hoekstra et al, 2002: 
+<a class="reference external" href="http://adsabs.harvard.edu/abs/2002ApJ...577..604H">http://adsabs.harvard.edu/abs/2002ApJ...577..604H</a></p>
+<p>This function computes these combinations and outputs them to a file.</p>
 <p>if rg is provided, the compensated calculation will be used for NMap.
-if dr is provided, the compensated calculation will be used for N^2.</p>
+if dr is provided, the compensated calculation will be used for Nap^2.</p>
 <p>See calculateNMap for an explanation of the m2_uform parameter.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>file_name</strong> &#8211; The name of the file to write to.</li>
+<li><strong>gg</strong> &#8211; A GGCorrelation object for the shear-shear correlation function
+of the G field.</li>
+<li><strong>dd</strong> &#8211; An NNCorrelation object for the count-count correlation function
+of the N field.</li>
+<li><strong>rr</strong> &#8211; An NNCorrelation object for the random-random pairs.</li>
+<li><strong>dr</strong> &#8211; An NNCorrelation object for the data-random pairs, if desired, in which
+case the Landy-Szalay estimator will be calculated.  (default: None)</li>
+<li><strong>rg</strong> &#8211; An NGCorrelation using random locations as the lenses, if desired. 
+(default: None)</li>
+<li><strong>m2_uform</strong> &#8211; Which form to use for the aperture mass.  (default: None)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>

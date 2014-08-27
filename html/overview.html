@@ -23,6 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="TreeCorr  documentation" href="index.html" />
     <link rel="next" title="Catalogs" href="catalog.html" />
     <link rel="prev" title="TreeCorr Documentation" href="index.html" /> 
@@ -193,8 +194,8 @@ TreeCorr wiki page</p>
 <p>You can also specify parameters on the command line after the name of
 the configuration file. e.g.:</p>
 <blockquote>
-<div>corr2 config_file file_name=file1.dat g2_file_name=file1.out
-corr2 config_file file_name=file2.dat g2_file_name=file2.out
+<div>corr2 config_file file_name=file1.dat gg_file_name=file1.out
+corr2 config_file file_name=file2.dat gg_file_name=file2.out
 ...</div></blockquote>
 <p>This can be useful when running the program from a script for lots of input
 files.</p>
@@ -206,10 +207,10 @@ for the configuration parameters:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">treecorr</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">config</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">read_config</span><span class="p">(</span><span class="n">config_file</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s">&#39;file_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;file1.dat&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s">&#39;g2_file_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;file1.out&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s">&#39;gg_file_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;file1.out&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">treecorr</span><span class="o">.</span><span class="n">corr2</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s">&#39;file_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;file2.dat&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s">&#39;g2_file_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;file2.out&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s">&#39;gg_file_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;file2.out&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">treecorr</span><span class="o">.</span><span class="n">corr2</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 </pre></div>
 </div>

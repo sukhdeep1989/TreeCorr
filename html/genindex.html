@@ -24,6 +24,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="TreeCorr  documentation" href="index.html" /> 
   </head>
   <body>
@@ -109,15 +110,15 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="gg.html#treecorr.G2Correlation.calculateGamSq">calculateGamSq() (treecorr.G2Correlation method)</a>
+  <dt><a href="gg.html#treecorr.GGCorrelation.calculateGamSq">calculateGamSq() (treecorr.GGCorrelation method)</a>
   </dt>
 
       
-  <dt><a href="gg.html#treecorr.G2Correlation.calculateMapSq">calculateMapSq() (treecorr.G2Correlation method)</a>
+  <dt><a href="gg.html#treecorr.GGCorrelation.calculateMapSq">calculateMapSq() (treecorr.GGCorrelation method)</a>
   </dt>
 
       
-  <dt><a href="nn.html#treecorr.N2Correlation.calculateNapSq">calculateNapSq() (treecorr.N2Correlation method)</a>
+  <dt><a href="nn.html#treecorr.NNCorrelation.calculateNapSq">calculateNapSq() (treecorr.NNCorrelation method)</a>
   </dt>
 
       
@@ -133,16 +134,16 @@
   </dt>
 
       
-  <dt><a href="nn.html#treecorr.N2Correlation.calculateXi">calculateXi() (treecorr.N2Correlation method)</a>
+  <dt><a href="ng.html#treecorr.NGCorrelation.calculateXi">calculateXi() (treecorr.NGCorrelation method)</a>
   </dt>
 
       <dd><dl>
         
-  <dt><a href="ng.html#treecorr.NGCorrelation.calculateXi">(treecorr.NGCorrelation method)</a>
+  <dt><a href="nk.html#treecorr.NKCorrelation.calculateXi">(treecorr.NKCorrelation method)</a>
   </dt>
 
         
-  <dt><a href="nk.html#treecorr.NKCorrelation.calculateXi">(treecorr.NKCorrelation method)</a>
+  <dt><a href="nn.html#treecorr.NNCorrelation.calculateXi">(treecorr.NNCorrelation method)</a>
   </dt>
 
       </dl></dd>
@@ -169,20 +170,16 @@
   </dt>
 
       
-  <dt><a href="gg.html#treecorr.G2Correlation.clear">clear() (treecorr.G2Correlation method)</a>
+  <dt><a href="gg.html#treecorr.GGCorrelation.clear">clear() (treecorr.GGCorrelation method)</a>
   </dt>
 
       <dd><dl>
-        
-  <dt><a href="kk.html#treecorr.K2Correlation.clear">(treecorr.K2Correlation method)</a>
-  </dt>
-
         
   <dt><a href="kg.html#treecorr.KGCorrelation.clear">(treecorr.KGCorrelation method)</a>
   </dt>
 
         
-  <dt><a href="nn.html#treecorr.N2Correlation.clear">(treecorr.N2Correlation method)</a>
+  <dt><a href="kk.html#treecorr.KKCorrelation.clear">(treecorr.KKCorrelation method)</a>
   </dt>
 
         
@@ -191,6 +188,10 @@
 
         
   <dt><a href="nk.html#treecorr.NKCorrelation.clear">(treecorr.NKCorrelation method)</a>
+  </dt>
+
+        
+  <dt><a href="nn.html#treecorr.NNCorrelation.clear">(treecorr.NNCorrelation method)</a>
   </dt>
 
       </dl></dd>
@@ -245,20 +246,16 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="gg.html#treecorr.G2Correlation.finalize">finalize() (treecorr.G2Correlation method)</a>
+  <dt><a href="gg.html#treecorr.GGCorrelation.finalize">finalize() (treecorr.GGCorrelation method)</a>
   </dt>
 
       <dd><dl>
-        
-  <dt><a href="kk.html#treecorr.K2Correlation.finalize">(treecorr.K2Correlation method)</a>
-  </dt>
-
         
   <dt><a href="kg.html#treecorr.KGCorrelation.finalize">(treecorr.KGCorrelation method)</a>
   </dt>
 
         
-  <dt><a href="nn.html#treecorr.N2Correlation.finalize">(treecorr.N2Correlation method)</a>
+  <dt><a href="kk.html#treecorr.KKCorrelation.finalize">(treecorr.KKCorrelation method)</a>
   </dt>
 
         
@@ -269,6 +266,10 @@
   <dt><a href="nk.html#treecorr.NKCorrelation.finalize">(treecorr.NKCorrelation method)</a>
   </dt>
 
+        
+  <dt><a href="nn.html#treecorr.NNCorrelation.finalize">(treecorr.NNCorrelation method)</a>
+  </dt>
+
       </dl></dd>
   </dl></td>
 </tr></table>
@@ -276,10 +277,6 @@
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
-      
-  <dt><a href="gg.html#treecorr.G2Correlation">G2Correlation (class in treecorr)</a>
-  </dt>
-
       
   <dt><a href="celestial.html#treecorr.CelestialCoord.galactic">galactic() (treecorr.CelestialCoord method)</a>
   </dt>
@@ -304,12 +301,12 @@
   <dt><a href="catalog.html#treecorr.Catalog.getGSimpleField">getGSimpleField() (treecorr.Catalog method)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="catalog.html#treecorr.Catalog.getKField">getKField() (treecorr.Catalog method)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="catalog.html#treecorr.Catalog.getKSimpleField">getKSimpleField() (treecorr.Catalog method)</a>
   </dt>
@@ -323,11 +320,15 @@
   </dt>
 
       
-  <dt><a href="field.html#treecorr.field.GField">GField (class in treecorr.field)</a>
+  <dt><a href="field.html#treecorr.GField">GField (class in treecorr)</a>
   </dt>
 
       
-  <dt><a href="field.html#treecorr.field.GSimpleField">GSimpleField (class in treecorr.field)</a>
+  <dt><a href="gg.html#treecorr.GGCorrelation">GGCorrelation (class in treecorr)</a>
+  </dt>
+
+      
+  <dt><a href="field.html#treecorr.GSimpleField">GSimpleField (class in treecorr)</a>
   </dt>
 
   </dl></td>
@@ -363,21 +364,21 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="kk.html#treecorr.K2Correlation">K2Correlation (class in treecorr)</a>
+  <dt><a href="field.html#treecorr.KField">KField (class in treecorr)</a>
   </dt>
 
       
-  <dt><a href="field.html#treecorr.field.KField">KField (class in treecorr.field)</a>
+  <dt><a href="kg.html#treecorr.KGCorrelation">KGCorrelation (class in treecorr)</a>
   </dt>
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="kg.html#treecorr.KGCorrelation">KGCorrelation (class in treecorr)</a>
+  <dt><a href="kk.html#treecorr.KKCorrelation">KKCorrelation (class in treecorr)</a>
   </dt>
 
       
-  <dt><a href="field.html#treecorr.field.KSimpleField">KSimpleField (class in treecorr.field)</a>
+  <dt><a href="field.html#treecorr.KSimpleField">KSimpleField (class in treecorr)</a>
   </dt>
 
   </dl></td>
@@ -385,6 +386,12 @@
 
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="catalog.html#treecorr.Catalog.makeArray">makeArray() (treecorr.Catalog method)</a>
+  </dt>
+
+  </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="corr2.html#treecorr.config.merge_config">merge_config() (in module treecorr.config)</a>
@@ -397,25 +404,25 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="nn.html#treecorr.N2Correlation">N2Correlation (class in treecorr)</a>
-  </dt>
-
-      
-  <dt><a href="field.html#treecorr.field.NField">NField (class in treecorr.field)</a>
+  <dt><a href="field.html#treecorr.NField">NField (class in treecorr)</a>
   </dt>
 
       
   <dt><a href="ng.html#treecorr.NGCorrelation">NGCorrelation (class in treecorr)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="nk.html#treecorr.NKCorrelation">NKCorrelation (class in treecorr)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="field.html#treecorr.field.NSimpleField">NSimpleField (class in treecorr.field)</a>
+  <dt><a href="nn.html#treecorr.NNCorrelation">NNCorrelation (class in treecorr)</a>
+  </dt>
+
+      
+  <dt><a href="field.html#treecorr.NSimpleField">NSimpleField (class in treecorr)</a>
   </dt>
 
   </dl></td>
@@ -426,10 +433,6 @@
   <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="corr2.html#treecorr.config.parse_bool">parse_bool() (in module treecorr.config)</a>
-  </dt>
-
-      
-  <dt><a href="field.html#treecorr.field.parse_split_method">parse_split_method() (in module treecorr.field)</a>
   </dt>
 
       
@@ -455,20 +458,16 @@
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="gg.html#treecorr.G2Correlation.process">process() (treecorr.G2Correlation method)</a>
+  <dt><a href="gg.html#treecorr.GGCorrelation.process">process() (treecorr.GGCorrelation method)</a>
   </dt>
 
       <dd><dl>
-        
-  <dt><a href="kk.html#treecorr.K2Correlation.process">(treecorr.K2Correlation method)</a>
-  </dt>
-
         
   <dt><a href="kg.html#treecorr.KGCorrelation.process">(treecorr.KGCorrelation method)</a>
   </dt>
 
         
-  <dt><a href="nn.html#treecorr.N2Correlation.process">(treecorr.N2Correlation method)</a>
+  <dt><a href="kk.html#treecorr.KKCorrelation.process">(treecorr.KKCorrelation method)</a>
   </dt>
 
         
@@ -479,36 +478,36 @@
   <dt><a href="nk.html#treecorr.NKCorrelation.process">(treecorr.NKCorrelation method)</a>
   </dt>
 
-      </dl></dd>
-      
-  <dt><a href="gg.html#treecorr.G2Correlation.process_auto">process_auto() (treecorr.G2Correlation method)</a>
-  </dt>
-
-      <dd><dl>
         
-  <dt><a href="kk.html#treecorr.K2Correlation.process_auto">(treecorr.K2Correlation method)</a>
-  </dt>
-
-        
-  <dt><a href="nn.html#treecorr.N2Correlation.process_auto">(treecorr.N2Correlation method)</a>
+  <dt><a href="nn.html#treecorr.NNCorrelation.process">(treecorr.NNCorrelation method)</a>
   </dt>
 
       </dl></dd>
       
-  <dt><a href="gg.html#treecorr.G2Correlation.process_cross">process_cross() (treecorr.G2Correlation method)</a>
+  <dt><a href="gg.html#treecorr.GGCorrelation.process_auto">process_auto() (treecorr.GGCorrelation method)</a>
   </dt>
 
       <dd><dl>
         
-  <dt><a href="kk.html#treecorr.K2Correlation.process_cross">(treecorr.K2Correlation method)</a>
+  <dt><a href="kk.html#treecorr.KKCorrelation.process_auto">(treecorr.KKCorrelation method)</a>
   </dt>
 
+        
+  <dt><a href="nn.html#treecorr.NNCorrelation.process_auto">(treecorr.NNCorrelation method)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="gg.html#treecorr.GGCorrelation.process_cross">process_cross() (treecorr.GGCorrelation method)</a>
+  </dt>
+
+      <dd><dl>
         
   <dt><a href="kg.html#treecorr.KGCorrelation.process_cross">(treecorr.KGCorrelation method)</a>
   </dt>
 
         
-  <dt><a href="nn.html#treecorr.N2Correlation.process_cross">(treecorr.N2Correlation method)</a>
+  <dt><a href="kk.html#treecorr.KKCorrelation.process_cross">(treecorr.KKCorrelation method)</a>
   </dt>
 
         
@@ -519,22 +518,22 @@
   <dt><a href="nk.html#treecorr.NKCorrelation.process_cross">(treecorr.NKCorrelation method)</a>
   </dt>
 
+        
+  <dt><a href="nn.html#treecorr.NNCorrelation.process_cross">(treecorr.NNCorrelation method)</a>
+  </dt>
+
       </dl></dd>
       
-  <dt><a href="gg.html#treecorr.G2Correlation.process_pairwise">process_pairwise() (treecorr.G2Correlation method)</a>
+  <dt><a href="gg.html#treecorr.GGCorrelation.process_pairwise">process_pairwise() (treecorr.GGCorrelation method)</a>
   </dt>
 
       <dd><dl>
-        
-  <dt><a href="kk.html#treecorr.K2Correlation.process_pairwise">(treecorr.K2Correlation method)</a>
-  </dt>
-
         
   <dt><a href="kg.html#treecorr.KGCorrelation.process_pairwise">(treecorr.KGCorrelation method)</a>
   </dt>
 
         
-  <dt><a href="nn.html#treecorr.N2Correlation.process_pairwise">(treecorr.N2Correlation method)</a>
+  <dt><a href="kk.html#treecorr.KKCorrelation.process_pairwise">(treecorr.KKCorrelation method)</a>
   </dt>
 
         
@@ -543,6 +542,10 @@
 
         
   <dt><a href="nk.html#treecorr.NKCorrelation.process_pairwise">(treecorr.NKCorrelation method)</a>
+  </dt>
+
+        
+  <dt><a href="nn.html#treecorr.NNCorrelation.process_pairwise">(treecorr.NNCorrelation method)</a>
   </dt>
 
       </dl></dd>
@@ -601,6 +604,12 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
+  <dt><a href="corr2.html#treecorr.config.set_omp_threads">set_omp_threads() (in module treecorr.config)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
   <dt><a href="corr2.html#treecorr.config.setup_logger">setup_logger() (in module treecorr.config)</a>
   </dt>
 
@@ -618,18 +627,14 @@
   <dt><a href="celestial.html#module-treecorr.celestial">treecorr.celestial (module)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="corr2.html#module-treecorr.config">treecorr.config (module)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="corr2.html#module-treecorr.corr2">treecorr.corr2 (module)</a>
-  </dt>
-
-      
-  <dt><a href="field.html#module-treecorr.field">treecorr.field (module)</a>
   </dt>
 
   </dl></td>
@@ -644,11 +649,7 @@
 
       <dd><dl>
         
-  <dt><a href="gg.html#treecorr.G2Correlation.write">(treecorr.G2Correlation method)</a>
-  </dt>
-
-        
-  <dt><a href="kk.html#treecorr.K2Correlation.write">(treecorr.K2Correlation method)</a>
+  <dt><a href="gg.html#treecorr.GGCorrelation.write">(treecorr.GGCorrelation method)</a>
   </dt>
 
         
@@ -656,7 +657,7 @@
   </dt>
 
         
-  <dt><a href="nn.html#treecorr.N2Correlation.write">(treecorr.N2Correlation method)</a>
+  <dt><a href="kk.html#treecorr.KKCorrelation.write">(treecorr.KKCorrelation method)</a>
   </dt>
 
         
@@ -667,9 +668,13 @@
   <dt><a href="nk.html#treecorr.NKCorrelation.write">(treecorr.NKCorrelation method)</a>
   </dt>
 
+        
+  <dt><a href="nn.html#treecorr.NNCorrelation.write">(treecorr.NNCorrelation method)</a>
+  </dt>
+
       </dl></dd>
       
-  <dt><a href="gg.html#treecorr.G2Correlation.writeMapSq">writeMapSq() (treecorr.G2Correlation method)</a>
+  <dt><a href="gg.html#treecorr.GGCorrelation.writeMapSq">writeMapSq() (treecorr.GGCorrelation method)</a>
   </dt>
 
   </dl></td>

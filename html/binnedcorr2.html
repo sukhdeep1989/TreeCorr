@@ -23,6 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="TreeCorr  documentation" href="index.html" />
     <link rel="up" title="Two-point Correlation Functions" href="correlation.html" />
     <link rel="next" title="NN: Count-count correlations" href="nn.html" />
@@ -65,12 +66,12 @@ ancillary data.</p>
 helper functions that derived classes can use to help perform their calculations.  See
 the derived classes for more details:</p>
 <ul class="simple">
-<li><tt class="docutils literal"><span class="pre">G2Correlation</span></tt> handles shear-shear correlation functions</li>
-<li><tt class="docutils literal"><span class="pre">N2Correlation</span></tt> handles count-count correlation functions</li>
-<li><tt class="docutils literal"><span class="pre">K2Correlation</span></tt> handles kappa-kappa correlation functions</li>
-<li><tt class="docutils literal"><span class="pre">NGCorrelation</span></tt> handles count-shear correlation functions</li>
-<li><tt class="docutils literal"><span class="pre">NKCorrelation</span></tt> handles count-kappa correlation functions</li>
-<li><tt class="docutils literal"><span class="pre">KGCorrelation</span></tt> handles kappa-shear correlation functions</li>
+<li><a class="reference internal" href="gg.html#treecorr.GGCorrelation" title="treecorr.GGCorrelation"><tt class="xref py py-class docutils literal"><span class="pre">GGCorrelation</span></tt></a> handles shear-shear correlation functions</li>
+<li><a class="reference internal" href="nn.html#treecorr.NNCorrelation" title="treecorr.NNCorrelation"><tt class="xref py py-class docutils literal"><span class="pre">NNCorrelation</span></tt></a> handles count-count correlation functions</li>
+<li><a class="reference internal" href="kk.html#treecorr.KKCorrelation" title="treecorr.KKCorrelation"><tt class="xref py py-class docutils literal"><span class="pre">KKCorrelation</span></tt></a> handles kappa-kappa correlation functions</li>
+<li><a class="reference internal" href="ng.html#treecorr.NGCorrelation" title="treecorr.NGCorrelation"><tt class="xref py py-class docutils literal"><span class="pre">NGCorrelation</span></tt></a> handles count-shear correlation functions</li>
+<li><a class="reference internal" href="nk.html#treecorr.NKCorrelation" title="treecorr.NKCorrelation"><tt class="xref py py-class docutils literal"><span class="pre">NKCorrelation</span></tt></a> handles count-kappa correlation functions</li>
+<li><a class="reference internal" href="kg.html#treecorr.KGCorrelation" title="treecorr.KGCorrelation"><tt class="xref py py-class docutils literal"><span class="pre">KGCorrelation</span></tt></a> handles kappa-shear correlation functions</li>
 </ul>
 <p>Note that when we refer to kappa in the correlation function, that is because I
 come from a weak lensing perspective.  But really any scalar quantity may be used
@@ -81,31 +82,60 @@ use one or if you want to change some parameters from what are in a config dict,
 then you can use normal kwargs, which take precedence over anything in the config dict.</p>
 <p>Exactly three of the following 4 parameters are required either in the config dict or
 in kwargs:</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">nbins:</th><td class="field-body">How many bins to use</td>
+</tr>
+<tr class="field-even field"><th class="field-name">bin_size:</th><td class="field-body">The width of the bins in log(separation)</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">min_sep:</th><td class="field-body">The minimum separation; the left edge of the first bin</td>
+</tr>
+<tr class="field-even field"><th class="field-name">max_sep:</th><td class="field-body">The maximum separation; the right edge of the last bin</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Any three of these may be provided.  The fourth number will be calculated from them.</p>
+<p>Note that if bin_size, min_sep, and max_sep are specified, then the nominal number of
+bins is not necessarily and integer.  In this case, nbins will be rounded up to the 
+next higher integer, and max_sep will be updated to account for this.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>nbins</strong> &#8211; How many bins to use</li>
-<li><strong>bin_size</strong> &#8211; The width of the bins in log(separation)</li>
-<li><strong>min_sep</strong> &#8211; The minimum separation; the left edge of the first bin</li>
-<li><strong>max_sep</strong> &#8211; The maximum separation; the right edge of the last bin</li>
+<li><strong>config</strong> &#8211; The configuration dict which defines attributes about how to read the file.
+Any kwargs that are not those listed here will be added to the config, 
+so you can even omit the config dict and just enter all parameters you
+want as kwargs.  (default: None)</li>
+<li><strong>logger</strong> &#8211; If desired, a logger object for logging. (default: None, in which case
+one will be built according to the config dict&#8217;s verbose level.)</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<p>Any three of these may be provided.  The fourth number will be calculated from them.</p>
-<p>Note that if bin_size, min_sep, and max_sep are specified, then the nominal number of
-bins is not necessarily and integer.  In this case, nbins will be rounded up to the 
-next higher integer, and max_sep will be updated to account for this.</p>
 <dl class="method">
 <dt id="treecorr.BinnedCorr2.gen_write">
 <tt class="descname">gen_write</tt><big>(</big><em>file_name</em>, <em>headers</em>, <em>columns</em><big>)</big><a class="headerlink" href="#treecorr.BinnedCorr2.gen_write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write some columns to an output file with the given headers.</p>
 <p>We do this basic functionality a lot, so put the code to do it in one place.</p>
-<p>headers should be a list of strings.
-columns should be a list of numpy arrays.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>file_name</strong> &#8211; The name of the file to write to.</li>
+<li><strong>headers</strong> &#8211; A list of strings to use for the header strings of each column.</li>
+<li><strong>columns</strong> &#8211; A list of numpy arrays with the data to write.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>

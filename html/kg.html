@@ -23,9 +23,10 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="TreeCorr  documentation" href="index.html" />
     <link rel="up" title="Two-point Correlation Functions" href="correlation.html" />
-    <link rel="next" title="Fields" href="field.html" />
+    <link rel="next" title="Celestial Coordinates" href="celestial.html" />
     <link rel="prev" title="NK: Count-kappa correlations" href="nk.html" /> 
   </head>
   <body>
@@ -39,7 +40,7 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="field.html" title="Fields"
+          <a href="celestial.html" title="Celestial Coordinates"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="nk.html" title="NK: Count-kappa correlations"
@@ -60,32 +61,34 @@
 <dt id="treecorr.KGCorrelation">
 <em class="property">class </em><tt class="descclassname">treecorr.</tt><tt class="descname">KGCorrelation</tt><big>(</big><em>config=None</em>, <em>logger=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#treecorr.KGCorrelation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">treecorr.binnedcorr2.BinnedCorr2</span></tt></p>
-<p>This class handles the calculation and storage of a 2-point shear-shear correlation
+<p>This class handles the calculation and storage of a 2-point kappa-shear correlation
 function.</p>
 <p>It holds the following attributes:</p>
-<table class="docutils field-list" frame="void" rules="none">
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Logr:</th><td class="field-body">The nominal center of the bin in log(r).</td>
+<tr class="field-odd field"><th class="field-name">logr:</th><td class="field-body">The nominal center of the bin in log(r).</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Meanlogr:</th><td class="field-body">The (weighted) mean value of log(r) for the pairs in each bin.
+<tr class="field-even field"><th class="field-name">meanlogr:</th><td class="field-body">The (weighted) mean value of log(r) for the pairs in each bin.
 If there are no pairs in a bin, then logr will be used instead.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Xi:</th><td class="field-body">The correlation function, xi(r) = &lt;kappa gamma_T&gt;.</td>
+<tr class="field-odd field"><th class="field-name">xi:</th><td class="field-body">The correlation function, xi(r) = &lt;kappa gamma_T&gt;.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Xi_im:</th><td class="field-body">The imaginary part of xi(r).</td>
+<tr class="field-even field"><th class="field-name">xi_im:</th><td class="field-body">The imaginary part of xi(r).</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Varxi:</th><td class="field-body">The variance of xi, only including the shape noise propagated into the
+<tr class="field-odd field"><th class="field-name">varxi:</th><td class="field-body">The variance of xi, only including the shape noise propagated into the
 final correlation.  This does not include sample variance, so it is always
 an underestimate of the actual variance.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Weight:</th><td class="field-body">The total weight in each bin.</td>
+<tr class="field-even field"><th class="field-name">weight:</th><td class="field-body">The total weight in each bin.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Npairs:</th><td class="field-body">The number of pairs going into each bin.</td>
+<tr class="field-odd field"><th class="field-name">npairs:</th><td class="field-body">The number of pairs going into each bin.</td>
 </tr>
 </tbody>
 </table>
+</div></blockquote>
 <p>The usage pattern is as follows:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kg</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">KGCorrelation</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">kg</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span><span class="n">cat2</span><span class="p">)</span>   <span class="c"># Calculate the cross-correlation</span>
@@ -93,6 +96,22 @@ an underestimate of the actual variance.</td>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">xi</span> <span class="o">=</span> <span class="n">kg</span><span class="o">.</span><span class="n">xi</span>              <span class="c"># Or access the correlation function directly.</span>
 </pre></div>
 </div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>config</strong> &#8211; The configuration dict which defines attributes about how to read the file.
+Any kwargs that are not those listed here will be added to the config, 
+so you can even omit the config dict and just enter all parameters you
+want as kwargs.  (default: None)</li>
+<li><strong>logger</strong> &#8211; If desired, a logger object for logging. (default: None, in which case
+one will be built according to the config dict&#8217;s verbose level.)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="treecorr.KGCorrelation.clear">
 <tt class="descname">clear</tt><big>(</big><big>)</big><a class="headerlink" href="#treecorr.KGCorrelation.clear" title="Permalink to this definition">¶</a></dt>
@@ -106,6 +125,18 @@ an underestimate of the actual variance.</td>
 <p>The process_cross command accumulates values in each bin, so it can be called
 multiple times if appropriate.  Afterwards, this command finishes the calculation
 by dividing each column by the total weight.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>vark</strong> &#8211; The kappa variance for the first field.</li>
+<li><strong>varg</strong> &#8211; The shear variance per component for the second field.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -114,6 +145,18 @@ by dividing each column by the total weight.</p>
 <dd><p>Compute the correlation function.</p>
 <p>Both arguments may be lists, in which case all items in the list are used 
 for that element of the correlation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cat1</strong> &#8211; A catalog or list of catalogs for the K field.</li>
+<li><strong>cat2</strong> &#8211; A catalog or list of catalogs for the G field.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -124,6 +167,18 @@ for that element of the correlation.</p>
 the calculation by dividing by the total weight at the end.  After
 calling this function as often as desired, the finalize() command will
 finish the calculation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cat1</strong> &#8211; The first catalog to process</li>
+<li><strong>cat2</strong> &#8211; The second catalog to process</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -135,12 +190,32 @@ the corresponding pairs of objects in each catalog.</p>
 the calculation by dividing by the total weight at the end.  After
 calling this function as often as desired, the finalize() command will
 finish the calculation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cat1</strong> &#8211; The first catalog to process</li>
+<li><strong>cat2</strong> &#8211; The second catalog to process</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="treecorr.KGCorrelation.write">
 <tt class="descname">write</tt><big>(</big><em>file_name</em><big>)</big><a class="headerlink" href="#treecorr.KGCorrelation.write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write the correlation function to the file, file_name.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file_name</strong> &#8211; The name of the file to write to.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -157,8 +232,8 @@ finish the calculation.</p>
   <p class="topless"><a href="nk.html"
                         title="previous chapter">NK: Count-kappa correlations</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="field.html"
-                        title="next chapter">Fields</a></p>
+  <p class="topless"><a href="celestial.html"
+                        title="next chapter">Celestial Coordinates</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/kg.txt"
@@ -191,7 +266,7 @@ finish the calculation.</p>
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="field.html" title="Fields"
+          <a href="celestial.html" title="Celestial Coordinates"
              >next</a> |</li>
         <li class="right" >
           <a href="nk.html" title="NK: Count-kappa correlations"

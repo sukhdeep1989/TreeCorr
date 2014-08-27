@@ -23,6 +23,7 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="TreeCorr  documentation" href="../../index.html" />
     <link rel="up" title="treecorr" href="../treecorr.html" /> 
   </head>
@@ -64,9 +65,14 @@
 <span class="kn">import</span> <span class="nn">treecorr</span>
 
 <div class="viewcode-block" id="parse_variable"><a class="viewcode-back" href="../../corr2.html#treecorr.config.parse_variable">[docs]</a><span class="k">def</span> <span class="nf">parse_variable</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Parse a configuration variable from a string that should look like &#39;key = value&#39;</span>
+<span class="sd">    and write that value to config[key].</span>
+
+<span class="sd">    :param config:  The configuration dict to wich to write the key,value pair</span>
+<span class="sd">    :param v:       A string of the form &#39;key = value&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s">&#39;=&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
-        <span class="k">print</span> <span class="s">&#39;trying to parse: &#39;</span><span class="p">,</span><span class="n">v</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;Improper variable specification.  Use syntax: item = value.&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;Improper variable specificationi: </span><span class="si">%s</span><span class="s">.  Use syntax: key = value.&#39;</span><span class="o">%</span><span class="n">v</span><span class="p">)</span>
     <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;=&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">key</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
     <span class="c"># Cut off any trailing comment</span>
@@ -83,6 +89,18 @@
 
 </div>
 <div class="viewcode-block" id="parse_bool"><a class="viewcode-back" href="../../corr2.html#treecorr.config.parse_bool">[docs]</a><span class="k">def</span> <span class="nf">parse_bool</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Parse a value as a boolean.</span>
+
+<span class="sd">    Valid string values for True are: &#39;true&#39;, &#39;yes&#39;, &#39;t&#39;, &#39;y&#39;</span>
+<span class="sd">    Valid string values for False are: &#39;false&#39;, &#39;no&#39;, &#39;f&#39;, &#39;n&#39;, &#39;none&#39;</span>
+<span class="sd">    Capitalization is ignored.</span>
+
+<span class="sd">    If value is a number, it is converted to a bool in the usual way.</span>
+
+<span class="sd">    :param value:   The value to parse.</span>
+
+<span class="sd">    :returns:       The value converted to a bool.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span><span class="nb">str</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span> <span class="s">&#39;TRUE&#39;</span><span class="p">,</span> <span class="s">&#39;YES&#39;</span><span class="p">,</span> <span class="s">&#39;T&#39;</span><span class="p">,</span> <span class="s">&#39;Y&#39;</span> <span class="p">]:</span>
             <span class="k">return</span> <span class="bp">True</span>
@@ -102,7 +120,17 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Unable to parse </span><span class="si">%s</span><span class="s"> as a bool.&quot;</span><span class="o">%</span><span class="n">value</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="parse_unit"><a class="viewcode-back" href="../../corr2.html#treecorr.config.parse_unit">[docs]</a><span class="k">def</span> <span class="nf">parse_unit</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Get the appropriate unit, allowing the value to merely start with one of the unit names.</span>
+    <span class="sd">&quot;&quot;&quot;Parse the input value as a string that should be one of our valid angle units in</span>
+<span class="sd">    the treecorr.angle_units dict.</span>
+
+<span class="sd">    The value is allowed to merely start with one of the unit names.  So &#39;deg&#39;, &#39;degree&#39;,</span>
+<span class="sd">    &#39;degrees&#39; all convert to &#39;deg&#39; which is the key in the angle_units dict.</span>
+<span class="sd">    The return value in this case would be treecorr.angle_units[&#39;deg&#39;], which has the </span>
+<span class="sd">    value pi/180.</span>
+
+<span class="sd">    :param value:   The unit as a string value to parse.</span>
+
+<span class="sd">    :returns:       The given unit in radians.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">unit</span> <span class="ow">in</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">angle_units</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">unit</span><span class="p">):</span> <span class="k">return</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">angle_units</span><span class="p">[</span><span class="n">unit</span><span class="p">]</span>
@@ -111,6 +139,8 @@
 </div>
 <div class="viewcode-block" id="read_config"><a class="viewcode-back" href="../../corr2.html#treecorr.config.read_config">[docs]</a><span class="k">def</span> <span class="nf">read_config</span><span class="p">(</span><span class="n">file_name</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Read a configuration dict from a file.</span>
+
+<span class="sd">    :param file_name:   The file name from which the configuration dict should be read.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">fin</span><span class="p">:</span>
@@ -126,8 +156,18 @@
     <span class="k">return</span> <span class="n">config</span>
 
 </div>
-<div class="viewcode-block" id="setup_logger"><a class="viewcode-back" href="../../corr2.html#treecorr.config.setup_logger">[docs]</a><span class="k">def</span> <span class="nf">setup_logger</span><span class="p">(</span><span class="n">verbose</span><span class="p">,</span> <span class="n">log_file</span><span class="p">):</span>
+<div class="viewcode-block" id="setup_logger"><a class="viewcode-back" href="../../corr2.html#treecorr.config.setup_logger">[docs]</a><span class="k">def</span> <span class="nf">setup_logger</span><span class="p">(</span><span class="n">verbose</span><span class="p">,</span> <span class="n">log_file</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Parse the integer verbosity level from the command line args into a logging_level string</span>
+
+<span class="sd">    Note: This will update the verbosity if a previous call to setup_logger used a different</span>
+<span class="sd">    value for verbose.  However, it will not update the handler to use a different log_file</span>
+<span class="sd">    or switch between using a log_file and stdout.</span>
+
+<span class="sd">    :param verbose:     An integer indicating what verbosity level to use.</span>
+<span class="sd">    :param log_file:    If given, a file name to which to write the logging output.</span>
+<span class="sd">                        If omitted or None, then output to stdout.</span>
+
+<span class="sd">    :returns:           The logging.Logger object to use.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">import</span> <span class="nn">logging</span>
     <span class="n">logging_levels</span> <span class="o">=</span> <span class="p">{</span>  <span class="mi">0</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">CRITICAL</span><span class="p">,</span>
@@ -137,28 +177,51 @@
     <span class="n">logging_level</span> <span class="o">=</span> <span class="n">logging_levels</span><span class="p">[</span><span class="n">verbose</span><span class="p">]</span>
 
     <span class="c"># Setup logging to go to sys.stdout or (if requested) to an output file</span>
-    <span class="k">if</span> <span class="n">log_file</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-        <span class="kn">import</span> <span class="nn">sys</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">format</span><span class="o">=</span><span class="s">&quot;</span><span class="si">%(message)s</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging_level</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">format</span><span class="o">=</span><span class="s">&quot;</span><span class="si">%(message)s</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging_level</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">log_file</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&#39;treecorr&#39;</span><span class="p">)</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&#39;treecorr&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">logger</span><span class="o">.</span><span class="n">handlers</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c"># only add handler once!</span>
+        <span class="k">if</span> <span class="n">log_file</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">handle</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">handle</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">FileHandler</span><span class="p">(</span><span class="n">log_file</span><span class="p">)</span>
+        <span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%(message)s</span><span class="s">&#39;</span><span class="p">)</span>  <span class="c"># Simple text output</span>
+        <span class="n">handle</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging_level</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">logger</span>
 
  </div>
-<div class="viewcode-block" id="check_config"><a class="viewcode-back" href="../../corr2.html#treecorr.config.check_config">[docs]</a><span class="k">def</span> <span class="nf">check_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+<div class="viewcode-block" id="check_config"><a class="viewcode-back" href="../../corr2.html#treecorr.config.check_config">[docs]</a><span class="k">def</span> <span class="nf">check_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">aliases</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Check (and update) a config dict to conform to the given parameter rules.</span>
 <span class="sd">    The params dict has an entry for each valid config parameter whose value is a tuple</span>
 <span class="sd">    with the following items:</span>
 
-<span class="sd">     - type</span>
-<span class="sd">     - can be a list?</span>
-<span class="sd">     - default value</span>
-<span class="sd">     - valid values</span>
-<span class="sd">     - description (Multiple entries here are allowed for longer strings)</span>
+<span class="sd">    - type</span>
+<span class="sd">    - can be a list?</span>
+<span class="sd">    - default value</span>
+<span class="sd">    - valid values</span>
+<span class="sd">    - description (Multiple entries here are allowed for longer strings)</span>
 
-<span class="sd">    Returns the updated config dict.</span>
+<span class="sd">    The file corr2.py has a list of parameters for the corr2 program.</span>
+
+<span class="sd">    :param config:  The config dict to check.</span>
+<span class="sd">    :param params:  A dict of valid parameters with information about each one.</span>
+<span class="sd">    :param aliases: A dict of deprecated parameters that are still aliases for new names.</span>
+<span class="sd">                    (default: None)</span>
+<span class="sd">    :param logger:  If desired, a logger object for logging any warnings here. (default: None)</span>
+
+<span class="sd">    :returns:       The updated config dict.  The input config may be modified by this function.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
+        <span class="c"># Check if this is a deprecated alias</span>
+        <span class="k">if</span> <span class="n">aliases</span> <span class="ow">and</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">aliases</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">logger</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s">&quot;The parameter </span><span class="si">%s</span><span class="s"> is deprecated.  You should use </span><span class="si">%s</span><span class="s"> instead.&quot;</span><span class="p">,</span>
+                            <span class="n">key</span><span class="p">,</span> <span class="n">aliases</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+            <span class="n">new_key</span> <span class="o">=</span> <span class="n">aliases</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="n">config</span><span class="p">[</span><span class="n">new_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="k">del</span> <span class="n">config</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">new_key</span>
+
         <span class="c"># Check that this is a valid key</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s">&quot;Invalid parameter </span><span class="si">%s</span><span class="s"> found in config dict.&quot;</span><span class="o">%</span><span class="n">key</span><span class="p">)</span>
@@ -199,8 +262,10 @@
 
 </div>
 <div class="viewcode-block" id="print_params"><a class="viewcode-back" href="../../corr2.html#treecorr.config.print_params">[docs]</a><span class="k">def</span> <span class="nf">print_params</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;List the information about the valid parameters, given by the given params dict.</span>
+    <span class="sd">&quot;&quot;&quot;Print the information about the valid parameters, given by the given params dict.</span>
 <span class="sd">    See check_config for the structure of the params dict.</span>
+
+<span class="sd">    :param params:  A dict of valid parameters with information about each one.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">max_len</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">params</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
@@ -225,7 +290,19 @@
 
 </div>
 <div class="viewcode-block" id="convert"><a class="viewcode-back" href="../../corr2.html#treecorr.config.convert">[docs]</a><span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">value_type</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">value_type</span> <span class="o">==</span> <span class="nb">str</span> <span class="ow">and</span> <span class="s">&#39;unit&#39;</span> <span class="ow">in</span> <span class="n">key</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Convert the given value to the given type.</span>
+<span class="sd">    </span>
+<span class="sd">    The key helps determine what kind of conversion should be performed.</span>
+<span class="sd">    Specifically if &#39;unit&#39; is in the key value, then a unit conversion is done.</span>
+<span class="sd">    Otherwise, it just parses </span>
+
+<span class="sd">    :param value:       The input value to be converted.  Usually a string.</span>
+<span class="sd">    :param value_type:  The type to convert to.</span>
+<span class="sd">    :param key:         The key for this value.  Only used to see if it includes &#39;unit&#39;.</span>
+
+<span class="sd">    :returns:           The converted value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s">&#39;unit&#39;</span> <span class="ow">in</span> <span class="n">key</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">parse_unit</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">value_type</span> <span class="o">==</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">parse_bool</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
@@ -234,6 +311,19 @@
 </div>
 <div class="viewcode-block" id="get_from_list"><a class="viewcode-back" href="../../corr2.html#treecorr.config.get_from_list">[docs]</a><span class="k">def</span> <span class="nf">get_from_list</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span> <span class="n">value_type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;A helper function to get a key from config that is allowed to be a list</span>
+
+<span class="sd">    Some of the config values are allowed to be lists of values, in which case we take the </span>
+<span class="sd">    `num` item from the list.  If they are not a list, then the given value is used for </span>
+<span class="sd">    all values of `num`.</span>
+
+<span class="sd">    :param config:      The configuration dict from which to get the key value.</span>
+<span class="sd">    :param key:         What key to get from config.</span>
+<span class="sd">    :param num:         Which number element to use if the item is a list.</span>
+<span class="sd">    :param value_type:  What type should the value be converted to. (default: str)</span>
+<span class="sd">    :param default:     What value should be used if the key is not in the config dict.</span>
+<span class="sd">                        (default: None)</span>
+
+<span class="sd">    :returns:           The specified value, converted as needed.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
         <span class="n">values</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
@@ -255,6 +345,14 @@
 </div>
 <div class="viewcode-block" id="get"><a class="viewcode-back" href="../../corr2.html#treecorr.config.get">[docs]</a><span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value_type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;A helper function to get a key from config converting to a particular type</span>
+
+<span class="sd">    :param config:      The configuration dict from which to get the key value.</span>
+<span class="sd">    :param key:         Which key to get from config.</span>
+<span class="sd">    :param value_type:  Which type should the value be converted to. (default: str)</span>
+<span class="sd">    :param default:     What value should be used if the key is not in the config dict.</span>
+<span class="sd">                        (default: None)</span>
+
+<span class="sd">    :returns:           The specified value, converted as needed.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
         <span class="n">value</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
@@ -265,10 +363,23 @@
         <span class="k">return</span> <span class="n">default</span>
 </div>
 <div class="viewcode-block" id="merge_config"><a class="viewcode-back" href="../../corr2.html#treecorr.config.merge_config">[docs]</a><span class="k">def</span> <span class="nf">merge_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span> <span class="n">config</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="sd">&quot;&quot;&quot;Merge in the values from kwargs into config.</span>
+
+<span class="sd">    If either of these is None, then the other one is returned.</span>
+<span class="sd">    If they are both dicts, then the values in kwargs take precedence over ones in config</span>
+<span class="sd">    if there are any keys that are in both.</span>
+
+<span class="sd">    Note: neither input dict will be modified in this process.</span>
+
+<span class="sd">    :param config:      The root config</span>
+<span class="sd">    :param kwargs:      A second dict with more or updated values</span>
+
+<span class="sd">    :returns:           The merged dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
-        <span class="kn">import</span> <span class="nn">copy</span>
-        <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">config</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">copy</span>
             <span class="n">config</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
             <span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span> 
@@ -276,6 +387,25 @@
     <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">config</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">return</span> <span class="n">config</span>
+
+</div>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">ctypes</span>
+<span class="n">_treecorr</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ctypeslib</span><span class="o">.</span><span class="n">load_library</span><span class="p">(</span><span class="s">&#39;_treecorr&#39;</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">))</span>
+<span class="n">_treecorr</span><span class="o">.</span><span class="n">SetOMPThreads</span><span class="o">.</span><span class="n">restype</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">c_int</span>
+<span class="n">_treecorr</span><span class="o">.</span><span class="n">SetOMPThreads</span><span class="o">.</span><span class="n">argtypes</span> <span class="o">=</span> <span class="p">[</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">c_int</span> <span class="p">]</span>
+
+<div class="viewcode-block" id="set_omp_threads"><a class="viewcode-back" href="../../corr2.html#treecorr.config.set_omp_threads">[docs]</a><span class="k">def</span> <span class="nf">set_omp_threads</span><span class="p">(</span><span class="n">num_threads</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Set the number of OpenMP threads to use in the C++ layer.</span>
+
+<span class="sd">    :param num_threads: The target number of threads to use</span>
+
+<span class="sd">    :returns:           The  number of threads OpenMP reports that it will use.  Typically this</span>
+<span class="sd">                        matches the input, but OpenMP reserves the right not to comply with</span>
+<span class="sd">                        the requested number of threads.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_treecorr</span><span class="o">.</span><span class="n">SetOMPThreads</span><span class="p">(</span><span class="n">num_threads</span><span class="p">)</span>
 </pre></div></div>
 
           </div>
