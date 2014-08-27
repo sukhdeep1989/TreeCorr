@@ -129,14 +129,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_x</span> <span class="o">=</span> <span class="bp">None</span>  <span class="c"># Indicate that x,y,z are not set yet.</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">ra</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> 
-        <span class="sd">&quot;&quot;&quot;The Right Ascension in radians (read-only)&quot;&quot;&quot;</span> 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ra</span>
+    <span class="k">def</span> <span class="nf">ra</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ra</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">dec</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;The Declination in radians (read-only)&quot;&quot;&quot;</span> 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dec</span>
+    <span class="k">def</span> <span class="nf">dec</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dec</span>
 
 
     <span class="k">def</span> <span class="nf">_set_aux</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
