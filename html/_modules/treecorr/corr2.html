@@ -273,11 +273,15 @@
 
     <span class="c"># Set the number of threads</span>
     <span class="n">num_threads</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;num_threads&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;From config dict, num_threads = </span><span class="si">%d</span><span class="s">&#39;</span><span class="p">,</span><span class="n">num_threads</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">num_threads</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
         <span class="kn">import</span> <span class="nn">multiprocessing</span>
         <span class="n">num_threads</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;multiprocessing.cpu_count() = </span><span class="si">%d</span><span class="s">&#39;</span><span class="p">,</span><span class="n">num_threads</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">num_threads</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;Telling OpenMP to use </span><span class="si">%d</span><span class="s"> threads&#39;</span><span class="p">,</span><span class="n">num_threads</span><span class="p">)</span>
         <span class="n">num_threads</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">set_omp_threads</span><span class="p">(</span><span class="n">num_threads</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;OpenMP reports that it will use </span><span class="si">%d</span><span class="s"> threads&#39;</span><span class="p">,</span><span class="n">num_threads</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">num_threads</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;Using </span><span class="si">%d</span><span class="s"> threads.&#39;</span><span class="p">,</span><span class="n">num_threads</span><span class="p">)</span>
         <span class="k">elif</span> <span class="s">&#39;num_threads&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>

@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Changes from version 3.0 to 3.1 &mdash; TreeCorr  documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="TreeCorr  documentation" href="index.html" />
+    <link rel="next" title="Previous History" href="history.html" />
+    <link rel="prev" title="The corr2 driver script" href="corr2.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="history.html" title="Previous History"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="corr2.html" title="The corr2 driver script"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">TreeCorr  documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="changes-from-version-3-0-to-3-1">
+<h1>Changes from version 3.0 to 3.1<a class="headerlink" href="#changes-from-version-3-0-to-3-1" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="api-changes">
+<h2>API changes:<a class="headerlink" href="#api-changes" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Changed class names G2Correlation -&gt; GGCorrelation, N2Correlation -&gt;
+NNCorrelation, and K2Correlation-&gt;KKCorrelation.  I realized that I had
+been kind of inconsistent in my use of G2 vs GG to mean the two-point
+shear correaltion.  Considering that g1,g2 are the shear components, I
+think the former may be confusing, so I changed everything to use
+the GG notation throughout the code and documentation, most critically
+in these class names. (#9)</li>
+<li>Changed the config parameters g2_file_name -&gt; gg_file_name, n2_file_name -&gt;
+nn_file_name, and k2_file_name -&gt; kk_file_name for the same reason as
+above.  In this case though, I kept the old parameter names as valid
+aliases for the new names.  With verbose &gt;= 1, you will get a warning
+about the name change, but it will still work. (#9)</li>
+</ul>
+</div>
+<div class="section" id="changes-to-output-files">
+<h2>Changes to output files:<a class="headerlink" href="#changes-to-output-files" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Removed the extra dots I put in the headers of the output files.  They were
+meant to help visually separate the columns, but it confuses some automatic
+parsers (like astropy as pointed out by Joe Zuntz).  (#14)</li>
+</ul>
+</div>
+<div class="section" id="new-features">
+<h2>New features:<a class="headerlink" href="#new-features" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Added a warning if a file_list does not have any entries. (#10)</li>
+<li>Added a warning if Catalog is passed an input array that is not 1-d, and
+automatically reshape it to 1-d. (#11)</li>
+</ul>
+</div>
+<div class="section" id="bug-fixes">
+<h2>Bug fixes:<a class="headerlink" href="#bug-fixes" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Fixed how setup.py checks what kind of compiler is being used when the
+when the compiler is called simply &#8216;cc&#8217;.  It should now detect gcc more
+reliably and so use OpenMP on those systems. (#7)</li>
+<li>Fixed an error in the handling of file_name as a list of file names. (#10)</li>
+<li>Allowed verbose parameter to correctly reset the logging verbosity on calls
+to Catalog, etc.  It used to only get set correctly on the first call, so if
+later values of verbose were different, they did not work right. (#11)</li>
+<li>Fixed some errors in the sample.params file. (#12)</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Changes from version 3.0 to 3.1</a><ul>
+<li><a class="reference internal" href="#api-changes">API changes:</a></li>
+<li><a class="reference internal" href="#changes-to-output-files">Changes to output files:</a></li>
+<li><a class="reference internal" href="#new-features">New features:</a></li>
+<li><a class="reference internal" href="#bug-fixes">Bug fixes:</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="corr2.html"
+                        title="previous chapter">The corr2 driver script</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="history.html"
+                        title="next chapter">Previous History</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/changes.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="history.html" title="Previous History"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="corr2.html" title="The corr2 driver script"
+             >previous</a> |</li>
+        <li><a href="index.html">TreeCorr  documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Mike Jarvis.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
