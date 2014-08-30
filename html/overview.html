@@ -86,16 +86,19 @@ file <cite>TreeCorr_LICENSE</cite> with the distribution.  See that file for det
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
 <p>The easiest way to install TreeCorr is with pip:</p>
-<blockquote>
-<div>sudo pip install TreeCorr</div></blockquote>
+<div class="highlight-python"><div class="highlight"><pre>sudo pip install TreeCorr
+</pre></div>
+</div>
 <p>If you have previously installed TreeCorr, and want to upgrade to a new
 released version, you should do:</p>
-<blockquote>
-<div>sudo pip install TreeCorr &#8211;upgrade</div></blockquote>
+<div class="highlight-python"><div class="highlight"><pre>sudo pip install TreeCorr --upgrade
+</pre></div>
+</div>
 <p>To install TreeCorr on a system where you do not have sudo privileges,
 you can do:</p>
-<blockquote>
-<div>pip install TreeCorr &#8211;install-option=&#8221;&#8211;prefix=~&#8221;</div></blockquote>
+<div class="highlight-python"><div class="highlight"><pre>pip install TreeCorr --install-option=&quot;--prefix=~&quot;
+</pre></div>
+</div>
 <p>NB: There is also a <cite>&#8211;user</cite> option with <cite>pip install</cite>, which installs into
 ~/.local.  This is fine for the python module, but it puts the <cite>corr2</cite>
 executable into ~/.local/bin, which is probably not in your path.  The above
@@ -118,36 +121,58 @@ input catalogs over the numpy functions loadtxt or genfromtxt.</li>
 </div></blockquote>
 </li>
 <li><p class="first">Download the zip file or tarball of the current code from:</p>
-<p><a class="reference external" href="https://github.com/rmjarvis/TreeCorr/releases/tag/v3.0.2">https://github.com/rmjarvis/TreeCorr/releases/tag/v3.0.2</a></p>
+<p><a class="reference external" href="https://github.com/rmjarvis/TreeCorr/releases/tag/v3.1.0">https://github.com/rmjarvis/TreeCorr/releases/tag/v3.1.0</a></p>
 </li>
 <li><p class="first">Unzip the archive with either of the following (depending on which kind
 of archive you downloaded):</p>
-<blockquote>
-<div><p>unzip TreeCorr-3.0.2.zip
-tar xvzf TreeCorr-3.0.2.tar.gz</p>
-</div></blockquote>
-<p>It will unzip into the directory TreeCorr-3.0.2. Change to that directory:</p>
-<blockquote>
-<div><p>cd TreeCorr-3.0.2</p>
-</div></blockquote>
+<div class="highlight-python"><div class="highlight"><pre>unzip TreeCorr-3.1.0.zip
+tar xvzf TreeCorr-3.1.0.tar.gz
+</pre></div>
+</div>
+<p>It will unzip into the directory TreeCorr-3.1.0. Change to that directory:</p>
+<div class="highlight-python"><div class="highlight"><pre>cd TreeCorr-3.1.0
+</pre></div>
+</div>
 </li>
 <li><p class="first">Install with the normal setup.py options.  Typically this would be the
-command</p>
-<blockquote>
-<div><p>python setup.py install &#8211;prefix=/your/home/directory</p>
-</div></blockquote>
-<p>This will install the executable <cite>corr2</cite> at</p>
-<blockquote>
-<div><p>/your/home/directory/bin/corr2</p>
-</div></blockquote>
+command:</p>
+<div class="highlight-python"><div class="highlight"><pre>python setup.py install --prefix=/your/home/directory
+</pre></div>
+</div>
+<p>This will install the executable <cite>corr2</cite> at:</p>
+<div class="highlight-python"><div class="highlight"><pre>/your/home/directory/bin/corr2
+</pre></div>
+</div>
 <p>It will also install the Python module called treecorr which you can use
 from within Python.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>There is a bug with numpy that it sometimes doesn&#8217;t install correctly
+when included as a setup.py dependency:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/numpy/numpy/issues/1458">https://github.com/numpy/numpy/issues/1458</a></p>
+</div></blockquote>
+<p>The bug was marked closed in 2012, but I&#8217;ve gotten it with the latest
+numpy version 1.8.2.  Installation failed with a traceback that ended
+with:</p>
+<div class="highlight-python"><div class="highlight"><pre>File &quot;/private/tmp/easy_install-xl4gri/numpy-1.8.2/numpy/core/setup.py&quot;, line 631, in configuration
+
+AttributeError: &#39;Configuration&#39; object has no attribute &#39;add_define_macros&#39;
+</pre></div>
+</div>
+<p>The workaround if this happens for you seems to be to install numpy
+separately with:</p>
+<div class="highlight-python"><div class="highlight"><pre>easy_install numpy
+</pre></div>
+</div>
+<p class="last">Then the normal TreeCorr installation should work correctly.</p>
+</div>
 </li>
 <li><p class="first">(optional) If you want to run the unit tests, you can do the following:</p>
-<blockquote>
-<div><p>cd tests
-nosetests</p>
-</div></blockquote>
+<div class="highlight-python"><div class="highlight"><pre>cd tests
+nosetests
+</pre></div>
+</div>
 <p>They do take a bit of time to run, since I use around 1 million galaxies
 for many of the tests.  On the order of 5-10 minutes when using a single
 core, or less when OpenMP is enabled.</p>
@@ -185,18 +210,20 @@ weighting the pairs by the convergence values the foreground points.</td>
 <h2>Running corr2<a class="headerlink" href="#running-corr2" title="Permalink to this headline">¶</a></h2>
 <p>The executable corr2 takes one required command-line argument, which is the
 name of a configuration file:</p>
-<blockquote>
-<div>corr2 config_file</div></blockquote>
+<div class="highlight-python"><div class="highlight"><pre>corr2 config_file
+</pre></div>
+</div>
 <p>A sample configuration file is provided, called sample.params.  See the
 TreeCorr wiki page</p>
 <p><a class="reference external" href="https://github.com/rmjarvis/TreeCorr/wiki/Configuration-Parameters">https://github.com/rmjarvis/TreeCorr/wiki/Configuration-Parameters</a></p>
 <p>for the complete documentation about the allowed parameters.</p>
 <p>You can also specify parameters on the command line after the name of
 the configuration file. e.g.:</p>
-<blockquote>
-<div>corr2 config_file file_name=file1.dat gg_file_name=file1.out
+<div class="highlight-python"><div class="highlight"><pre>corr2 config_file file_name=file1.dat gg_file_name=file1.out
 corr2 config_file file_name=file2.dat gg_file_name=file2.out
-...</div></blockquote>
+...
+</pre></div>
+</div>
 <p>This can be useful when running the program from a script for lots of input
 files.</p>
 </div>

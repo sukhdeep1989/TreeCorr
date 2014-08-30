@@ -55,21 +55,27 @@
             
   <div class="section" id="changes-from-version-3-0-to-3-1">
 <h1>Changes from version 3.0 to 3.1<a class="headerlink" href="#changes-from-version-3-0-to-3-1" title="Permalink to this headline">¶</a></h1>
+<p>The numbers at the ends of each item below indicate which issue is connected
+with the change:</p>
+<p><a class="reference external" href="https://github.com/rmjarvis/TreeCorr/issues?q=milestone%3A%22Version+3.1%22+is%3Aclosed">https://github.com/rmjarvis/TreeCorr/issues?q=milestone%3A%22Version+3.1%22+is%3Aclosed</a></p>
 <div class="section" id="api-changes">
 <h2>API changes:<a class="headerlink" href="#api-changes" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Changed class names G2Correlation -&gt; GGCorrelation, N2Correlation -&gt;
-NNCorrelation, and K2Correlation-&gt;KKCorrelation.  I realized that I had
+NNCorrelation, and K2Correlation -&gt; KKCorrelation.  I realized that I had
 been kind of inconsistent in my use of G2 vs GG to mean the two-point
-shear correaltion.  Considering that g1,g2 are the shear components, I
-think the former may be confusing, so I changed everything to use
-the GG notation throughout the code and documentation, most critically
-in these class names. (#9)</li>
+shear correaltion.  In most places in the docs and such I use GG, but then
+I made the class name G2Correlation.  Considering that g1,g2 are the shear
+components, I think this may be confusing.  Plus, when I eventually do the
+various three point functions, I&#8217;ll want NGG, NNG, GGG, etc.  So I corrected
+my poor design choice and changed this class to GGCorrelation.  Similarly
+for the other two auto-correlations. (#9)</li>
 <li>Changed the config parameters g2_file_name -&gt; gg_file_name, n2_file_name -&gt;
-nn_file_name, and k2_file_name -&gt; kk_file_name for the same reason as
-above.  In this case though, I kept the old parameter names as valid
-aliases for the new names.  With verbose &gt;= 1, you will get a warning
-about the name change, but it will still work. (#9)</li>
+nn_file_name, and k2_file_name -&gt; kk_file_name for the same reason as above.
+In this case though, I kept the old parameter names as valid aliases for the
+new names for backwards compatibility with existing config files.  With
+verbose &gt;= 1, you will get a warning about the name change, but it will still
+work. (#9)</li>
 </ul>
 </div>
 <div class="section" id="changes-to-output-files">
@@ -77,23 +83,25 @@ about the name change, but it will still work. (#9)</li>
 <ul class="simple">
 <li>Removed the extra dots I put in the headers of the output files.  They were
 meant to help visually separate the columns, but it confuses some automatic
-parsers (like astropy as pointed out by Joe Zuntz).  (#14)</li>
+parsers (like astropy as pointed out by Joe Zuntz). (#14)</li>
 </ul>
 </div>
 <div class="section" id="new-features">
 <h2>New features:<a class="headerlink" href="#new-features" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
+<li>Switched the documentation to use Restructured Text markup and put the
+documentation online using Sphinx. (#9)</li>
 <li>Added a warning if a file_list does not have any entries. (#10)</li>
-<li>Added a warning if Catalog is passed an input array that is not 1-d, and
-automatically reshape it to 1-d. (#11)</li>
+<li>Added a warning if Catalog is passed an input array that is not 1-d.
+If will also automatically reshape it to 1-d. (#11)</li>
 </ul>
 </div>
 <div class="section" id="bug-fixes">
 <h2>Bug fixes:<a class="headerlink" href="#bug-fixes" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Fixed how setup.py checks what kind of compiler is being used when the
-when the compiler is called simply &#8216;cc&#8217;.  It should now detect gcc more
-reliably and so use OpenMP on those systems. (#7)</li>
+compiler is called simply &#8216;cc&#8217;.  It should now detect gcc more reliably and
+so use OpenMP on those systems. (#7)</li>
 <li>Fixed an error in the handling of file_name as a list of file names. (#10)</li>
 <li>Allowed verbose parameter to correctly reset the logging verbosity on calls
 to Catalog, etc.  It used to only get set correctly on the first call, so if

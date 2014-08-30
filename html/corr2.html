@@ -87,18 +87,20 @@ one will be built according to the config dict&#8217;s verbose level.)</li>
 <p>Also installed with TreeCorr is an executable script, called corr2.
 The script takes one required command-line argument, which is the
 name of a configuration file:</p>
-<blockquote>
-<div>corr2 config_file</div></blockquote>
+<div class="highlight-python"><div class="highlight"><pre>corr2 config_file
+</pre></div>
+</div>
 <p>A sample configuration file is provided, called sample.params.  See the
 TreeCorr wiki page</p>
 <p><a class="reference external" href="https://github.com/rmjarvis/TreeCorr/wiki/Configuration-Parameters">https://github.com/rmjarvis/TreeCorr/wiki/Configuration-Parameters</a></p>
 <p>for the complete documentation about the allowed parameters.</p>
 <p>You can also specify parameters on the command line after the name of
 the configuration file. e.g.:</p>
-<blockquote>
-<div>corr2 config_file file_name=file1.dat gg_file_name=file1.out
+<div class="highlight-python"><div class="highlight"><pre>corr2 config_file file_name=file1.dat gg_file_name=file1.out
 corr2 config_file file_name=file2.dat gg_file_name=file2.out
-...</div></blockquote>
+...
+</pre></div>
+</div>
 <p>This can be useful when running the program from a script for lots of input
 files.</p>
 </div>
