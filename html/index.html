@@ -56,7 +56,8 @@
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="overview.html#installation">Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="overview.html#two-point-correlations">Two-point Correlations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="overview.html#running-corr2">Running corr2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#three-point-correlations">Three-point Correlations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#running-corr2-and-corr3">Running corr2 and corr3</a></li>
 <li class="toctree-l2"><a class="reference internal" href="overview.html#using-the-python-module">Using the Python module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="overview.html#reporting-bugs">Reporting bugs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="overview.html#requesting-features">Requesting features</a></li>
@@ -76,14 +77,21 @@
 <li class="toctree-l2"><a class="reference internal" href="field.html#ksimplefield">KSimpleField</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="correlation.html">Two-point Correlation Functions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="binnedcorr2.html">BinnedCorr2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="correlation2.html">Two-point Correlation Functions</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="nn.html">NN: Count-count correlations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="gg.html">GG: Shear-shear correlations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ng.html">NG: Count-shear correlations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kk.html">KK: Kappa-kappa correlations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nk.html">NK: Count-kappa correlations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kg.html">KG: Kappa-shear correlations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="correlation2.html#binnedcorr2">BinnedCorr2</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="correlation3.html">Three-point Correlation Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="nnn.html">NNN: Count-count-count correlations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ggg.html">GGG: Shear-shear-shear correlations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kkk.html">KKK: Kappa-kappa-kappa correlations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="correlation3.html#binnedcorr3">BinnedCorr3</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="celestial.html">Celestial Coordinates</a><ul>
@@ -91,18 +99,16 @@
 <li class="toctree-l2"><a class="reference internal" href="celestial.html#module-treecorr.celestial">Angular units</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="corr2.html">The corr2 driver script</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="corr2.html">The corr2 and corr3 driver scripts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="corr2.html#the-corr2-function-from-python">The corr2 function from python</a></li>
-<li class="toctree-l2"><a class="reference internal" href="corr2.html#the-corr2-executable">The corr2 executable</a></li>
-<li class="toctree-l2"><a class="reference internal" href="corr2.html#module-treecorr.corr2">Other utilities related to corr2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="corr2.html#the-corr3-function-from-python">The corr3 function from python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="corr2.html#the-corr2-and-corr3-executables">The corr2 and corr3 executables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="corr2.html#module-treecorr.corr2">Other utilities related to corr2 and corr3</a></li>
 <li class="toctree-l2"><a class="reference internal" href="corr2.html#module-treecorr.config">Utilities related to the configuration dict</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="changes.html">Changes from version 3.1.1 to 3.1.2</a></li>
-<li class="toctree-l1"><a class="reference internal" href="changes.html#changes-from-version-3-1-0-to-3-1-1">Changes from version 3.1.0 to 3.1.1</a></li>
-<li class="toctree-l1"><a class="reference internal" href="changes.html#changes-from-version-3-0-to-3-1">Changes from version 3.0 to 3.1</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="changes.html">Changes from version 3.1 to 3.2</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="changes.html#api-changes">API changes:</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changes.html#changes-to-output-files">Changes to output files:</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changes.html#new-features">New features:</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changes.html#bug-fixes">Bug fixes:</a></li>
 </ul>
@@ -164,7 +170,7 @@
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2014, Mike Jarvis.
+        &copy; Copyright 2015, Mike Jarvis.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>

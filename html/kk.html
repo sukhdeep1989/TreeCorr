@@ -25,7 +25,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="TreeCorr  documentation" href="index.html" />
-    <link rel="up" title="Two-point Correlation Functions" href="correlation.html" />
+    <link rel="up" title="Two-point Correlation Functions" href="correlation2.html" />
     <link rel="next" title="NK: Count-kappa correlations" href="nk.html" />
     <link rel="prev" title="NG: Count-shear correlations" href="ng.html" /> 
   </head>
@@ -46,7 +46,7 @@
           <a href="ng.html" title="NG: Count-shear correlations"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">TreeCorr  documentation</a> &raquo;</li>
-          <li><a href="correlation.html" accesskey="U">Two-point Correlation Functions</a> &raquo;</li> 
+          <li><a href="correlation2.html" accesskey="U">Two-point Correlation Functions</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -63,33 +63,55 @@
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">treecorr.binnedcorr2.BinnedCorr2</span></tt></p>
 <p>This class handles the calculation and storage of a 2-point kappa-kappa correlation
 function.</p>
-<p>Note: while we use the term kappa here and the letter K in various places, in fact
-any scalar field will work here.  For example, you can use this to compute correlations
+<p>Note: while we use the term kappa (<span class="math">\(\kappa\)</span>) here and the letter K in various places,
+in fact any scalar field will work here.  For example, you can use this to compute correlations
 of the CMB temperature fluctuations, where &#8220;kappa&#8221; would really be delta T.</p>
-<p>It holds the following attributes:</p>
+<p>Ojects of this class holds the following attributes:</p>
 <blockquote>
 <div><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">logr:</th><td class="field-body">The nominal center of the bin in log(r).</td>
+<tr class="field-odd field"><th class="field-name">nbins:</th><td class="field-body">The number of bins in logr</td>
 </tr>
-<tr class="field-even field"><th class="field-name">meanlogr:</th><td class="field-body">The (weighted) mean value of log(r) for the pairs in each bin.
-If there are no pairs in a bin, then logr will be used instead.</td>
+<tr class="field-even field"><th class="field-name">bin_size:</th><td class="field-body">The size of the bins in logr</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">xi:</th><td class="field-body">The correlation function, xi(r).</td>
+<tr class="field-odd field"><th class="field-name">min_sep:</th><td class="field-body">The minimum separation being considered</td>
 </tr>
-<tr class="field-even field"><th class="field-name">varxi:</th><td class="field-body">The variance of xi, only including the shot noise propagated into the
-final correlation.  This does not include sample variance, so it is always
-an underestimate of the actual variance.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">weight:</th><td class="field-body">The total weight in each bin.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">npairs:</th><td class="field-body">The number of pairs going into each bin.</td>
+<tr class="field-even field"><th class="field-name">max_sep:</th><td class="field-body">The maximum separation being considered</td>
 </tr>
 </tbody>
 </table>
 </div></blockquote>
+<p>In addition, the following attributes are numpy arrays of length (nbins):</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">logr:</th><td class="field-body">The nominal center of the bin in log(r) (the natural logarithm of r).</td>
+</tr>
+<tr class="field-even field"><th class="field-name">meanr:</th><td class="field-body">The (weighted) mean value of r for the pairs in each bin.
+If there are no pairs in a bin, then exp(logr) will be used instead.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">meanlogr:</th><td class="field-body">The (weighted) mean value of log(r) for the pairs in each bin.
+If there are no pairs in a bin, then logr will be used instead.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">xi:</th><td class="field-body">The correlation function, xi(r).</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">varxi:</th><td class="field-body">The variance of xi, only including the shot noise propagated into the
+final correlation.  This does not include sample variance, so it is always
+an underestimate of the actual variance.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">weight:</th><td class="field-body">The total weight in each bin.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">npairs:</th><td class="field-body">The number of pairs going into each bin.</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>If sep_units are given (either in the config dict or as a named kwarg) then logr and meanlogr
+both take r to be in these units.  i.e. exp(logr) will have R in units of sep_units.</p>
 <p>The usage pattern is as follows:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kk</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">KKCorrelation</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">kk</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">cat</span><span class="p">)</span>         <span class="c"># For auto-correlation.</span>
@@ -103,10 +125,9 @@ an underestimate of the actual variance.</td>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>config</strong> &#8211; The configuration dict which defines attributes about how to read the file.
-Any kwargs that are not those listed here will be added to the config, 
-so you can even omit the config dict and just enter all parameters you
-want as kwargs.  (default: None)</li>
+<li><strong>config</strong> &#8211; A configuration dict that can be used to pass in kwargs if desired.
+This dict is allowed to have addition entries in addition to those listed
+in <a class="reference internal" href="correlation2.html#treecorr.BinnedCorr2" title="treecorr.BinnedCorr2"><tt class="xref py py-class docutils literal"><span class="pre">BinnedCorr2</span></tt></a>, which are ignored here. (default: None)</li>
 <li><strong>logger</strong> &#8211; If desired, a logger object for logging. (default: None, in which case
 one will be built according to the config dict&#8217;s verbose level.)</li>
 </ul>
@@ -114,6 +135,8 @@ one will be built according to the config dict&#8217;s verbose level.)</li>
 </tr>
 </tbody>
 </table>
+<p>See the documentation for <a class="reference internal" href="correlation2.html#treecorr.BinnedCorr2" title="treecorr.BinnedCorr2"><tt class="xref py py-class docutils literal"><span class="pre">BinnedCorr2</span></tt></a> for the list of other allowed kwargs,
+which may be passed either directly or in the config dict.</p>
 <dl class="method">
 <dt id="treecorr.KKCorrelation.clear">
 <tt class="descname">clear</tt><big>(</big><big>)</big><a class="headerlink" href="#treecorr.KKCorrelation.clear" title="Permalink to this definition">¶</a></dt>
@@ -143,7 +166,7 @@ finishes the calculation by dividing each column by the total weight.</p>
 
 <dl class="method">
 <dt id="treecorr.KKCorrelation.process">
-<tt class="descname">process</tt><big>(</big><em>cat1</em>, <em>cat2=None</em><big>)</big><a class="headerlink" href="#treecorr.KKCorrelation.process" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">process</tt><big>(</big><em>cat1</em>, <em>cat2=None</em>, <em>metric=None</em>, <em>num_threads=None</em><big>)</big><a class="headerlink" href="#treecorr.KKCorrelation.process" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the correlation function.</p>
 <p>If only 1 argument is given, then compute an auto-correlation function.
 If 2 arguments are given, then compute a cross-correlation function.</p>
@@ -157,6 +180,23 @@ for that element of the correlation.</p>
 <li><strong>cat1</strong> &#8211; A catalog or list of catalogs for the first K field.</li>
 <li><strong>cat2</strong> &#8211; A catalog or list of catalogs for the second K field, if any.
 (default: None)</li>
+<li><strong>metric</strong> &#8211; <p>Which metric to use for distance measurements.  Options are:</p>
+<ul>
+<li>&#8216;Euclidean&#8217; = straight line Euclidean distance between two points.
+For spherical coordinates (ra,dec without r), this is the chord
+distance between points on the unit sphere.</li>
+<li>&#8216;Rperp&#8217; = the perpendicular component of the distance. For two points
+with distance from Earth <cite>r1, r2</cite>, if <cite>d</cite> is the normal Euclidean 
+distance and <span class="math">\(Rparallel = |r1-r2|\)</span>, then we define
+<span class="math">\(Rperp^2 = d^2 - Rparallel^2\)</span>.</li>
+</ul>
+<p>(default: &#8216;Euclidean&#8217;; this value can also be given in the constructor
+in the config dict.)</p>
+</li>
+<li><strong>num_threads</strong> &#8211; How many OpenMP threads to use during the calculation.  
+(default: use the number of cpu cores; this value can also be given in
+the constructor in the config dict.) Note that this won&#8217;t work if the 
+system&#8217;s C compiler is clang prior to version 3.7.</li>
 </ul>
 </td>
 </tr>
@@ -166,7 +206,7 @@ for that element of the correlation.</p>
 
 <dl class="method">
 <dt id="treecorr.KKCorrelation.process_auto">
-<tt class="descname">process_auto</tt><big>(</big><em>cat</em><big>)</big><a class="headerlink" href="#treecorr.KKCorrelation.process_auto" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">process_auto</tt><big>(</big><em>cat</em>, <em>metric=None</em>, <em>num_threads=None</em><big>)</big><a class="headerlink" href="#treecorr.KKCorrelation.process_auto" title="Permalink to this definition">¶</a></dt>
 <dd><p>Process a single catalog, accumulating the auto-correlation.</p>
 <p>This accumulates the weighted sums into the bins, but does not finalize
 the calculation by dividing by the total weight at the end.  After
@@ -176,7 +216,17 @@ finish the calculation.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>cat</strong> &#8211; The catalog to process</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cat</strong> &#8211; The catalog to process</li>
+<li><strong>metric</strong> &#8211; Which metric to use.  See <a class="reference internal" href="#treecorr.KKCorrelation.process" title="treecorr.KKCorrelation.process"><tt class="xref py py-meth docutils literal"><span class="pre">process()</span></tt></a> for 
+details.  (default: &#8216;Euclidean&#8217;; this value can also be given in the 
+constructor in the config dict.)</li>
+<li><strong>num_threads</strong> &#8211; How many OpenMP threads to use during the calculation.  
+(default: use the number of cpu cores; this value can also be given in
+the constructor in the config dict.) Note that this won&#8217;t work if the 
+system&#8217;s C compiler is clang prior to version 3.7.</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -184,7 +234,7 @@ finish the calculation.</p>
 
 <dl class="method">
 <dt id="treecorr.KKCorrelation.process_cross">
-<tt class="descname">process_cross</tt><big>(</big><em>cat1</em>, <em>cat2</em><big>)</big><a class="headerlink" href="#treecorr.KKCorrelation.process_cross" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">process_cross</tt><big>(</big><em>cat1</em>, <em>cat2</em>, <em>metric=None</em>, <em>num_threads=None</em><big>)</big><a class="headerlink" href="#treecorr.KKCorrelation.process_cross" title="Permalink to this definition">¶</a></dt>
 <dd><p>Process a single pair of catalogs, accumulating the cross-correlation.</p>
 <p>This accumulates the weighted sums into the bins, but does not finalize
 the calculation by dividing by the total weight at the end.  After
@@ -197,6 +247,13 @@ finish the calculation.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>cat1</strong> &#8211; The first catalog to process</li>
 <li><strong>cat2</strong> &#8211; The second catalog to process</li>
+<li><strong>metric</strong> &#8211; Which metric to use.  See <a class="reference internal" href="#treecorr.KKCorrelation.process" title="treecorr.KKCorrelation.process"><tt class="xref py py-meth docutils literal"><span class="pre">process()</span></tt></a> for 
+details.  (default: &#8216;Euclidean&#8217;; this value can also be given in the 
+constructor in the config dict.)</li>
+<li><strong>num_threads</strong> &#8211; How many OpenMP threads to use during the calculation.  
+(default: use the number of cpu cores; this value can also be given in
+the constructor in the config dict.) Note that this won&#8217;t work if the 
+system&#8217;s C compiler is clang prior to version 3.7.</li>
 </ul>
 </td>
 </tr>
@@ -206,7 +263,7 @@ finish the calculation.</p>
 
 <dl class="method">
 <dt id="treecorr.KKCorrelation.process_pairwise">
-<tt class="descname">process_pairwise</tt><big>(</big><em>cat1</em>, <em>cat2</em><big>)</big><a class="headerlink" href="#treecorr.KKCorrelation.process_pairwise" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">process_pairwise</tt><big>(</big><em>cat1</em>, <em>cat2</em>, <em>metric=None</em>, <em>num_threads=None</em><big>)</big><a class="headerlink" href="#treecorr.KKCorrelation.process_pairwise" title="Permalink to this definition">¶</a></dt>
 <dd><p>Process a single pair of catalogs, accumulating the cross-correlation, only using
 the corresponding pairs of objects in each catalog.</p>
 <p>This accumulates the weighted sums into the bins, but does not finalize
@@ -220,6 +277,37 @@ finish the calculation.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>cat1</strong> &#8211; The first catalog to process</li>
 <li><strong>cat2</strong> &#8211; The second catalog to process</li>
+<li><strong>metric</strong> &#8211; Which metric to use.  See <a class="reference internal" href="#treecorr.KKCorrelation.process" title="treecorr.KKCorrelation.process"><tt class="xref py py-meth docutils literal"><span class="pre">process()</span></tt></a> for 
+details.  (default: &#8216;Euclidean&#8217;; this value can also be given in the 
+constructor in the config dict.)</li>
+<li><strong>num_threads</strong> &#8211; How many OpenMP threads to use during the calculation.  
+(default: use the number of cpu cores; this value can also be given in
+the constructor in the config dict.) Note that this won&#8217;t work if the 
+system&#8217;s C compiler is clang prior to version 3.7.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.KKCorrelation.read">
+<tt class="descname">read</tt><big>(</big><em>file_name</em>, <em>file_type=None</em><big>)</big><a class="headerlink" href="#treecorr.KKCorrelation.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read in values from a file.</p>
+<p>This should be a file that was written by TreeCorr, preferably a FITS file, so there
+is no loss of information.</p>
+<p>Warning: The KKCorrelation object should be constructed with the same configuration 
+parameters as the one being read.  e.g. the same min_sep, max_sep, etc.  This is not
+checked by the read function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>file_name</strong> &#8211; The name of the file to read in.</li>
+<li><strong>file_type</strong> &#8211; The type of file (&#8216;ASCII&#8217; or &#8216;FITS&#8217;).  (default: determine the type
+automatically from the extension of file_name.)</li>
 </ul>
 </td>
 </tr>
@@ -229,13 +317,44 @@ finish the calculation.</p>
 
 <dl class="method">
 <dt id="treecorr.KKCorrelation.write">
-<tt class="descname">write</tt><big>(</big><em>file_name</em><big>)</big><a class="headerlink" href="#treecorr.KKCorrelation.write" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">write</tt><big>(</big><em>file_name</em>, <em>file_type=None</em>, <em>prec=None</em><big>)</big><a class="headerlink" href="#treecorr.KKCorrelation.write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write the correlation function to the file, file_name.</p>
+<p>The output file will include the following columns:</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">R_nom:</th><td class="field-body">The nominal center of the bin in R.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">meanR:</th><td class="field-body">The mean value <span class="math">\(\langle R\rangle\)</span> of pairs that fell into each bin.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">meanlogR:</th><td class="field-body">The mean value <span class="math">\(\langle logR\rangle\)</span> of pairs that fell into each
+bin.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">xi:</th><td class="field-body">The correlation function <span class="math">\(\xi = \langle \kappa \kappa \rangle\)</span>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">sigma_xi:</th><td class="field-body">The sqrt of the variance estimate of <span class="math">\(\xi\)</span>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">weight:</th><td class="field-body">The total weight contributing to each bin.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">npairs:</th><td class="field-body">The number of pairs contributing ot each bin.</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file_name</strong> &#8211; The name of the file to write to.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>file_name</strong> &#8211; The name of the file to write to.</li>
+<li><strong>file_type</strong> &#8211; The type of file to write (&#8216;ASCII&#8217; or &#8216;FITS&#8217;).  (default: determine
+the type automatically from the extension of file_name.)</li>
+<li><strong>prec</strong> &#8211; For ASCII output catalogs, the desired precision. (default: 4;
+this value can also be given in the constructor in the config dict.)</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -295,11 +414,11 @@ finish the calculation.</p>
           <a href="ng.html" title="NG: Count-shear correlations"
              >previous</a> |</li>
         <li><a href="index.html">TreeCorr  documentation</a> &raquo;</li>
-          <li><a href="correlation.html" >Two-point Correlation Functions</a> &raquo;</li> 
+          <li><a href="correlation2.html" >Two-point Correlation Functions</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2014, Mike Jarvis.
+        &copy; Copyright 2015, Mike Jarvis.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>

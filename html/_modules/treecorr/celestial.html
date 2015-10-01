@@ -49,7 +49,7 @@
           <div class="body">
             
   <h1>Source code for treecorr.celestial</h1><div class="highlight"><pre>
-<span class="c"># Copyright (c) 2003-2014 by Mike Jarvis</span>
+<span class="c"># Copyright (c) 2003-2015 by Mike Jarvis</span>
 <span class="c">#</span>
 <span class="c"># TreeCorr is free software: redistribution and use in source and binary forms,</span>
 <span class="c"># with or without modification, are permitted provided that the following</span>
@@ -66,6 +66,9 @@
 <span class="c"># of it there, I can republish it here under the TreeCorr license too.  I&#39;ve</span>
 <span class="c"># made a few (slight) modifications from the GalSim version.</span>
 
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. module:: celestial</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 <span class="n">angle_units</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s">&#39;arcsec&#39;</span> <span class="p">:</span> <span class="mf">4.84813681109537e-6</span><span class="p">,</span>
@@ -97,6 +100,10 @@
 <span class="sd">    This class is used to perform various calculations in spherical coordinates, such</span>
 <span class="sd">    as the angular distance between two points in the sky, the angles in spherical triangles,</span>
 <span class="sd">    projecting from sky coordinates onto a Euclidean tangent plane, etc.</span>
+<span class="sd">    None of these calculations are used directly by TreeCorr, but the projection routines</span>
+<span class="sd">    were useful when developing code for working directly in spherical coordinates, and it</span>
+<span class="sd">    could still be useful for people who need to massage their input catalogs before passing</span>
+<span class="sd">    them to TreeCorr.</span>
 
 <span class="sd">    A `CelestialCoord` object is constructed from the right ascension and declination:</span>
 
@@ -134,6 +141,18 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">dec</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dec</span>
 
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">radec_to_xyz</span><span class="p">(</span><span class="n">ra</span><span class="p">,</span> <span class="n">dec</span><span class="p">):</span>
+        <span class="s">&quot;Convert ra, dec to 3D x,y,z coordinates on the unit sphere.&quot;</span>
+        <span class="kn">import</span> <span class="nn">numpy</span>
+        <span class="n">cosdec</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">dec</span><span class="p">)</span>
+        <span class="n">sindec</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">dec</span><span class="p">)</span>
+        <span class="n">cosra</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">ra</span><span class="p">)</span>
+        <span class="n">sinra</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">ra</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">cosdec</span> <span class="o">*</span> <span class="n">cosra</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">cosdec</span> <span class="o">*</span> <span class="n">sinra</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">sindec</span>
+        <span class="k">return</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span>
 
     <span class="k">def</span> <span class="nf">_set_aux</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
@@ -143,7 +162,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_cosra</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ra</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_sinra</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ra</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cosdec</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cosra</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_y</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">_cosdec</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sinra</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cosdec</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sinra</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sindec</span>
 
 
@@ -152,6 +171,7 @@
 <span class="sd">        The return value is in radians.</span>
 
 <span class="sd">        :param other:   Another `CelestialCoord` object.</span>
+
 <span class="sd">        :returns:       The great circle distance in radians between this coord and `other`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c"># The easiest way to do this in a way that is stable for small separations</span>
@@ -181,11 +201,15 @@
 
 
     <span class="k">def</span> <span class="nf">angleBetween</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coord1</span><span class="p">,</span> <span class="n">coord2</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Find the open angle at the location of the current coord between `coord1` and</span>
-<span class="sd">        `coord2`.</span>
+        <span class="sd">&quot;&quot;&quot;Find the open angle at the location of the current coord between `coord1` and `coord2`.</span>
+
+<span class="sd">        Note that this returns a signed angle.  The angle is positive if the sweep direction from</span>
+<span class="sd">        coord1 to coord2 is counter-clockwise (as observed from Earth).  It is negative if</span>
+<span class="sd">        the direction is clockwise.</span>
 
 <span class="sd">        :param coord1:  Another `CelestialCoord` object.</span>
 <span class="sd">        :param coord2:  A third `CelestialCoord` object.</span>
+
 <span class="sd">        :returns:       The angle in radians between the great circles to the two other coords.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c"># Call A = coord1, B = coord2, C = self</span>
@@ -223,6 +247,7 @@
 
 <span class="sd">        :param coord1:  Another `CelestialCoord` object.</span>
 <span class="sd">        :param coord2:  A third `CelestialCoord` object.</span>
+
 <span class="sd">        :returns:       The area in steradians of the spherical triangle defined by the three</span>
 <span class="sd">                        coords.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -302,6 +327,7 @@
 
 <span class="sd">        :param other:       The coordinate to be projected relative to the current coord.</span>
 <span class="sd">        :param projection:  Which kind of projection to use. (default: &#39;lambert&#39;)</span>
+
 <span class="sd">        :returns:           The projected position (u,v) in radians as a tuple.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">projection</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span> <span class="s">&#39;lambert&#39;</span><span class="p">,</span> <span class="s">&#39;stereographic&#39;</span><span class="p">,</span> <span class="s">&#39;gnomonic&#39;</span><span class="p">,</span> <span class="s">&#39;postel&#39;</span> <span class="p">]:</span>
@@ -376,6 +402,7 @@
 <span class="sd">        :param ra:          The RA of the coordinate to be projected relative to the current coord.</span>
 <span class="sd">        :param dec:         The Dec of the coordinate to be projected relative to the current coord.</span>
 <span class="sd">        :param projection:  Which kind of projection to use. (default: &#39;lambert&#39;)</span>
+
 <span class="sd">        :returns:           The projected position (u,v) in radians as a tuple.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">projection</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span> <span class="s">&#39;lambert&#39;</span><span class="p">,</span> <span class="s">&#39;stereographic&#39;</span><span class="p">,</span> <span class="s">&#39;gnomonic&#39;</span><span class="p">,</span> <span class="s">&#39;postel&#39;</span> <span class="p">]:</span>
@@ -405,6 +432,7 @@
 <span class="sd">        :param u:           The projected u value to be deprojected.</span>
 <span class="sd">        :param v:           The projected v value to be deprojected.</span>
 <span class="sd">        :param projection:  Which kind of projection to use. (default: &#39;lambert&#39;)</span>
+
 <span class="sd">        :returns:           The `CelestialCoord` corresponding to the given projected position.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">projection</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span> <span class="s">&#39;lambert&#39;</span><span class="p">,</span> <span class="s">&#39;stereographic&#39;</span><span class="p">,</span> <span class="s">&#39;gnomonic&#39;</span><span class="p">,</span> <span class="s">&#39;postel&#39;</span> <span class="p">]:</span>
@@ -491,6 +519,7 @@
 <span class="sd">        :param u:           The projected u value to be deprojected.</span>
 <span class="sd">        :param v:           The projected v value to be deprojected.</span>
 <span class="sd">        :param projection:  Which kind of projection to use. (default: &#39;lambert&#39;)</span>
+
 <span class="sd">        :returns:           A tuple (ra, dec) of the deprojected coordinates.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">projection</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span> <span class="s">&#39;lambert&#39;</span><span class="p">,</span> <span class="s">&#39;stereographic&#39;</span><span class="p">,</span> <span class="s">&#39;gnomonic&#39;</span><span class="p">,</span> <span class="s">&#39;postel&#39;</span> <span class="p">]:</span>
@@ -513,6 +542,7 @@
 <span class="sd">        :param u:           The projected u value to be deprojected.</span>
 <span class="sd">        :param v:           The projected v value to be deprojected.</span>
 <span class="sd">        :param projection:  Which kind of projection to use. (default: &#39;lambert&#39;)</span>
+
 <span class="sd">        :returns:           The matrix as a tuple (J00, J01, J10, J11)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">projection</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span> <span class="s">&#39;lambert&#39;</span><span class="p">,</span> <span class="s">&#39;stereographic&#39;</span><span class="p">,</span> <span class="s">&#39;gnomonic&#39;</span><span class="p">,</span> <span class="s">&#39;postel&#39;</span> <span class="p">]:</span>
@@ -595,6 +625,7 @@
 
 <span class="sd">        :param from_epoch:  The epoch to use for the current coord.</span>
 <span class="sd">        :param to_epoch:    The new epoch to precess to.</span>
+
 <span class="sd">        :returns:           A new `CelestialCoord` of the coordinates in the new epoch.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">from_epoch</span> <span class="o">==</span> <span class="n">to_epoch</span><span class="p">:</span> <span class="k">return</span> <span class="bp">self</span>
@@ -633,15 +664,13 @@
         <span class="n">zz</span> <span class="o">=</span> <span class="n">cosc</span>
 
         <span class="c"># Perform the rotation:</span>
-        <span class="c"># And note that Lieske defines y with the opposite sign of our convention.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_aux</span><span class="p">()</span>
-        <span class="kn">import</span> <span class="nn">numpy</span>
-        <span class="n">x2</span> <span class="o">=</span> <span class="n">xx</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_x</span> <span class="o">-</span> <span class="n">yx</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_y</span> <span class="o">+</span> <span class="n">zx</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_z</span>
-        <span class="n">y2</span> <span class="o">=</span> <span class="o">-</span><span class="n">xy</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_x</span> <span class="o">+</span> <span class="n">yy</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_y</span> <span class="o">-</span> <span class="n">zy</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_z</span>
-        <span class="n">z2</span> <span class="o">=</span> <span class="n">xz</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_x</span> <span class="o">-</span> <span class="n">yz</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_y</span> <span class="o">+</span> <span class="n">zz</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_z</span>
+        <span class="n">x2</span> <span class="o">=</span> <span class="n">xx</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_x</span> <span class="o">+</span> <span class="n">yx</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_y</span> <span class="o">+</span> <span class="n">zx</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_z</span>
+        <span class="n">y2</span> <span class="o">=</span> <span class="n">xy</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_x</span> <span class="o">+</span> <span class="n">yy</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_y</span> <span class="o">+</span> <span class="n">zy</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_z</span>
+        <span class="n">z2</span> <span class="o">=</span> <span class="n">xz</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_x</span> <span class="o">+</span> <span class="n">yz</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_y</span> <span class="o">+</span> <span class="n">zz</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_z</span>
 
         <span class="n">new_dec</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">z2</span><span class="p">,</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x2</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="n">y2</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> 
-        <span class="n">new_ra</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="o">-</span><span class="n">y2</span><span class="p">,</span><span class="n">x2</span><span class="p">)</span>
+        <span class="n">new_ra</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">y2</span><span class="p">,</span><span class="n">x2</span><span class="p">)</span>
         <span class="n">new_coord</span> <span class="o">=</span> <span class="n">CelestialCoord</span><span class="p">(</span><span class="n">new_ra</span><span class="p">,</span><span class="n">new_dec</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">new_coord</span>
 
@@ -654,6 +683,7 @@
 <span class="sd">        by default, but you may also specify a different value with the epoch parameter.</span>
 
 <span class="sd">        :param epoch:   The epoch to assume for the current coordinates (default: 2000)</span>
+
 <span class="sd">        :returns:       The longitude and latitude as a tuple (el, b) in radians.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c"># cf. Lang, Astrophysical Formulae, page 13</span>
@@ -683,6 +713,45 @@
         <span class="n">el</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">cbsl</span><span class="p">,</span><span class="n">cbcl</span><span class="p">)</span> <span class="o">+</span> <span class="n">el0</span>
 
         <span class="k">return</span> <span class="p">(</span><span class="n">el</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">ecliptic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch</span><span class="o">=</span><span class="mf">2000.</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the longitude and latitude in ecliptic coordinates corresponding to this position.</span>
+
+<span class="sd">        Note that the ecliptic coordinate system precesses with time.  This function takes</span>
+<span class="sd">        an optional epoch parameter to indicate what epoch to use for both the input coordinates</span>
+<span class="sd">        and the output ecliptic coordinates.</span>
+
+<span class="sd">        :param epoch:   The epoch to assume for the coordinates (default: 2000).</span>
+
+<span class="sd">        :returns:       The longitude and latitude as a tuple (lambda, beta) in radians.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">math</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_aux</span><span class="p">()</span>
+
+        <span class="c"># From http://en.wikipedia.org/wiki/Axial_tilt</span>
+        <span class="c"># ep = 23deg 26m +</span>
+        <span class="c">#      (21.406 + T(-46.836769 + T(-0.0001831 + T(0.00200340 + T(-0.576e-6 - 4.34e-8 T) s</span>
+        <span class="n">ep</span> <span class="o">=</span> <span class="mf">84381.406</span>  <span class="c"># = 23d 26m 21.406s in arcsec</span>
+        <span class="k">if</span> <span class="n">epoch</span> <span class="o">!=</span> <span class="mf">2000.</span><span class="p">:</span>
+            <span class="n">T</span> <span class="o">=</span> <span class="p">(</span><span class="n">epoch</span> <span class="o">-</span> <span class="mf">2000.</span><span class="p">)</span> <span class="o">/</span> <span class="mf">100.</span>
+            <span class="n">ep</span> <span class="o">+=</span> <span class="n">T</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="mf">46.836769</span> <span class="o">+</span> <span class="n">T</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="mf">0.0001831</span> <span class="o">+</span> <span class="n">T</span><span class="o">*</span><span class="p">(</span><span class="mf">0.0020034</span> <span class="o">+</span> <span class="n">T</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="mf">0.576e-6</span> <span class="o">-</span> <span class="n">T</span><span class="o">*</span><span class="mf">4.34e-8</span><span class="p">))))</span>
+        <span class="n">ep</span> <span class="o">*=</span> <span class="n">arcsec</span>
+
+        <span class="c"># cf. http://en.wikipedia.org/wiki/Ecliptic_coordinate_system</span>
+        <span class="c"># xe = x</span>
+        <span class="c"># ye = cos(ep) y + sin(ep) z</span>
+        <span class="c"># ze = -sin(ep) y + cos(ep) z</span>
+        <span class="n">cos_ep</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">ep</span><span class="p">)</span>
+        <span class="n">sin_ep</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">ep</span><span class="p">)</span>
+        <span class="n">xe</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x</span>
+        <span class="n">ye</span> <span class="o">=</span> <span class="n">cos_ep</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_y</span> <span class="o">+</span> <span class="n">sin_ep</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_z</span>
+        <span class="n">ze</span> <span class="o">=</span> <span class="o">-</span><span class="n">sin_ep</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_y</span> <span class="o">+</span> <span class="n">cos_ep</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_z</span>
+
+        <span class="n">beta</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">asin</span><span class="p">(</span><span class="n">ze</span><span class="p">)</span>
+        <span class="n">lam</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">ye</span><span class="p">,</span> <span class="n">xe</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">lam</span><span class="p">,</span> <span class="n">beta</span><span class="p">)</span>
 
 
     <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">return</span> <span class="n">CelestialCoord</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ra</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dec</span><span class="p">)</span>
@@ -727,7 +796,7 @@
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2014, Mike Jarvis.
+        &copy; Copyright 2015, Mike Jarvis.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>

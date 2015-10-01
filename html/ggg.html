@@ -1,0 +1,537 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>GGG: Shear-shear-shear correlations &mdash; TreeCorr  documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="TreeCorr  documentation" href="index.html" />
+    <link rel="up" title="Three-point Correlation Functions" href="correlation3.html" />
+    <link rel="next" title="KKK: Kappa-kappa-kappa correlations" href="kkk.html" />
+    <link rel="prev" title="NNN: Count-count-count correlations" href="nnn.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="kkk.html" title="KKK: Kappa-kappa-kappa correlations"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="nnn.html" title="NNN: Count-count-count correlations"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">TreeCorr  documentation</a> &raquo;</li>
+          <li><a href="correlation3.html" accesskey="U">Three-point Correlation Functions</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="ggg-shear-shear-shear-correlations">
+<h1>GGG: Shear-shear-shear correlations<a class="headerlink" href="#ggg-shear-shear-shear-correlations" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="treecorr.GGGCorrelation">
+<em class="property">class </em><tt class="descclassname">treecorr.</tt><tt class="descname">GGGCorrelation</tt><big>(</big><em>config=None</em>, <em>logger=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#treecorr.GGGCorrelation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">treecorr.binnedcorr3.BinnedCorr3</span></tt></p>
+<p>This class handles the calculation and storage of a 3-point shear-shear-shear correlation
+function.</p>
+<p>We use the &#8220;natural components&#8221; of the shear 3-point function described by Schneider &amp;
+Lombardi (2003) [Astron.Astrophys. 397 (2003) 809-818].  In this paradigm, the shears
+are projected relative to some point defined by the geometry of the triangle.  They
+give several reasonable choices for this point.  We choose the triangle&#8217;s centroid as the 
+&#8220;most natural&#8221; point, as many simple shear fields have purely real <span class="math">\(\Gamma_0\)</span> using
+this definition.  It is also a fairly simple point to calculate in the code compared to 
+some of the other options they offer, so projections relative to it are fairly efficient.</p>
+<p>There are 4 complex-valued 3-point shear corrletion functions defined for triples of shear
+values projected relative to the line joining the location of the shear to the cenroid of
+the triangle:</p>
+<div class="math">
+\[\begin{split}\Gamma_0 &amp;= \langle \gamma(\mathbf{x1}) \gamma(\mathbf{x2}) \gamma(\mathbf{x3}) \rangle \\
+\Gamma_1 &amp;= \langle \gamma(\mathbf{x1})^* \gamma(\mathbf{x2}) \gamma(\mathbf{x3}) \rangle \\
+\Gamma_2 &amp;= \langle \gamma(\mathbf{x1}) \gamma(\mathbf{x2})^* \gamma(\mathbf{x3}) \rangle \\
+\Gamma_3 &amp;= \langle \gamma(\mathbf{x1}) \gamma(\mathbf{x2}) \gamma(\mathbf{x3})^* \rangle \\\end{split}\]</div>
+<p>where <span class="math">\(\mathbf{x1}, \mathbf{x2}, \mathbf{x3}\)</span> are the corners of the triange opposite
+sides <cite>d1, d2, d3</cite> respectively, where <cite>d1 &gt; d2 &gt; d3</cite>, and <cite>*</cite> indicates complex conjugation.</p>
+<p>See the doc string of <a class="reference internal" href="correlation3.html#treecorr.BinnedCorr3" title="treecorr.BinnedCorr3"><tt class="xref py py-class docutils literal"><span class="pre">BinnedCorr3</span></tt></a> for a description of how the triangles 
+are binned.</p>
+<p>Ojects of this class holds the following attributes:</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">nbins:</th><td class="field-body">The number of bins in logr where r = d2</td>
+</tr>
+<tr class="field-even field"><th class="field-name">bin_size:</th><td class="field-body">The size of the bins in logr</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">min_sep:</th><td class="field-body">The minimum separation being considered</td>
+</tr>
+<tr class="field-even field"><th class="field-name">max_sep:</th><td class="field-body">The maximum separation being considered</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">nubins:</th><td class="field-body">The number of bins in u where u = d3/d2</td>
+</tr>
+<tr class="field-even field"><th class="field-name">ubin_size:</th><td class="field-body">The size of the bins in u</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">min_u:</th><td class="field-body">The minimum u being considered</td>
+</tr>
+<tr class="field-even field"><th class="field-name">max_u:</th><td class="field-body">The maximum u being considered</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">nvbins:</th><td class="field-body">The number of bins in v where v = +-(d1-d2)/d3</td>
+</tr>
+<tr class="field-even field"><th class="field-name">vbin_size:</th><td class="field-body">The size of the bins in v</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">min_v:</th><td class="field-body">The minimum v being considered</td>
+</tr>
+<tr class="field-even field"><th class="field-name">max_v:</th><td class="field-body">The maximum v being considered</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">logr1d:</th><td class="field-body">The nominal centers of the nbins bins in log(r).</td>
+</tr>
+<tr class="field-even field"><th class="field-name">u1d:</th><td class="field-body">The nominal centers of the nubins bins in u.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">v1d:</th><td class="field-body">The nominal centers of the nvbins bins in v.</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>In addition, the following attributes are numpy arrays whose shape is (nbins, nubins, nvbins):</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">logr:</th><td class="field-body">The nominal center of each bin in log(r).</td>
+</tr>
+<tr class="field-even field"><th class="field-name">u:</th><td class="field-body">The nominal center of each bin in u.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">v:</th><td class="field-body">The nominal center of each bin in v.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">meand1:</th><td class="field-body">The (weighted) mean value of d1 for the triangles in each bin.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">meanlogd1:</th><td class="field-body">The mean value of log(d1) for the triangles in each bin.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">meand2:</th><td class="field-body">The (weighted) mean value of d2 (aka r) for the triangles in each bin.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">meanlogd2:</th><td class="field-body">The mean value of log(d2) for the triangles in each bin.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">meand2:</th><td class="field-body">The (weighted) mean value of d3 for the triangles in each bin.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">meanlogd2:</th><td class="field-body">The mean value of log(d3) for the triangles in each bin.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">meanu:</th><td class="field-body">The mean value of u for the triangles in each bin.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">meanv:</th><td class="field-body">The mean value of v for the triangles in each bin.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">gam0:</th><td class="field-body">The 0th &#8220;natural&#8221; correlation function, <span class="math">\(\Gamma_0(r,u,v)\)</span>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">gam1:</th><td class="field-body">The 1st &#8220;natural&#8221; correlation function, <span class="math">\(\Gamma_1(r,u,v)\)</span>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">gam2:</th><td class="field-body">The 2nd &#8220;natural&#8221; correlation function, <span class="math">\(\Gamma_2(r,u,v)\)</span>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">gam3:</th><td class="field-body">The 3rd &#8220;natural&#8221; correlation function, <span class="math">\(\Gamma_3(r,u,v)\)</span>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">vargam:</th><td class="field-body">The variance of <span class="math">\(\Gamma\)</span> values, only including the shot noise
+propagated into the final correlation.  This does not include sample variance,
+so it is always an underestimate of the actual variance.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">weight:</th><td class="field-body">The total weight in each bin.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">ntri:</th><td class="field-body">The number of triangles going into each bin.</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>If sep_units are given (either in the config dict or as a named kwarg) then logr and meanlogr
+both take r to be in these units.  i.e. exp(logr) will have R in units of sep_units.</p>
+<p>The usage pattern is as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">ggg</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">GGGCorrelation</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ggg</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">cat</span><span class="p">)</span>              <span class="c"># For auto-correlation.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ggg</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span><span class="n">cat2</span><span class="p">,</span><span class="n">cat3</span><span class="p">)</span>   <span class="c"># For cross-correlation.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ggg</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>          <span class="c"># Write out to a file.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gam0</span> <span class="o">=</span> <span class="n">ggg</span><span class="o">.</span><span class="n">gam0</span><span class="p">,</span> <span class="n">etc</span><span class="o">.</span>         <span class="c"># To access gamma values directly.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gam0r</span> <span class="o">=</span> <span class="n">ggg</span><span class="o">.</span><span class="n">gam0r</span>             <span class="c"># You can also access real and imag parts separately.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gam0i</span> <span class="o">=</span> <span class="n">ggg</span><span class="o">.</span><span class="n">gam0i</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>config</strong> &#8211; A configuration dict that can be used to pass in kwargs if desired.
+This dict is allowed to have addition entries in addition to those listed
+in <a class="reference internal" href="correlation3.html#treecorr.BinnedCorr3" title="treecorr.BinnedCorr3"><tt class="xref py py-class docutils literal"><span class="pre">BinnedCorr3</span></tt></a>, which are ignored here. (default: None)</li>
+<li><strong>logger</strong> &#8211; If desired, a logger object for logging. (default: None, in which case
+one will be built according to the config dict&#8217;s verbose level.)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>See the documentation for <a class="reference internal" href="correlation3.html#treecorr.BinnedCorr3" title="treecorr.BinnedCorr3"><tt class="xref py py-class docutils literal"><span class="pre">BinnedCorr3</span></tt></a> for the list of other allowed kwargs,
+which may be passed either directly or in the config dict.</p>
+<dl class="method">
+<dt id="treecorr.GGGCorrelation.clear">
+<tt class="descname">clear</tt><big>(</big><big>)</big><a class="headerlink" href="#treecorr.GGGCorrelation.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear the data vectors</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.GGGCorrelation.finalize">
+<tt class="descname">finalize</tt><big>(</big><em>varg1</em>, <em>varg2</em>, <em>varg3</em><big>)</big><a class="headerlink" href="#treecorr.GGGCorrelation.finalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finalize the calculation of the correlation function.</p>
+<p>The process_auto and process_cross commands accumulate values in each bin,
+so they can be called multiple times if appropriate.  Afterwards, this command
+finishes the calculation by dividing by the total weight.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>varg1</strong> &#8211; The shear variance for the first field.</li>
+<li><strong>varg2</strong> &#8211; The shear variance for the second field.</li>
+<li><strong>varg3</strong> &#8211; The shear variance for the third field.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.GGGCorrelation.process">
+<tt class="descname">process</tt><big>(</big><em>cat1</em>, <em>cat2=None</em>, <em>cat3=None</em>, <em>metric=None</em>, <em>num_threads=None</em><big>)</big><a class="headerlink" href="#treecorr.GGGCorrelation.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accumulate the number of triangles of points between cat1, cat2, and cat3.</p>
+<ul class="simple">
+<li>If only 1 argument is given, then compute an auto-correlation function.</li>
+<li>If 2 arguments are given, then compute a cross-correlation function with the 
+first catalog taking two corners of the triangles. (Not implemented yet.)</li>
+<li>If 3 arguments are given, then compute a cross-correlation function.</li>
+</ul>
+<p>All arguments may be lists, in which case all items in the list are used 
+for that element of the correlation.</p>
+<p>Note: For a correlation of multiple catalogs, it matters which corner of the
+triangle comes from which catalog.  The final accumulation will have 
+d1 &gt; d2 &gt; d3 where d1 is between two points in cat2,cat3; d2 is between 
+points in cat1,cat3; and d3 is between points in cat1,cat2.  To accumulate
+all the possible triangles between three catalogs, you should call this
+multiple times with the different catalogs in different positions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cat1</strong> &#8211; A catalog or list of catalogs for the first N field.</li>
+<li><strong>cat2</strong> &#8211; A catalog or list of catalogs for the second N field, if any.
+(default: None)</li>
+<li><strong>cat3</strong> &#8211; A catalog or list of catalogs for the third N field, if any.
+(default: None)</li>
+<li><strong>metric</strong> &#8211; <p>Which metric to use for distance measurements.  Options are:</p>
+<ul>
+<li>&#8216;Euclidean&#8217; = straight line Euclidean distance between two points.
+For spherical coordinates (ra,dec without r), this is the chord
+distance between points on the unit sphere.</li>
+<li>&#8216;Rperp&#8217; = the perpendicular component of the distance. For two points
+with distance from Earth <cite>r1, r2</cite>, if <cite>d</cite> is the normal Euclidean 
+distance and <span class="math">\(Rparallel = |r1-r2|\)</span>, then we define
+<span class="math">\(Rperp^2 = d^2 - Rparallel^2\)</span>.</li>
+</ul>
+<p>(default: &#8216;Euclidean&#8217;; this value can also be given in the constructor
+in the config dict.)</p>
+</li>
+<li><strong>num_threads</strong> &#8211; How many OpenMP threads to use during the calculation.  
+(default: use the number of cpu cores; this value can also be given in
+the constructor in the config dict.) Note that this won&#8217;t work if the 
+system&#8217;s C compiler is clang prior to version 3.7.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.GGGCorrelation.process_auto">
+<tt class="descname">process_auto</tt><big>(</big><em>cat</em>, <em>metric=None</em>, <em>num_threads=None</em><big>)</big><a class="headerlink" href="#treecorr.GGGCorrelation.process_auto" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process a single catalog, accumulating the auto-correlation.</p>
+<p>This accumulates the auto-correlation for the given catalog.  After
+calling this function as often as desired, the finalize() command will
+finish the calculation of meand1, meanlogd1, etc.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cat</strong> &#8211; The catalog to process</li>
+<li><strong>metric</strong> &#8211; Which metric to use.  See <a class="reference internal" href="#treecorr.GGGCorrelation.process" title="treecorr.GGGCorrelation.process"><tt class="xref py py-meth docutils literal"><span class="pre">process()</span></tt></a> for 
+details.  (default: &#8216;Euclidean&#8217;; this value can also be given in the 
+constructor in the config dict.)</li>
+<li><strong>num_threads</strong> &#8211; How many OpenMP threads to use during the calculation.  
+(default: use the number of cpu cores; this value can also be given in
+the constructor in the config dict.) Note that this won&#8217;t work if the 
+system&#8217;s C compiler is clang prior to version 3.7.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.GGGCorrelation.process_cross">
+<tt class="descname">process_cross</tt><big>(</big><em>cat1</em>, <em>cat2</em>, <em>cat3</em>, <em>metric=None</em>, <em>num_threads=None</em><big>)</big><a class="headerlink" href="#treecorr.GGGCorrelation.process_cross" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process a set of three catalogs, accumulating the 3pt cross-correlation.</p>
+<p>This accumulates the cross-correlation for the given catalogs.  After
+calling this function as often as desired, the finalize() command will
+finish the calculation of meand1, meanlogd1, etc.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cat1</strong> &#8211; The first catalog to process</li>
+<li><strong>cat2</strong> &#8211; The second catalog to process</li>
+<li><strong>cat3</strong> &#8211; The third catalog to process</li>
+<li><strong>metric</strong> &#8211; Which metric to use.  See <a class="reference internal" href="#treecorr.GGGCorrelation.process" title="treecorr.GGGCorrelation.process"><tt class="xref py py-meth docutils literal"><span class="pre">process()</span></tt></a> for 
+details.  (default: &#8216;Euclidean&#8217;; this value can also be given in the 
+constructor in the config dict.)</li>
+<li><strong>num_threads</strong> &#8211; How many OpenMP threads to use during the calculation.  
+(default: use the number of cpu cores; this value can also be given in
+the constructor in the config dict.) Note that this won&#8217;t work if the 
+system&#8217;s C compiler is clang prior to version 3.7.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.GGGCorrelation.process_cross21">
+<tt class="descname">process_cross21</tt><big>(</big><em>cat1</em>, <em>cat2</em>, <em>metric=None</em>, <em>num_threads=None</em><big>)</big><a class="headerlink" href="#treecorr.GGGCorrelation.process_cross21" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process two catalogs, accumulating the 3pt cross-correlation, where two of the 
+points in each triangle come from the first catalog, and one from the second.</p>
+<p>This accumulates the cross-correlation for the given catalogs.  After
+calling this function as often as desired, the finalize() command will
+finish the calculation of meand1, meanlogd1, etc.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cat1</strong> &#8211; The first catalog to process</li>
+<li><strong>cat2</strong> &#8211; The second catalog to process</li>
+<li><strong>metric</strong> &#8211; Which metric to use.  See <a class="reference internal" href="#treecorr.GGGCorrelation.process" title="treecorr.GGGCorrelation.process"><tt class="xref py py-meth docutils literal"><span class="pre">process()</span></tt></a> for 
+details.  (default: &#8216;Euclidean&#8217;; this value can also be given in the 
+constructor in the config dict.)</li>
+<li><strong>num_threads</strong> &#8211; How many OpenMP threads to use during the calculation.  
+(default: use the number of cpu cores; this value can also be given in
+the constructor in the config dict.) Note that this won&#8217;t work if the 
+system&#8217;s C compiler is clang prior to version 3.7.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.GGGCorrelation.read">
+<tt class="descname">read</tt><big>(</big><em>file_name</em>, <em>file_type=None</em><big>)</big><a class="headerlink" href="#treecorr.GGGCorrelation.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read in values from a file.</p>
+<p>This should be a file that was written by TreeCorr, preferably a FITS file, so there
+is no loss of information.</p>
+<p>Warning: The GGGCorrelation object should be constructed with the same configuration 
+parameters as the one being read.  e.g. the same min_sep, max_sep, etc.  This is not
+checked by the read function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>file_name</strong> &#8211; The name of the file to read in.</li>
+<li><strong>file_type</strong> &#8211; The type of file (&#8216;ASCII&#8217; or &#8216;FITS&#8217;).  (default: determine the type
+automatically from the extension of file_name.)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="treecorr.GGGCorrelation.write">
+<tt class="descname">write</tt><big>(</big><em>file_name</em>, <em>file_type=None</em>, <em>prec=None</em><big>)</big><a class="headerlink" href="#treecorr.GGGCorrelation.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the correlation function to the file, file_name.</p>
+<p>As described in the doc string for <a class="reference internal" href="#treecorr.GGGCorrelation" title="treecorr.GGGCorrelation"><tt class="xref py py-class docutils literal"><span class="pre">GGGCorrelation</span></tt></a>, we use the
+&#8220;natural components&#8221; of the shear 3-point function described by Schneider &amp; Lombardi (2003)
+using the triangle centroid as the projection point.  There are 4 complex-valued natural
+components, so there are 8 columns in the output file.</p>
+<p>The output file will include the following columns:</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">R_nom:</th><td class="field-body">The nominal center of the bin in R = d2 where d1 &gt; d2 &gt; d3.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">u_nom:</th><td class="field-body">The nominal center of the bin in u = d3/d2.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">v_nom:</th><td class="field-body">The nominal center of the bin in v = +-(d1-d2)/d3.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">meand1:</th><td class="field-body">The mean value <span class="math">\(\langle d1\rangle\)</span> of pairs that fell into
+each bin.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">meanlogd1:</th><td class="field-body">The mean value <span class="math">\(\langle logd1\rangle\)</span> of pairs that fell into
+each bin.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">meand2:</th><td class="field-body">The mean value <span class="math">\(\langle d2\rangle\)</span> of pairs that fell into
+each bin.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">meanlogd2:</th><td class="field-body">The mean value <span class="math">\(\langle logd2\rangle\)</span> of pairs that fell into
+each bin.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">meand3:</th><td class="field-body">The mean value <span class="math">\(\langle d3\rangle\)</span> of pairs that fell into
+each bin.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">meanlogd3:</th><td class="field-body">The mean value <span class="math">\(\langle logd3\rangle\)</span> of pairs that fell into
+each bin.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">meanu:</th><td class="field-body">The mean value <span class="math">\(\langle u\rangle\)</span> of pairs that fell into
+each bin.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">meanv:</th><td class="field-body">The mean value <span class="math">\(\langle v\rangle\)</span> of pairs that fell into
+each bin.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">gam0r:</th><td class="field-body">The real part of the estimator of <span class="math">\(\Gamma_0(r,u,v)\)</span>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">gam0i:</th><td class="field-body">The imag part of the estimator of <span class="math">\(\Gamma_0(r,u,v)\)</span>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">gam1r:</th><td class="field-body">The real part of the estimator of <span class="math">\(\Gamma_1(r,u,v)\)</span>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">gam1i:</th><td class="field-body">The imag part of the estimator of <span class="math">\(\Gamma_1(r,u,v)\)</span>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">gam2r:</th><td class="field-body">The real part of the estimator of <span class="math">\(\Gamma_2(r,u,v)\)</span>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">gam2i:</th><td class="field-body">The imag part of the estimator of <span class="math">\(\Gamma_2(r,u,v)\)</span>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">gam3r:</th><td class="field-body">The real part of the estimator of <span class="math">\(\Gamma_3(r,u,v)\)</span>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">gam3i:</th><td class="field-body">The imag part of the estimator of <span class="math">\(\Gamma_3(r,u,v)\)</span>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">sigma_gam:</th><td class="field-body">The sqrt of the variance estimate of <span class="math">\(\Gamma\)</span> values.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">weight:</th><td class="field-body">The total weight of triangles contributing to each bin.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">ntri:</th><td class="field-body">The number of triangles contributing to each bin.</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>file_name</strong> &#8211; The name of the file to write to.</li>
+<li><strong>file_type</strong> &#8211; The type of file to write (&#8216;ASCII&#8217; or &#8216;FITS&#8217;).  (default: determine
+the type automatically from the extension of file_name.)</li>
+<li><strong>prec</strong> &#8211; For ASCII output catalogs, the desired precision. (default: 4;
+this value can also be given in the constructor in the config dict.)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="nnn.html"
+                        title="previous chapter">NNN: Count-count-count correlations</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="kkk.html"
+                        title="next chapter">KKK: Kappa-kappa-kappa correlations</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/ggg.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="kkk.html" title="KKK: Kappa-kappa-kappa correlations"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="nnn.html" title="NNN: Count-count-count correlations"
+             >previous</a> |</li>
+        <li><a href="index.html">TreeCorr  documentation</a> &raquo;</li>
+          <li><a href="correlation3.html" >Three-point Correlation Functions</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Mike Jarvis.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

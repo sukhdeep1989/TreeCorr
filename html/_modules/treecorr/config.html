@@ -49,7 +49,7 @@
           <div class="body">
             
   <h1>Source code for treecorr.config</h1><div class="highlight"><pre>
-<span class="c"># Copyright (c) 2003-2014 by Mike Jarvis</span>
+<span class="c"># Copyright (c) 2003-2015 by Mike Jarvis</span>
 <span class="c">#</span>
 <span class="c"># TreeCorr is free software: redistribution and use in source and binary forms,</span>
 <span class="c"># with or without modification, are permitted provided that the following</span>
@@ -62,8 +62,13 @@
 <span class="c">#    this list of conditions, and the disclaimer given in the documentation</span>
 <span class="c">#    and/or other materials provided with the distribution.</span>
 
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. module:: config</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
 <span class="kn">import</span> <span class="nn">treecorr</span>
+<span class="kn">import</span> <span class="nn">six</span>
 
 
 <div class="viewcode-block" id="parse_variable"><a class="viewcode-back" href="../../corr2.html#treecorr.config.parse_variable">[docs]</a><span class="k">def</span> <span class="nf">parse_variable</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
@@ -226,7 +231,7 @@
 
         <span class="c"># Check that this is a valid key</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s">&quot;Invalid parameter </span><span class="si">%s</span><span class="s"> found in config dict.&quot;</span><span class="o">%</span><span class="n">key</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s">&quot;Invalid parameter </span><span class="si">%s</span><span class="s">.&quot;</span><span class="o">%</span><span class="n">key</span><span class="p">)</span>
 
         <span class="n">value_type</span><span class="p">,</span> <span class="n">may_be_list</span><span class="p">,</span> <span class="n">default_value</span><span class="p">,</span> <span class="n">valid_values</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="n">key</span><span class="p">][:</span><span class="mi">4</span><span class="p">]</span>
 
@@ -364,31 +369,28 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">default</span>
 </div>
-<div class="viewcode-block" id="merge_config"><a class="viewcode-back" href="../../corr2.html#treecorr.config.merge_config">[docs]</a><span class="k">def</span> <span class="nf">merge_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="merge_config"><a class="viewcode-back" href="../../corr2.html#treecorr.config.merge_config">[docs]</a><span class="k">def</span> <span class="nf">merge_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">valid_params</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Merge in the values from kwargs into config.</span>
 
 <span class="sd">    If either of these is None, then the other one is returned.</span>
 <span class="sd">    If they are both dicts, then the values in kwargs take precedence over ones in config</span>
-<span class="sd">    if there are any keys that are in both.</span>
+<span class="sd">    if there are any keys that are in both.  Also, the kwargs dict will be modified in this case.</span>
 
-<span class="sd">    Note: neither input dict will be modified in this process.</span>
+<span class="sd">    :param config:          The root config (will not be modified)</span>
+<span class="sd">    :param kwargs:          A second dict with more or updated values</span>
+<span class="sd">    :param valid_params:    A dict of valid parameters that are allowed for this usage.</span>
+<span class="sd">                            The config dict is allowed to have extra items, but kwargs is not.</span>
 
-<span class="sd">    :param config:      The root config</span>
-<span class="sd">    :param kwargs:      A second dict with more or updated values</span>
-
-<span class="sd">    :returns:           The merged dict</span>
+<span class="sd">    :returns:               The merged dict, including only items that are in valid_params.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">config</span><span class="p">:</span>
-            <span class="kn">import</span> <span class="nn">copy</span>
-            <span class="n">config</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-            <span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span> 
-            <span class="n">config</span> <span class="o">=</span> <span class="n">kwargs</span>
-    <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-        <span class="n">config</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">return</span> <span class="n">config</span>
+    <span class="k">if</span> <span class="n">kwargs</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="n">config</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">valid_params</span> <span class="ow">and</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="n">check_config</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">valid_params</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">kwargs</span>
 
 </div>
 <span class="kn">import</span> <span class="nn">os</span>
@@ -398,16 +400,34 @@
 <span class="n">_treecorr</span><span class="o">.</span><span class="n">SetOMPThreads</span><span class="o">.</span><span class="n">restype</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">c_int</span>
 <span class="n">_treecorr</span><span class="o">.</span><span class="n">SetOMPThreads</span><span class="o">.</span><span class="n">argtypes</span> <span class="o">=</span> <span class="p">[</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">c_int</span> <span class="p">]</span>
 
-<div class="viewcode-block" id="set_omp_threads"><a class="viewcode-back" href="../../corr2.html#treecorr.config.set_omp_threads">[docs]</a><span class="k">def</span> <span class="nf">set_omp_threads</span><span class="p">(</span><span class="n">num_threads</span><span class="p">):</span>
+<div class="viewcode-block" id="set_omp_threads"><a class="viewcode-back" href="../../corr2.html#treecorr.config.set_omp_threads">[docs]</a><span class="k">def</span> <span class="nf">set_omp_threads</span><span class="p">(</span><span class="n">num_threads</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Set the number of OpenMP threads to use in the C++ layer.</span>
 
 <span class="sd">    :param num_threads: The target number of threads to use</span>
+<span class="sd">    :param logger:      If desired, a logger object for logging any warnings here. (default: None)</span>
 
 <span class="sd">    :returns:           The  number of threads OpenMP reports that it will use.  Typically this</span>
 <span class="sd">                        matches the input, but OpenMP reserves the right not to comply with</span>
 <span class="sd">                        the requested number of threads.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">_treecorr</span><span class="o">.</span><span class="n">SetOMPThreads</span><span class="p">(</span><span class="n">num_threads</span><span class="p">)</span>
+    <span class="n">input_num_threads</span> <span class="o">=</span> <span class="n">num_threads</span>  <span class="c"># Save the input value.</span>
+    <span class="k">if</span> <span class="n">num_threads</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">num_threads</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">multiprocessing</span>
+        <span class="n">num_threads</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">logger</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;multiprocessing.cpu_count() = </span><span class="si">%d</span><span class="s">&#39;</span><span class="p">,</span><span class="n">num_threads</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">num_threads</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">logger</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;Telling OpenMP to use </span><span class="si">%d</span><span class="s"> threads&#39;</span><span class="p">,</span><span class="n">num_threads</span><span class="p">)</span>
+        <span class="n">num_threads</span> <span class="o">=</span> <span class="n">_treecorr</span><span class="o">.</span><span class="n">SetOMPThreads</span><span class="p">(</span><span class="n">num_threads</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">logger</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;OpenMP reports that it will use </span><span class="si">%d</span><span class="s"> threads&#39;</span><span class="p">,</span><span class="n">num_threads</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">num_threads</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;Using </span><span class="si">%d</span><span class="s"> threads.&#39;</span><span class="p">,</span><span class="n">num_threads</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">input_num_threads</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">input_num_threads</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="c"># Only warn if the user specifically asked for num_threads != 1.</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s">&#39;Unable to use multiple threads, since OpenMP is not enabled.&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">num_threads</span>
 </pre></div></div>
 
           </div>
@@ -447,7 +467,7 @@
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2014, Mike Jarvis.
+        &copy; Copyright 2015, Mike Jarvis.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>

@@ -25,7 +25,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="TreeCorr  documentation" href="index.html" />
-    <link rel="next" title="Two-point Correlation Functions" href="correlation.html" />
+    <link rel="next" title="Two-point Correlation Functions" href="correlation2.html" />
     <link rel="prev" title="Catalogs" href="catalog.html" /> 
   </head>
   <body>
@@ -39,7 +39,7 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="correlation.html" title="Two-point Correlation Functions"
+          <a href="correlation2.html" title="Two-point Correlation Functions"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="catalog.html" title="Catalogs"
@@ -59,7 +59,7 @@
 <h2>NField<a class="headerlink" href="#nfield" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="treecorr.NField">
-<em class="property">class </em><tt class="descclassname">treecorr.</tt><tt class="descname">NField</tt><big>(</big><em>cat</em>, <em>min_sep</em>, <em>max_sep</em>, <em>b</em>, <em>split_method='mean'</em>, <em>logger=None</em><big>)</big><a class="headerlink" href="#treecorr.NField" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">treecorr.</tt><tt class="descname">NField</tt><big>(</big><em>cat</em>, <em>min_sep</em>, <em>max_sep</em>, <em>b</em>, <em>split_method='mean'</em>, <em>metric='Euclidean'</em>, <em>max_top=10</em>, <em>logger=None</em><big>)</big><a class="headerlink" href="#treecorr.NField" title="Permalink to this definition">¶</a></dt>
 <dd><p>This class stores the positions in a tree structure from which it is efficient
 to compute the two-point correlation functions.</p>
 <p>An NField is typically created from a Catalog object using</p>
@@ -78,12 +78,32 @@ to compute the two-point correlation functions.</p>
 This should be bin_size * bin_slop.</li>
 <li><strong>split_method</strong> &#8211; Which split method to use (&#8216;mean&#8217;, &#8216;median&#8217;, or &#8216;middle&#8217;)
 (default: &#8216;mean&#8217;)</li>
+<li><strong>metric</strong> &#8211; <p>Which metric to use for distance measurements.  Options are:</p>
+<ul>
+<li>&#8216;Euclidean&#8217; = straight line Euclidean distance between two points.
+For spherical coordinates (ra,dec without r), this is the chord
+distance between points on the unit sphere.</li>
+<li>&#8216;Rperp&#8217; = the perpendicular component of the distance. For two points
+with distance from Earth <cite>r1, r2</cite>, if <cite>d</cite> is the normal Euclidean 
+distance and <span class="math">\(Rparallel = |r1-r2|\)</span>, then we define
+<span class="math">\(Rperp^2 = d^2 - Rparallel^2\)</span>.</li>
+</ul>
+<p>(default: &#8216;Euclidean&#8217;)</p>
+</li>
+<li><strong>max_top</strong> &#8211; The maximum number of top layers to use when setting up the
+field. (default: 10)</li>
 <li><strong>logger</strong> &#8211; A logger file if desired (default: None)</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
+<dl class="attribute">
+<dt id="treecorr.NField.nTopLevelNodes">
+<tt class="descname">nTopLevelNodes</tt><a class="headerlink" href="#treecorr.NField.nTopLevelNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of top-level nodes.</p>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -91,7 +111,7 @@ This should be bin_size * bin_slop.</li>
 <h2>GField<a class="headerlink" href="#gfield" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="treecorr.GField">
-<em class="property">class </em><tt class="descclassname">treecorr.</tt><tt class="descname">GField</tt><big>(</big><em>cat</em>, <em>min_sep</em>, <em>max_sep</em>, <em>b</em>, <em>split_method='mean'</em>, <em>logger=None</em><big>)</big><a class="headerlink" href="#treecorr.GField" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">treecorr.</tt><tt class="descname">GField</tt><big>(</big><em>cat</em>, <em>min_sep</em>, <em>max_sep</em>, <em>b</em>, <em>split_method='mean'</em>, <em>metric='Euclidean'</em>, <em>max_top=10</em>, <em>logger=None</em><big>)</big><a class="headerlink" href="#treecorr.GField" title="Permalink to this definition">¶</a></dt>
 <dd><p>This class stores the shear field in a tree structure from which it is efficient
 to compute the two-point correlation functions.</p>
 <p>A GField is typically created from a Catalog object using</p>
@@ -110,12 +130,32 @@ to compute the two-point correlation functions.</p>
 This should be bin_size * bin_slop.</li>
 <li><strong>split_method</strong> &#8211; Which split method to use (&#8216;mean&#8217;, &#8216;median&#8217;, or &#8216;middle&#8217;)
 (default: &#8216;mean&#8217;)</li>
+<li><strong>metric</strong> &#8211; <p>Which metric to use for distance measurements.  Options are:</p>
+<ul>
+<li>&#8216;Euclidean&#8217; = straight line Euclidean distance between two points.
+For spherical coordinates (ra,dec without r), this is the chord
+distance between points on the unit sphere.</li>
+<li>&#8216;Rperp&#8217; = the perpendicular component of the distance. For two points
+with distance from Earth <cite>r1, r2</cite>, if <cite>d</cite> is the normal Euclidean 
+distance and <span class="math">\(Rparallel = |r1-r2|\)</span>, then we define
+<span class="math">\(Rperp^2 = d^2 - Rparallel^2\)</span>.</li>
+</ul>
+<p>(default: &#8216;Euclidean&#8217;)</p>
+</li>
+<li><strong>max_top</strong> &#8211; The maximum number of top layers to use when setting up the
+field. (default: 10)</li>
 <li><strong>logger</strong> &#8211; A logger file if desired (default: None)</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
+<dl class="attribute">
+<dt id="treecorr.GField.nTopLevelNodes">
+<tt class="descname">nTopLevelNodes</tt><a class="headerlink" href="#treecorr.GField.nTopLevelNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of top-level nodes.</p>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -123,7 +163,7 @@ This should be bin_size * bin_slop.</li>
 <h2>KField<a class="headerlink" href="#kfield" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="treecorr.KField">
-<em class="property">class </em><tt class="descclassname">treecorr.</tt><tt class="descname">KField</tt><big>(</big><em>cat</em>, <em>min_sep</em>, <em>max_sep</em>, <em>b</em>, <em>split_method='mean'</em>, <em>logger=None</em><big>)</big><a class="headerlink" href="#treecorr.KField" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">treecorr.</tt><tt class="descname">KField</tt><big>(</big><em>cat</em>, <em>min_sep</em>, <em>max_sep</em>, <em>b</em>, <em>split_method='mean'</em>, <em>metric='Euclidean'</em>, <em>max_top=10</em>, <em>logger=None</em><big>)</big><a class="headerlink" href="#treecorr.KField" title="Permalink to this definition">¶</a></dt>
 <dd><p>This class stores the kappa field in a tree structure from which it is efficient
 to compute the two-point correlation functions.</p>
 <p>A KField is typically created from a Catalog object using</p>
@@ -142,12 +182,32 @@ to compute the two-point correlation functions.</p>
 This should be bin_size * bin_slop.</li>
 <li><strong>split_method</strong> &#8211; Which split method to use (&#8216;mean&#8217;, &#8216;median&#8217;, or &#8216;middle&#8217;)
 (default: &#8216;mean&#8217;)</li>
+<li><strong>metric</strong> &#8211; <p>Which metric to use for distance measurements.  Options are:</p>
+<ul>
+<li>&#8216;Euclidean&#8217; = straight line Euclidean distance between two points.
+For spherical coordinates (ra,dec without r), this is the chord
+distance between points on the unit sphere.</li>
+<li>&#8216;Rperp&#8217; = the perpendicular component of the distance. For two points
+with distance from Earth <cite>r1, r2</cite>, if <cite>d</cite> is the normal Euclidean 
+distance and <span class="math">\(Rparallel = |r1-r2|\)</span>, then we define
+<span class="math">\(Rperp^2 = d^2 - Rparallel^2\)</span>.</li>
+</ul>
+<p>(default: &#8216;Euclidean&#8217;)</p>
+</li>
+<li><strong>max_top</strong> &#8211; The maximum number of top layers to use when setting up the
+field. (default: 10)</li>
 <li><strong>logger</strong> &#8211; A logger file if desired (default: None)</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
+<dl class="attribute">
+<dt id="treecorr.KField.nTopLevelNodes">
+<tt class="descname">nTopLevelNodes</tt><a class="headerlink" href="#treecorr.KField.nTopLevelNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of top-level nodes.</p>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -155,7 +215,7 @@ This should be bin_size * bin_slop.</li>
 <h2>NSimpleField<a class="headerlink" href="#nsimplefield" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="treecorr.NSimpleField">
-<em class="property">class </em><tt class="descclassname">treecorr.</tt><tt class="descname">NSimpleField</tt><big>(</big><em>cat</em>, <em>logger=None</em><big>)</big><a class="headerlink" href="#treecorr.NSimpleField" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">treecorr.</tt><tt class="descname">NSimpleField</tt><big>(</big><em>cat</em>, <em>metric='Euclidean'</em>, <em>logger=None</em><big>)</big><a class="headerlink" href="#treecorr.NSimpleField" title="Permalink to this definition">¶</a></dt>
 <dd><p>This class stores the positions as a list, skipping all the tree stuff.</p>
 <p>An NSimpleField is typically created from a Catalog object using</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">nfield</span> <span class="o">=</span> <span class="n">cat</span><span class="o">.</span><span class="n">getNSimpleField</span><span class="p">()</span>
@@ -167,6 +227,18 @@ This should be bin_size * bin_slop.</li>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>cat</strong> &#8211; The catalog from which to make the field.</li>
+<li><strong>metric</strong> &#8211; <p>Which metric to use for distance measurements.  Options are:</p>
+<ul>
+<li>&#8216;Euclidean&#8217; = straight line Euclidean distance between two points.
+For spherical coordinates (ra,dec without r), this is the chord
+distance between points on the unit sphere.</li>
+<li>&#8216;Rperp&#8217; = the perpendicular component of the distance. For two points
+with distance from Earth <cite>r1, r2</cite>, if <cite>d</cite> is the normal Euclidean 
+distance and <span class="math">\(Rparallel = |r1-r2|\)</span>, then we define
+<span class="math">\(Rperp^2 = d^2 - Rparallel^2\)</span>.</li>
+</ul>
+<p>(default: &#8216;Euclidean&#8217;)</p>
+</li>
 <li><strong>logger</strong> &#8211; A logger file if desired (default: None)</li>
 </ul>
 </td>
@@ -180,7 +252,7 @@ This should be bin_size * bin_slop.</li>
 <h2>GSimpleField<a class="headerlink" href="#gsimplefield" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="treecorr.GSimpleField">
-<em class="property">class </em><tt class="descclassname">treecorr.</tt><tt class="descname">GSimpleField</tt><big>(</big><em>cat</em>, <em>logger=None</em><big>)</big><a class="headerlink" href="#treecorr.GSimpleField" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">treecorr.</tt><tt class="descname">GSimpleField</tt><big>(</big><em>cat</em>, <em>metric='Euclidean'</em>, <em>logger=None</em><big>)</big><a class="headerlink" href="#treecorr.GSimpleField" title="Permalink to this definition">¶</a></dt>
 <dd><p>This class stores the shear field as a list, skipping all the tree stuff.</p>
 <p>A GSimpleField is typically created from a Catalog object using</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">gfield</span> <span class="o">=</span> <span class="n">cat</span><span class="o">.</span><span class="n">getGSimpleField</span><span class="p">()</span>
@@ -192,6 +264,18 @@ This should be bin_size * bin_slop.</li>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>cat</strong> &#8211; The catalog from which to make the field.</li>
+<li><strong>metric</strong> &#8211; <p>Which metric to use for distance measurements.  Options are:</p>
+<ul>
+<li>&#8216;Euclidean&#8217; = straight line Euclidean distance between two points.
+For spherical coordinates (ra,dec without r), this is the chord
+distance between points on the unit sphere.</li>
+<li>&#8216;Rperp&#8217; = the perpendicular component of the distance. For two points
+with distance from Earth <cite>r1, r2</cite>, if <cite>d</cite> is the normal Euclidean 
+distance and <span class="math">\(Rparallel = |r1-r2|\)</span>, then we define
+<span class="math">\(Rperp^2 = d^2 - Rparallel^2\)</span>.</li>
+</ul>
+<p>(default: &#8216;Euclidean&#8217;)</p>
+</li>
 <li><strong>logger</strong> &#8211; A logger file if desired (default: None)</li>
 </ul>
 </td>
@@ -205,7 +289,7 @@ This should be bin_size * bin_slop.</li>
 <h2>KSimpleField<a class="headerlink" href="#ksimplefield" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="treecorr.KSimpleField">
-<em class="property">class </em><tt class="descclassname">treecorr.</tt><tt class="descname">KSimpleField</tt><big>(</big><em>cat</em>, <em>logger=None</em><big>)</big><a class="headerlink" href="#treecorr.KSimpleField" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">treecorr.</tt><tt class="descname">KSimpleField</tt><big>(</big><em>cat</em>, <em>metric='Euclidean'</em>, <em>logger=None</em><big>)</big><a class="headerlink" href="#treecorr.KSimpleField" title="Permalink to this definition">¶</a></dt>
 <dd><p>This class stores the kappa field as a list, skipping all the tree stuff.</p>
 <p>A KSimpleField is typically created from a Catalog object using</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">kfield</span> <span class="o">=</span> <span class="n">cat</span><span class="o">.</span><span class="n">getKSimpleField</span><span class="p">()</span>
@@ -217,6 +301,18 @@ This should be bin_size * bin_slop.</li>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>cat</strong> &#8211; The catalog from which to make the field.</li>
+<li><strong>metric</strong> &#8211; <p>Which metric to use for distance measurements.  Options are:</p>
+<ul>
+<li>&#8216;Euclidean&#8217; = straight line Euclidean distance between two points.
+For spherical coordinates (ra,dec without r), this is the chord
+distance between points on the unit sphere.</li>
+<li>&#8216;Rperp&#8217; = the perpendicular component of the distance. For two points
+with distance from Earth <cite>r1, r2</cite>, if <cite>d</cite> is the normal Euclidean 
+distance and <span class="math">\(Rparallel = |r1-r2|\)</span>, then we define
+<span class="math">\(Rperp^2 = d^2 - Rparallel^2\)</span>.</li>
+</ul>
+<p>(default: &#8216;Euclidean&#8217;)</p>
+</li>
 <li><strong>logger</strong> &#8211; A logger file if desired (default: None)</li>
 </ul>
 </td>
@@ -251,7 +347,7 @@ This should be bin_size * bin_slop.</li>
   <p class="topless"><a href="catalog.html"
                         title="previous chapter">Catalogs</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="correlation.html"
+  <p class="topless"><a href="correlation2.html"
                         title="next chapter">Two-point Correlation Functions</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
@@ -285,7 +381,7 @@ This should be bin_size * bin_slop.</li>
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="correlation.html" title="Two-point Correlation Functions"
+          <a href="correlation2.html" title="Two-point Correlation Functions"
              >next</a> |</li>
         <li class="right" >
           <a href="catalog.html" title="Catalogs"
@@ -294,7 +390,7 @@ This should be bin_size * bin_slop.</li>
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2014, Mike Jarvis.
+        &copy; Copyright 2015, Mike Jarvis.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>

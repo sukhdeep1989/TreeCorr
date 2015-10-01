@@ -48,7 +48,7 @@
           <div class="body">
             
   <h1>Source code for treecorr</h1><div class="highlight"><pre>
-<span class="c"># Copyright (c) 2003-2014 by Mike Jarvis</span>
+<span class="c"># Copyright (c) 2003-2015 by Mike Jarvis</span>
 <span class="c">#</span>
 <span class="c"># TreeCorr is free software: redistribution and use in source and binary forms,</span>
 <span class="c"># with or without modification, are permitted provided that the following</span>
@@ -62,11 +62,11 @@
 <span class="c">#    and/or other materials provided with the distribution.</span>
 
 
-<span class="n">version</span> <span class="o">=</span> <span class="s">&#39;3.1.1&#39;</span>
+<span class="n">version</span> <span class="o">=</span> <span class="s">&#39;3.2.0&#39;</span>
 
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">util</span>
 <span class="kn">from</span> <span class="nn">.celestial</span> <span class="kn">import</span> <span class="n">CelestialCoord</span><span class="p">,</span> <span class="n">angle_units</span><span class="p">,</span> <span class="n">arcsec</span><span class="p">,</span> <span class="n">arcmin</span><span class="p">,</span> <span class="n">degrees</span><span class="p">,</span> <span class="n">hours</span><span class="p">,</span> <span class="n">radians</span>
 <span class="kn">from</span> <span class="nn">.config</span> <span class="kn">import</span> <span class="n">read_config</span><span class="p">,</span> <span class="n">set_omp_threads</span>
-<span class="kn">from</span> <span class="nn">.corr2</span> <span class="kn">import</span> <span class="n">corr2</span><span class="p">,</span> <span class="n">print_corr2_params</span>
 <span class="kn">from</span> <span class="nn">.catalog</span> <span class="kn">import</span> <span class="n">Catalog</span><span class="p">,</span> <span class="n">read_catalogs</span><span class="p">,</span> <span class="n">calculateVarG</span><span class="p">,</span> <span class="n">calculateVarK</span>
 <span class="kn">from</span> <span class="nn">.binnedcorr2</span> <span class="kn">import</span> <span class="n">BinnedCorr2</span>
 <span class="kn">from</span> <span class="nn">.ggcorrelation</span> <span class="kn">import</span> <span class="n">GGCorrelation</span>
@@ -76,6 +76,12 @@
 <span class="kn">from</span> <span class="nn">.nkcorrelation</span> <span class="kn">import</span> <span class="n">NKCorrelation</span>
 <span class="kn">from</span> <span class="nn">.kgcorrelation</span> <span class="kn">import</span> <span class="n">KGCorrelation</span>
 <span class="kn">from</span> <span class="nn">.field</span> <span class="kn">import</span> <span class="n">NField</span><span class="p">,</span> <span class="n">KField</span><span class="p">,</span> <span class="n">GField</span><span class="p">,</span> <span class="n">NSimpleField</span><span class="p">,</span> <span class="n">KSimpleField</span><span class="p">,</span> <span class="n">GSimpleField</span>
+<span class="kn">from</span> <span class="nn">.binnedcorr3</span> <span class="kn">import</span> <span class="n">BinnedCorr3</span>
+<span class="kn">from</span> <span class="nn">.nnncorrelation</span> <span class="kn">import</span> <span class="n">NNNCorrelation</span>
+<span class="kn">from</span> <span class="nn">.kkkcorrelation</span> <span class="kn">import</span> <span class="n">KKKCorrelation</span>
+<span class="kn">from</span> <span class="nn">.gggcorrelation</span> <span class="kn">import</span> <span class="n">GGGCorrelation</span>
+<span class="kn">from</span> <span class="nn">.corr2</span> <span class="kn">import</span> <span class="n">corr2</span><span class="p">,</span> <span class="n">print_corr2_params</span>
+<span class="kn">from</span> <span class="nn">.corr3</span> <span class="kn">import</span> <span class="n">corr3</span><span class="p">,</span> <span class="n">print_corr3_params</span>
 </pre></div>
 
           </div>
@@ -114,7 +120,7 @@
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2014, Mike Jarvis.
+        &copy; Copyright 2015, Mike Jarvis.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>

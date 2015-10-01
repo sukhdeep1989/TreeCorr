@@ -1,0 +1,279 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Three-point Correlation Functions &mdash; TreeCorr  documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="TreeCorr  documentation" href="index.html" />
+    <link rel="next" title="NNN: Count-count-count correlations" href="nnn.html" />
+    <link rel="prev" title="KG: Kappa-shear correlations" href="kg.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="nnn.html" title="NNN: Count-count-count correlations"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="kg.html" title="KG: Kappa-shear correlations"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">TreeCorr  documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="three-point-correlation-functions">
+<h1>Three-point Correlation Functions<a class="headerlink" href="#three-point-correlation-functions" title="Permalink to this headline">¶</a></h1>
+<p>There are currently 3 differenct classes for calculating the different possible three-point
+auto-correlation functions:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nnn.html">NNN: Count-count-count correlations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ggg.html">GGG: Shear-shear-shear correlations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kkk.html">KKK: Kappa-kappa-kappa correlations</a></li>
+</ul>
+</div>
+<p>There are plans to add the various cross-correlations, but they have not yet been implemented.</p>
+<p>Each of the above classes is a sub-class of the base class BinnedCorr3, so they have a number of
+features in common about how they are constructed.  The common features are documented here.</p>
+<div class="section" id="binnedcorr3">
+<h2>BinnedCorr3<a class="headerlink" href="#binnedcorr3" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="treecorr.BinnedCorr3">
+<em class="property">class </em><tt class="descclassname">treecorr.</tt><tt class="descname">BinnedCorr3</tt><big>(</big><em>config=None</em>, <em>logger=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#treecorr.BinnedCorr3" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class stores the results of a 3-point correlation calculation, along with some
+ancillary data.</p>
+<p>This is a base class that is not intended to be constructed directly.  But it has a few
+helper functions that derived classes can use to help perform their calculations.  See
+the derived classes for more details:</p>
+<ul class="simple">
+<li><a class="reference internal" href="nnn.html#treecorr.NNNCorrelation" title="treecorr.NNNCorrelation"><tt class="xref py py-class docutils literal"><span class="pre">NNNCorrelation</span></tt></a> handles count-count-count correlation functions</li>
+<li><a class="reference internal" href="kkk.html#treecorr.KKKCorrelation" title="treecorr.KKKCorrelation"><tt class="xref py py-class docutils literal"><span class="pre">KKKCorrelation</span></tt></a> handles kappa-kappa-kappa correlation functions</li>
+<li><a class="reference internal" href="ggg.html#treecorr.GGGCorrelation" title="treecorr.GGGCorrelation"><tt class="xref py py-class docutils literal"><span class="pre">GGGCorrelation</span></tt></a> handles gamma-gamma-gamma correlation functions</li>
+</ul>
+<p>Three-point correlations are a bit more complicated than two-point, since the data need
+to be binned in triangles, not just the separation between two points.  We characterize the
+triangles according to the following three parameters based on the three side lenghts
+of the triangle with d1 &gt;= d2 &gt;= d3.</p>
+<div class="math">
+\[\begin{split}r &amp;= d2 \\
+u &amp;= \frac{d3}{d2} \\
+v &amp;= \pm \frac{(d1 - d2)}{d3} \\\end{split}\]</div>
+<p>The orientation of the triangle is specified by the sign of v.  
+Positive v triangles have the three sides d1,d2,d3 in counter-clockwise orientation.
+Negative v triangles have the three sides d1,d2,d3 in clockwise orientation.</p>
+<p>The constructor for all derived classes take a config dict as the first argument,
+since this is often how we keep track of parameters, but if you don&#8217;t want to 
+use one or if you want to change some parameters from what are in a config dict,
+then you can use normal kwargs, which take precedence over anything in the config dict.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>config</strong> &#8211; The configuration dict which defines attributes about how to read the file.
+Any kwargs that are not those listed here will be added to the config, 
+so you can even omit the config dict and just enter all parameters you
+want as kwargs.  (default: None)</li>
+<li><strong>logger</strong> &#8211; If desired, a logger object for logging. (default: None, in which case
+one will be built according to the config dict&#8217;s verbose level.)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The following parameters may be given either in the config dict or as a named kwarg:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>nbins</strong> &#8211; How many bins to use for the r binning. (Exactly three of nbins, bin_size,
+min_sep, max_sep are required. If nbins is not given, it will be 
+calculated from the values of the other three, rounding up to the next
+highest integer. In this case, max_sep will be readjusted to account for
+this rounding up.)</li>
+<li><strong>bin_size</strong> &#8211; The width of the bins in log(separation). (Exactly three of nbins, 
+bin_size, min_sep, max_sep are required.  If bin_size is not given, it will
+be calculated from the values of the other three.)</li>
+<li><strong>min_sep</strong> &#8211; The minimum separation in units of sep_units, if relevant. (Exactly three
+of nbins, bin_size, min_sep, max_sep are required.  If min_sep is not
+given, it will be calculated from the values of the other three.)</li>
+<li><strong>max_sep</strong> &#8211; The maximum separation in units of sep_units, if relevant. (Exactly three
+of nbins, bin_size, min_sep, max_sep are required.  If max_sep is not
+given, it will be calculated from the values of the other three.  If nbins
+is not given, then max_sep will be adjusted as needed to allow nbins to be
+an integer value.)</li>
+<li><strong>sep_units</strong> &#8211; The units to use for the separation values, given as a string.  This 
+includes both min_sep and max_sep above, as well as the units of the 
+output R column.  Valid options are arcsec, arcmin, degrees, hours,
+radians.  (default: radians)</li>
+<li><strong>bin_slop</strong> &#8211; How much slop to allow in the placement of pairs in the bins.
+If bin_slop = 1, then the bin into which a particular pair is placed may
+be incorrect by at most 1.0 bin widths.  (default: None, which means to
+use bin_slop=1 if bin_size &lt;= 0.1, or 0.1/bin_size if bin_size &gt; 0.1.
+This mean the error will be at most 0.1 in log(sep), which has been found
+to yield good results for most application.</li>
+<li><strong>nubins</strong> &#8211; Analogous to nbins for the u direction.  (The default is to calculate from
+ubin_size = binsize, min_u = 0, max_u = 1, but this can be overridden by 
+specifying up to 3 of these four parametes.)</li>
+<li><strong>ubin_size</strong> &#8211; Analogous to bin_size for the u direction. (default: bin_size)</li>
+<li><strong>min_u</strong> &#8211; Analogous to min_sep for the u direction. (default: 0)</li>
+<li><strong>max_u</strong> &#8211; Analogous to max_sep for the u direction. (default: 1)</li>
+<li><strong>nvbins</strong> &#8211; Analogous to nbins for the v direction.  (The default is to calculate from
+vbin_size = binsize, min_v = -1, max_v = 1, but this can be overridden by 
+specifying up to 3 of these four parametes.)</li>
+<li><strong>vbin_size</strong> &#8211; Analogous to bin_size for the v direction. (default: bin_size)</li>
+<li><strong>min_v</strong> &#8211; Analogous to min_sep for the v direction. (default: -1)</li>
+<li><strong>max_v</strong> &#8211; Analogous to max_sep for the v direction. (default: 1)</li>
+<li><strong>verbose</strong> &#8211; <p>If no logger is provided, this will optionally specify a logging level to
+use:</p>
+<ul>
+<li>0 means no logging output (default)</li>
+<li>1 means to output warnings only</li>
+<li>2 means to output various progress information</li>
+<li>3 means to output extensive debugging information</li>
+</ul>
+</li>
+<li><strong>log_file</strong> &#8211; If no logger is provided, this will specify a file to write the logging
+output.  (default: None; i.e. output to standard output)</li>
+<li><strong>output_dots</strong> &#8211; Whether to output progress dots during the calcualtion of the correlation
+function. (default: False unless verbose is given and &gt;= 2, in which case
+True)</li>
+<li><strong>split_method</strong> &#8211; <p>How to split the cells in the tree when building the tree structure.
+Options are:</p>
+<ul>
+<li>mean: Use the arithmetic mean of the coordinate being split. (default)</li>
+<li>median: Use the median of the coordinate being split.</li>
+<li>middle: Use the middle of the range; i.e. the average of the minimum and
+maximum value.</li>
+</ul>
+</li>
+<li><strong>max_top</strong> &#8211; The maximum number of top layers to use when setting up the field. 
+The top-level cells are the cells where each calculation job starts.
+There will typically be of order 2^max_top top-level cells. (default: 10)</li>
+<li><strong>precision</strong> &#8211; The precision to use for the output values. This should be an integer,
+which specifies how many digits to write. (default: 4)</li>
+<li><strong>metric</strong> &#8211; <p>Which metric to use for distance measurements.  Options are:</p>
+<ul>
+<li>&#8216;Euclidean&#8217; = straight line Euclidean distance between two points.
+For spherical coordinates (ra,dec without r), this is the chord
+distance between points on the unit sphere.</li>
+<li>&#8216;Rperp&#8217; = the perpendicular component of the distance. For two points
+with distance from Earth <cite>r1, r2</cite>, if <cite>d</cite> is the normal Euclidean 
+distance and <span class="math">\(Rparallel = |r1-r2|\)</span>, then we define
+<span class="math">\(Rperp^2 = d^2 - Rparallel^2\)</span>.</li>
+</ul>
+<p>(default: &#8216;Euclidean&#8217;)</p>
+</li>
+<li><strong>num_threads</strong> &#8211; How many OpenMP threads to use during the calculation.  
+(default: use the number of cpu cores; this value can also be given in
+the constructor in the config dict.) Note that this won&#8217;t work if the 
+system&#8217;s C compiler is clang prior to version 3.7.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Three-point Correlation Functions</a><ul>
+<li><a class="reference internal" href="#binnedcorr3">BinnedCorr3</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="kg.html"
+                        title="previous chapter">KG: Kappa-shear correlations</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="nnn.html"
+                        title="next chapter">NNN: Count-count-count correlations</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/correlation3.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="nnn.html" title="NNN: Count-count-count correlations"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="kg.html" title="KG: Kappa-shear correlations"
+             >previous</a> |</li>
+        <li><a href="index.html">TreeCorr  documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Mike Jarvis.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
