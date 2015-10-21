@@ -303,18 +303,6 @@
 <span class="sd">                        - middle: Use the middle of the range; i.e. the average of the minimum and</span>
 <span class="sd">                          maximum value.</span>
 
-<span class="sd">    :param metric:      Which metric to use for distance measurements.  Options are:</span>
-
-<span class="sd">                        - &#39;Euclidean&#39; = straight line Euclidean distance between two points.</span>
-<span class="sd">                          For spherical coordinates (ra,dec without r), this is the chord</span>
-<span class="sd">                          distance between points on the unit sphere.</span>
-<span class="sd">                        - &#39;Rperp&#39; = the perpendicular component of the distance. For two points</span>
-<span class="sd">                          with distance from Earth `r1, r2`, if `d` is the normal Euclidean </span>
-<span class="sd">                          distance and :math:`Rparallel = |r1-r2|`, then we define</span>
-<span class="sd">                          :math:`Rperp^2 = d^2 - Rparallel^2`.</span>
-
-<span class="sd">                        (default: &#39;Euclidean&#39;)</span>
-
 <span class="sd">    :param cat_precision: The precision to use when writing a Catalog to an ASCII file. This should</span>
 <span class="sd">                        be an integer, which specifies how many digits to write. (default: 16)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -413,8 +401,6 @@
                 <span class="s">&#39;The default is to write the output to stdout.&#39;</span><span class="p">),</span>
         <span class="s">&#39;split_method&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="s">&#39;mean&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;mean&#39;</span><span class="p">,</span> <span class="s">&#39;median&#39;</span><span class="p">,</span> <span class="s">&#39;middle&#39;</span><span class="p">],</span>
                 <span class="s">&#39;Which method to use for splitting cells.&#39;</span><span class="p">),</span>
-        <span class="s">&#39;metric&#39;</span><span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="s">&#39;Euclidean&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;Euclidean&#39;</span><span class="p">,</span> <span class="s">&#39;Rperp&#39;</span><span class="p">],</span>
-                <span class="s">&#39;Which metric to use for the distance measurements&#39;</span><span class="p">),</span>
         <span class="s">&#39;cat_precision&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
                 <span class="s">&#39;The number of digits after the decimal in the output.&#39;</span><span class="p">),</span>
     <span class="p">}</span>
@@ -1209,30 +1195,15 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;read k = </span><span class="si">%s</span><span class="s">&#39;</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">))</span>
 
 
-    <span class="k">def</span> <span class="nf">getNField</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_sep</span><span class="p">,</span> <span class="n">max_sep</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">split_method</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">max_top</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-                  <span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">getNField</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_size</span><span class="p">,</span> <span class="n">max_size</span><span class="p">,</span> <span class="n">split_method</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">max_top</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return an NField based on the positions in this catalog.</span>
 
 <span class="sd">        The NField object is cached, so this is efficient to call multiple times.</span>
 
-<span class="sd">        :param min_sep:     The minimum separation between points that will be needed.</span>
-<span class="sd">        :param max_sep:     The maximum separation between points that will be needed.</span>
-<span class="sd">        :param b:           The b parameter that will be used for the correlation function.</span>
-<span class="sd">                            This should be bin_size * bin_slop.</span>
+<span class="sd">        :param min_size:    The minimum radius cell required (usually min_sep).</span>
+<span class="sd">        :param max_size:    The maximum radius cell required (usually max_sep).</span>
 <span class="sd">        :param split_method: Which split method to use (&#39;mean&#39;, &#39;median&#39;, or &#39;middle&#39;)</span>
 <span class="sd">                            (default: &#39;mean&#39;; this value can also be given in the Catalog </span>
-<span class="sd">                            constructor in the config dict.)</span>
-<span class="sd">        :param metric:      Which metric to use for distance measurements.  Options are:</span>
-
-<span class="sd">                            - &#39;Euclidean&#39; = straight line Euclidean distance between two points.</span>
-<span class="sd">                              For spherical coordinates (ra,dec without r), this is the chord</span>
-<span class="sd">                              distance between points on the unit sphere.</span>
-<span class="sd">                            - &#39;Rperp&#39; = the perpendicular component of the distance. For two points</span>
-<span class="sd">                              with distance from Earth `r1, r2`, if `d` is the normal Euclidean </span>
-<span class="sd">                              distance and :math:`Rparallel = |r1-r2|`, then we define</span>
-<span class="sd">                              :math:`Rperp^2 = d^2 - Rparallel^2`.</span>
-
-<span class="sd">                            (default: &#39;Euclidean&#39;; this value can also be given in the Catalog </span>
 <span class="sd">                            constructor in the config dict.)</span>
 <span class="sd">        :param max_top:     The maximum number of top layers to use when setting up the</span>
 <span class="sd">                            field. (default: 10)</span>
@@ -1242,9 +1213,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">split_method</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">split_method</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span><span class="s">&#39;split_method&#39;</span><span class="p">,</span><span class="nb">str</span><span class="p">,</span><span class="s">&#39;mean&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">metric</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">metric</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span><span class="s">&#39;metric&#39;</span><span class="p">,</span><span class="nb">str</span><span class="p">,</span><span class="s">&#39;Euclidean&#39;</span><span class="p">)</span>
-        <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="n">min_sep</span><span class="p">,</span> <span class="n">max_sep</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">split_method</span><span class="p">,</span> <span class="n">metric</span><span class="p">,</span> <span class="n">max_top</span><span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="n">min_size</span><span class="p">,</span> <span class="n">max_size</span><span class="p">,</span> <span class="n">split_method</span><span class="p">,</span> <span class="n">max_top</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">args</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nfields</span><span class="p">:</span>
             <span class="n">nfield</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nfields</span><span class="p">[</span><span class="n">args</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1255,32 +1224,16 @@
         <span class="k">return</span> <span class="n">nfield</span>
 
 
-    <span class="k">def</span> <span class="nf">getKField</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_sep</span><span class="p">,</span> <span class="n">max_sep</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">split_method</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">max_top</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-                  <span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">getKField</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_size</span><span class="p">,</span> <span class="n">max_size</span><span class="p">,</span> <span class="n">split_method</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">max_top</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return a KField based on the k values in this catalog.</span>
 
 <span class="sd">        The KField object is cached, so this is efficient to call multiple times.</span>
 
-<span class="sd">        :param min_sep:     The minimum separation between points that will be needed.</span>
-<span class="sd">        :param max_sep:     The maximum separation between points that will be needed.</span>
-<span class="sd">        :param b:           The b parameter that will be used for the correlation function.</span>
-<span class="sd">                            This should be bin_size * bin_slop.</span>
+<span class="sd">        :param min_size:    The minimum radius cell required (usually min_sep).</span>
+<span class="sd">        :param max_size:    The maximum radius cell required (usually max_sep).</span>
 <span class="sd">        :param split_method: Which split method to use (&#39;mean&#39;, &#39;median&#39;, or &#39;middle&#39;)</span>
 <span class="sd">                            (default: &#39;mean&#39;; this value can also be given in the Catalog </span>
 <span class="sd">                            constructor in the config dict.)</span>
-<span class="sd">        :param metric:      Which metric to use for distance measurements.  Options are:</span>
-
-<span class="sd">                            - &#39;Euclidean&#39; = straight line Euclidean distance between two points.</span>
-<span class="sd">                              For spherical coordinates (ra,dec without r), this is the chord</span>
-<span class="sd">                              distance between points on the unit sphere.</span>
-<span class="sd">                            - &#39;Rperp&#39; = the perpendicular component of the distance. For two points</span>
-<span class="sd">                              with distance from Earth `r1, r2`, if `d` is the normal Euclidean </span>
-<span class="sd">                              distance and :math:`Rparallel = |r1-r2|`, then we define</span>
-<span class="sd">                              :math:`Rperp^2 = d^2 - Rparallel^2`.</span>
-
-<span class="sd">                            (default: &#39;Euclidean&#39;; this value can also be given in the Catalog </span>
-<span class="sd">                            constructor in the config dict.)</span>
-
 <span class="sd">        :param max_top:     The maximum number of top layers to use when setting up the</span>
 <span class="sd">                            field. (default: 10)</span>
 <span class="sd">        :param logger:      A logger file if desired (default: self.logger)</span>
@@ -1289,9 +1242,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">split_method</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">split_method</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span><span class="s">&#39;split_method&#39;</span><span class="p">,</span><span class="nb">str</span><span class="p">,</span><span class="s">&#39;mean&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">metric</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">metric</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span><span class="s">&#39;metric&#39;</span><span class="p">,</span><span class="nb">str</span><span class="p">,</span><span class="s">&#39;Euclidean&#39;</span><span class="p">)</span>
-        <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="n">min_sep</span><span class="p">,</span> <span class="n">max_sep</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">split_method</span><span class="p">,</span> <span class="n">metric</span><span class="p">,</span> <span class="n">max_top</span><span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="n">min_size</span><span class="p">,</span> <span class="n">max_size</span><span class="p">,</span> <span class="n">split_method</span><span class="p">,</span> <span class="n">max_top</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">args</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">kfields</span><span class="p">:</span>
             <span class="n">kfield</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kfields</span><span class="p">[</span><span class="n">args</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1304,32 +1255,16 @@
         <span class="k">return</span> <span class="n">kfield</span>
 
 
-    <span class="k">def</span> <span class="nf">getGField</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_sep</span><span class="p">,</span> <span class="n">max_sep</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">split_method</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">max_top</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-                  <span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">getGField</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_size</span><span class="p">,</span> <span class="n">max_size</span><span class="p">,</span> <span class="n">split_method</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">max_top</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return a GField based on the g1,g2 values in this catalog.</span>
 
 <span class="sd">        The GField object is cached, so this is efficient to call multiple times.</span>
 
-<span class="sd">        :param min_sep:     The minimum separation between points that will be needed.</span>
-<span class="sd">        :param max_sep:     The maximum separation between points that will be needed.</span>
-<span class="sd">        :param b:           The b parameter that will be used for the correlation function.</span>
-<span class="sd">                            This should be bin_size * bin_slop.</span>
+<span class="sd">        :param min_size:    The minimum radius cell required (usually min_sep).</span>
+<span class="sd">        :param max_size:    The maximum radius cell required (usually max_sep).</span>
 <span class="sd">        :param split_method: Which split method to use (&#39;mean&#39;, &#39;median&#39;, or &#39;middle&#39;)</span>
 <span class="sd">                            (default: &#39;mean&#39;; this value can also be given in the Catalog </span>
 <span class="sd">                            constructor in the config dict.)</span>
-<span class="sd">        :param metric:      Which metric to use for distance measurements.  Options are:</span>
-
-<span class="sd">                            - &#39;Euclidean&#39; = straight line Euclidean distance between two points.</span>
-<span class="sd">                              For spherical coordinates (ra,dec without r), this is the chord</span>
-<span class="sd">                              distance between points on the unit sphere.</span>
-<span class="sd">                            - &#39;Rperp&#39; = the perpendicular component of the distance. For two points</span>
-<span class="sd">                              with distance from Earth `r1, r2`, if `d` is the normal Euclidean </span>
-<span class="sd">                              distance and :math:`Rparallel = |r1-r2|`, then we define</span>
-<span class="sd">                              :math:`Rperp^2 = d^2 - Rparallel^2`.</span>
-
-<span class="sd">                            (default: &#39;Euclidean&#39;; this value can also be given in the Catalog </span>
-<span class="sd">                            constructor in the config dict.)</span>
-
 <span class="sd">        :param max_top:     The maximum number of top layers to use when setting up the</span>
 <span class="sd">                            field. (default: 10)</span>
 <span class="sd">        :param logger:      A logger file if desired (default: self.logger)</span>
@@ -1338,9 +1273,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">split_method</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">split_method</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span><span class="s">&#39;split_method&#39;</span><span class="p">,</span><span class="nb">str</span><span class="p">,</span><span class="s">&#39;mean&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">metric</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">metric</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span><span class="s">&#39;metric&#39;</span><span class="p">,</span><span class="nb">str</span><span class="p">,</span><span class="s">&#39;Euclidean&#39;</span><span class="p">)</span>
-        <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="n">min_sep</span><span class="p">,</span> <span class="n">max_sep</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">split_method</span><span class="p">,</span> <span class="n">metric</span><span class="p">,</span> <span class="n">max_top</span><span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="n">min_size</span><span class="p">,</span> <span class="n">max_size</span><span class="p">,</span> <span class="n">split_method</span><span class="p">,</span> <span class="n">max_top</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">args</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">gfields</span><span class="p">:</span>
             <span class="n">gfield</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gfields</span><span class="p">[</span><span class="n">args</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1353,31 +1286,16 @@
         <span class="k">return</span> <span class="n">gfield</span>
 
 
-    <span class="k">def</span> <span class="nf">getNSimpleField</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">getNSimpleField</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return an NSimpleField based on the positions in this catalog.</span>
 
 <span class="sd">        The NSimpleField object is cached, so this is efficient to call multiple times.</span>
-
-<span class="sd">        :param metric:      Which metric to use for distance measurements.  Options are:</span>
-
-<span class="sd">                            - &#39;Euclidean&#39; = straight line Euclidean distance between two points.</span>
-<span class="sd">                              For spherical coordinates (ra,dec without r), this is the chord</span>
-<span class="sd">                              distance between points on the unit sphere.</span>
-<span class="sd">                            - &#39;Rperp&#39; = the perpendicular component of the distance. For two points</span>
-<span class="sd">                              with distance from Earth `r1, r2`, if `d` is the normal Euclidean </span>
-<span class="sd">                              distance and :math:`Rparallel = |r1-r2|`, then we define</span>
-<span class="sd">                              :math:`Rperp^2 = d^2 - Rparallel^2`.</span>
-
-<span class="sd">                            (default: &#39;Euclidean&#39;; this value can also be given in the Catalog </span>
-<span class="sd">                            constructor in the config dict.)</span>
 
 <span class="sd">        :param logger:      A logger file if desired (default: self.logger)</span>
 
 <span class="sd">        :returns:           A :class:`~treecorr.NSimpleField` object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">metric</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">metric</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span><span class="s">&#39;metric&#39;</span><span class="p">,</span><span class="nb">str</span><span class="p">,</span><span class="s">&#39;Euclidean&#39;</span><span class="p">)</span>
-        <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="n">metric</span><span class="p">,</span> <span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">()</span>
         <span class="k">if</span> <span class="n">args</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nsimplefields</span><span class="p">:</span>
             <span class="n">nsimplefield</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nsimplefields</span><span class="p">[</span><span class="n">args</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1387,31 +1305,16 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nsimplefield</span>
 
 
-    <span class="k">def</span> <span class="nf">getKSimpleField</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">getKSimpleField</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return a KSimpleField based on the k values in this catalog.</span>
 
 <span class="sd">        The KSimpleField object is cached, so this is efficient to call multiple times.</span>
-
-<span class="sd">        :param metric:      Which metric to use for distance measurements.  Options are:</span>
-
-<span class="sd">                            - &#39;Euclidean&#39; = straight line Euclidean distance between two points.</span>
-<span class="sd">                              For spherical coordinates (ra,dec without r), this is the chord</span>
-<span class="sd">                              distance between points on the unit sphere.</span>
-<span class="sd">                            - &#39;Rperp&#39; = the perpendicular component of the distance. For two points</span>
-<span class="sd">                              with distance from Earth `r1, r2`, if `d` is the normal Euclidean </span>
-<span class="sd">                              distance and :math:`Rparallel = |r1-r2|`, then we define</span>
-<span class="sd">                              :math:`Rperp^2 = d^2 - Rparallel^2`.</span>
-
-<span class="sd">                            (default: &#39;Euclidean&#39;; this value can also be given in the Catalog </span>
-<span class="sd">                            constructor in the config dict.)</span>
 
 <span class="sd">        :param logger:      A logger file if desired (default: self.logger)</span>
 
 <span class="sd">        :returns:           A :class:`~treecorr.KSimpleField` object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">metric</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">metric</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span><span class="s">&#39;metric&#39;</span><span class="p">,</span><span class="nb">str</span><span class="p">,</span><span class="s">&#39;Euclidean&#39;</span><span class="p">)</span>
-        <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="n">metric</span><span class="p">,</span> <span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">()</span>
         <span class="k">if</span> <span class="n">args</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ksimplefields</span><span class="p">:</span>
             <span class="n">ksimplefield</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ksimplefields</span><span class="p">[</span><span class="n">args</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1421,31 +1324,16 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ksimplefield</span>
 
 
-    <span class="k">def</span> <span class="nf">getGSimpleField</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">getGSimpleField</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return a GSimpleField based on the g1,g2 values in this catalog.</span>
 
 <span class="sd">        The GSimpleField object is cached, so this is efficient to call multiple times.</span>
-
-<span class="sd">        :param metric:      Which metric to use for distance measurements.  Options are:</span>
-
-<span class="sd">                            - &#39;Euclidean&#39; = straight line Euclidean distance between two points.</span>
-<span class="sd">                              For spherical coordinates (ra,dec without r), this is the chord</span>
-<span class="sd">                              distance between points on the unit sphere.</span>
-<span class="sd">                            - &#39;Rperp&#39; = the perpendicular component of the distance. For two points</span>
-<span class="sd">                              with distance from Earth `r1, r2`, if `d` is the normal Euclidean </span>
-<span class="sd">                              distance and :math:`Rparallel = |r1-r2|`, then we define</span>
-<span class="sd">                              :math:`Rperp^2 = d^2 - Rparallel^2`.</span>
-
-<span class="sd">                            (default: &#39;Euclidean&#39;; this value can also be given in the Catalog </span>
-<span class="sd">                            constructor in the config dict.)</span>
 
 <span class="sd">        :param logger:      A logger file if desired (default: self.logger)</span>
 
 <span class="sd">        :returns:           A :class:`~treecorr.GSimpleField` object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">metric</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">metric</span> <span class="o">=</span> <span class="n">treecorr</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span><span class="s">&#39;metric&#39;</span><span class="p">,</span><span class="nb">str</span><span class="p">,</span><span class="s">&#39;Euclidean&#39;</span><span class="p">)</span>
-        <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="n">metric</span><span class="p">,</span> <span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">()</span>
         <span class="k">if</span> <span class="n">args</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">gsimplefields</span><span class="p">:</span>
             <span class="n">gsimplefield</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gsimplefields</span><span class="p">[</span><span class="n">args</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
