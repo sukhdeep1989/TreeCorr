@@ -313,6 +313,18 @@ Options are:</p>
 maximum value.</li>
 </ul>
 </li>
+<li><strong>metric</strong> &#8211; <p>Which metric to use for distance measurements.  Options are:</p>
+<ul>
+<li>&#8216;Euclidean&#8217; = straight line Euclidean distance between two points.
+For spherical coordinates (ra,dec without r), this is the chord
+distance between points on the unit sphere.</li>
+<li>&#8216;Rperp&#8217; = the perpendicular component of the distance. For two points
+with distance from Earth <cite>r1, r2</cite>, if <cite>d</cite> is the normal Euclidean 
+distance and <span class="math">\(Rparallel = |r1-r2|\)</span>, then we define
+<span class="math">\(Rperp^2 = d^2 - Rparallel^2\)</span>.</li>
+</ul>
+<p>(default: &#8216;Euclidean&#8217;)</p>
+</li>
 <li><strong>cat_precision</strong> &#8211; The precision to use when writing a Catalog to an ASCII file. This should
 be an integer, which specifies how many digits to write. (default: 16)</li>
 </ul>
@@ -340,7 +352,7 @@ be an integer, which specifies how many digits to write. (default: 16)</li>
 
 <dl class="method">
 <dt id="treecorr.Catalog.getGField">
-<tt class="descname">getGField</tt><big>(</big><em>min_size</em>, <em>max_size</em>, <em>split_method=None</em>, <em>max_top=10</em>, <em>logger=None</em><big>)</big><a class="headerlink" href="#treecorr.Catalog.getGField" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getGField</tt><big>(</big><em>min_sep</em>, <em>max_sep</em>, <em>b</em>, <em>split_method=None</em>, <em>metric=None</em>, <em>max_top=10</em>, <em>logger=None</em><big>)</big><a class="headerlink" href="#treecorr.Catalog.getGField" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a GField based on the g1,g2 values in this catalog.</p>
 <p>The GField object is cached, so this is efficient to call multiple times.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -348,11 +360,26 @@ be an integer, which specifies how many digits to write. (default: 16)</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>min_size</strong> &#8211; The minimum radius cell required (usually min_sep).</li>
-<li><strong>max_size</strong> &#8211; The maximum radius cell required (usually max_sep).</li>
+<li><strong>min_sep</strong> &#8211; The minimum separation between points that will be needed.</li>
+<li><strong>max_sep</strong> &#8211; The maximum separation between points that will be needed.</li>
+<li><strong>b</strong> &#8211; The b parameter that will be used for the correlation function.
+This should be bin_size * bin_slop.</li>
 <li><strong>split_method</strong> &#8211; Which split method to use (&#8216;mean&#8217;, &#8216;median&#8217;, or &#8216;middle&#8217;)
 (default: &#8216;mean&#8217;; this value can also be given in the Catalog 
 constructor in the config dict.)</li>
+<li><strong>metric</strong> &#8211; <p>Which metric to use for distance measurements.  Options are:</p>
+<ul>
+<li>&#8216;Euclidean&#8217; = straight line Euclidean distance between two points.
+For spherical coordinates (ra,dec without r), this is the chord
+distance between points on the unit sphere.</li>
+<li>&#8216;Rperp&#8217; = the perpendicular component of the distance. For two points
+with distance from Earth <cite>r1, r2</cite>, if <cite>d</cite> is the normal Euclidean 
+distance and <span class="math">\(Rparallel = |r1-r2|\)</span>, then we define
+<span class="math">\(Rperp^2 = d^2 - Rparallel^2\)</span>.</li>
+</ul>
+<p>(default: &#8216;Euclidean&#8217;; this value can also be given in the Catalog 
+constructor in the config dict.)</p>
+</li>
 <li><strong>max_top</strong> &#8211; The maximum number of top layers to use when setting up the
 field. (default: 10)</li>
 <li><strong>logger</strong> &#8211; A logger file if desired (default: self.logger)</li>
@@ -368,16 +395,33 @@ field. (default: 10)</li>
 
 <dl class="method">
 <dt id="treecorr.Catalog.getGSimpleField">
-<tt class="descname">getGSimpleField</tt><big>(</big><em>logger=None</em><big>)</big><a class="headerlink" href="#treecorr.Catalog.getGSimpleField" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getGSimpleField</tt><big>(</big><em>metric=None</em>, <em>logger=None</em><big>)</big><a class="headerlink" href="#treecorr.Catalog.getGSimpleField" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a GSimpleField based on the g1,g2 values in this catalog.</p>
 <p>The GSimpleField object is cached, so this is efficient to call multiple times.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>logger</strong> &#8211; A logger file if desired (default: self.logger)</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>metric</strong> &#8211; <p>Which metric to use for distance measurements.  Options are:</p>
+<ul>
+<li>&#8216;Euclidean&#8217; = straight line Euclidean distance between two points.
+For spherical coordinates (ra,dec without r), this is the chord
+distance between points on the unit sphere.</li>
+<li>&#8216;Rperp&#8217; = the perpendicular component of the distance. For two points
+with distance from Earth <cite>r1, r2</cite>, if <cite>d</cite> is the normal Euclidean 
+distance and <span class="math">\(Rparallel = |r1-r2|\)</span>, then we define
+<span class="math">\(Rperp^2 = d^2 - Rparallel^2\)</span>.</li>
+</ul>
+<p>(default: &#8216;Euclidean&#8217;; this value can also be given in the Catalog 
+constructor in the config dict.)</p>
+</li>
+<li><strong>logger</strong> &#8211; A logger file if desired (default: self.logger)</li>
+</ul>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A <a class="reference internal" href="field.html#treecorr.GSimpleField" title="treecorr.GSimpleField"><tt class="xref py py-class docutils literal"><span class="pre">GSimpleField</span></tt></a> object</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A <a class="reference internal" href="field.html#treecorr.GSimpleField" title="treecorr.GSimpleField"><tt class="xref py py-class docutils literal"><span class="pre">GSimpleField</span></tt></a> object</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -385,7 +429,7 @@ field. (default: 10)</li>
 
 <dl class="method">
 <dt id="treecorr.Catalog.getKField">
-<tt class="descname">getKField</tt><big>(</big><em>min_size</em>, <em>max_size</em>, <em>split_method=None</em>, <em>max_top=10</em>, <em>logger=None</em><big>)</big><a class="headerlink" href="#treecorr.Catalog.getKField" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getKField</tt><big>(</big><em>min_sep</em>, <em>max_sep</em>, <em>b</em>, <em>split_method=None</em>, <em>metric=None</em>, <em>max_top=10</em>, <em>logger=None</em><big>)</big><a class="headerlink" href="#treecorr.Catalog.getKField" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a KField based on the k values in this catalog.</p>
 <p>The KField object is cached, so this is efficient to call multiple times.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -393,11 +437,26 @@ field. (default: 10)</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>min_size</strong> &#8211; The minimum radius cell required (usually min_sep).</li>
-<li><strong>max_size</strong> &#8211; The maximum radius cell required (usually max_sep).</li>
+<li><strong>min_sep</strong> &#8211; The minimum separation between points that will be needed.</li>
+<li><strong>max_sep</strong> &#8211; The maximum separation between points that will be needed.</li>
+<li><strong>b</strong> &#8211; The b parameter that will be used for the correlation function.
+This should be bin_size * bin_slop.</li>
 <li><strong>split_method</strong> &#8211; Which split method to use (&#8216;mean&#8217;, &#8216;median&#8217;, or &#8216;middle&#8217;)
 (default: &#8216;mean&#8217;; this value can also be given in the Catalog 
 constructor in the config dict.)</li>
+<li><strong>metric</strong> &#8211; <p>Which metric to use for distance measurements.  Options are:</p>
+<ul>
+<li>&#8216;Euclidean&#8217; = straight line Euclidean distance between two points.
+For spherical coordinates (ra,dec without r), this is the chord
+distance between points on the unit sphere.</li>
+<li>&#8216;Rperp&#8217; = the perpendicular component of the distance. For two points
+with distance from Earth <cite>r1, r2</cite>, if <cite>d</cite> is the normal Euclidean 
+distance and <span class="math">\(Rparallel = |r1-r2|\)</span>, then we define
+<span class="math">\(Rperp^2 = d^2 - Rparallel^2\)</span>.</li>
+</ul>
+<p>(default: &#8216;Euclidean&#8217;; this value can also be given in the Catalog 
+constructor in the config dict.)</p>
+</li>
 <li><strong>max_top</strong> &#8211; The maximum number of top layers to use when setting up the
 field. (default: 10)</li>
 <li><strong>logger</strong> &#8211; A logger file if desired (default: self.logger)</li>
@@ -413,16 +472,33 @@ field. (default: 10)</li>
 
 <dl class="method">
 <dt id="treecorr.Catalog.getKSimpleField">
-<tt class="descname">getKSimpleField</tt><big>(</big><em>logger=None</em><big>)</big><a class="headerlink" href="#treecorr.Catalog.getKSimpleField" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getKSimpleField</tt><big>(</big><em>metric=None</em>, <em>logger=None</em><big>)</big><a class="headerlink" href="#treecorr.Catalog.getKSimpleField" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a KSimpleField based on the k values in this catalog.</p>
 <p>The KSimpleField object is cached, so this is efficient to call multiple times.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>logger</strong> &#8211; A logger file if desired (default: self.logger)</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>metric</strong> &#8211; <p>Which metric to use for distance measurements.  Options are:</p>
+<ul>
+<li>&#8216;Euclidean&#8217; = straight line Euclidean distance between two points.
+For spherical coordinates (ra,dec without r), this is the chord
+distance between points on the unit sphere.</li>
+<li>&#8216;Rperp&#8217; = the perpendicular component of the distance. For two points
+with distance from Earth <cite>r1, r2</cite>, if <cite>d</cite> is the normal Euclidean 
+distance and <span class="math">\(Rparallel = |r1-r2|\)</span>, then we define
+<span class="math">\(Rperp^2 = d^2 - Rparallel^2\)</span>.</li>
+</ul>
+<p>(default: &#8216;Euclidean&#8217;; this value can also be given in the Catalog 
+constructor in the config dict.)</p>
+</li>
+<li><strong>logger</strong> &#8211; A logger file if desired (default: self.logger)</li>
+</ul>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A <a class="reference internal" href="field.html#treecorr.KSimpleField" title="treecorr.KSimpleField"><tt class="xref py py-class docutils literal"><span class="pre">KSimpleField</span></tt></a> object</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A <a class="reference internal" href="field.html#treecorr.KSimpleField" title="treecorr.KSimpleField"><tt class="xref py py-class docutils literal"><span class="pre">KSimpleField</span></tt></a> object</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -430,7 +506,7 @@ field. (default: 10)</li>
 
 <dl class="method">
 <dt id="treecorr.Catalog.getNField">
-<tt class="descname">getNField</tt><big>(</big><em>min_size</em>, <em>max_size</em>, <em>split_method=None</em>, <em>max_top=10</em>, <em>logger=None</em><big>)</big><a class="headerlink" href="#treecorr.Catalog.getNField" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getNField</tt><big>(</big><em>min_sep</em>, <em>max_sep</em>, <em>b</em>, <em>split_method=None</em>, <em>metric=None</em>, <em>max_top=10</em>, <em>logger=None</em><big>)</big><a class="headerlink" href="#treecorr.Catalog.getNField" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return an NField based on the positions in this catalog.</p>
 <p>The NField object is cached, so this is efficient to call multiple times.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -438,11 +514,26 @@ field. (default: 10)</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>min_size</strong> &#8211; The minimum radius cell required (usually min_sep).</li>
-<li><strong>max_size</strong> &#8211; The maximum radius cell required (usually max_sep).</li>
+<li><strong>min_sep</strong> &#8211; The minimum separation between points that will be needed.</li>
+<li><strong>max_sep</strong> &#8211; The maximum separation between points that will be needed.</li>
+<li><strong>b</strong> &#8211; The b parameter that will be used for the correlation function.
+This should be bin_size * bin_slop.</li>
 <li><strong>split_method</strong> &#8211; Which split method to use (&#8216;mean&#8217;, &#8216;median&#8217;, or &#8216;middle&#8217;)
 (default: &#8216;mean&#8217;; this value can also be given in the Catalog 
 constructor in the config dict.)</li>
+<li><strong>metric</strong> &#8211; <p>Which metric to use for distance measurements.  Options are:</p>
+<ul>
+<li>&#8216;Euclidean&#8217; = straight line Euclidean distance between two points.
+For spherical coordinates (ra,dec without r), this is the chord
+distance between points on the unit sphere.</li>
+<li>&#8216;Rperp&#8217; = the perpendicular component of the distance. For two points
+with distance from Earth <cite>r1, r2</cite>, if <cite>d</cite> is the normal Euclidean 
+distance and <span class="math">\(Rparallel = |r1-r2|\)</span>, then we define
+<span class="math">\(Rperp^2 = d^2 - Rparallel^2\)</span>.</li>
+</ul>
+<p>(default: &#8216;Euclidean&#8217;; this value can also be given in the Catalog 
+constructor in the config dict.)</p>
+</li>
 <li><strong>max_top</strong> &#8211; The maximum number of top layers to use when setting up the
 field. (default: 10)</li>
 <li><strong>logger</strong> &#8211; A logger file if desired (default: self.logger)</li>
@@ -458,16 +549,33 @@ field. (default: 10)</li>
 
 <dl class="method">
 <dt id="treecorr.Catalog.getNSimpleField">
-<tt class="descname">getNSimpleField</tt><big>(</big><em>logger=None</em><big>)</big><a class="headerlink" href="#treecorr.Catalog.getNSimpleField" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getNSimpleField</tt><big>(</big><em>metric=None</em>, <em>logger=None</em><big>)</big><a class="headerlink" href="#treecorr.Catalog.getNSimpleField" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return an NSimpleField based on the positions in this catalog.</p>
 <p>The NSimpleField object is cached, so this is efficient to call multiple times.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>logger</strong> &#8211; A logger file if desired (default: self.logger)</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>metric</strong> &#8211; <p>Which metric to use for distance measurements.  Options are:</p>
+<ul>
+<li>&#8216;Euclidean&#8217; = straight line Euclidean distance between two points.
+For spherical coordinates (ra,dec without r), this is the chord
+distance between points on the unit sphere.</li>
+<li>&#8216;Rperp&#8217; = the perpendicular component of the distance. For two points
+with distance from Earth <cite>r1, r2</cite>, if <cite>d</cite> is the normal Euclidean 
+distance and <span class="math">\(Rparallel = |r1-r2|\)</span>, then we define
+<span class="math">\(Rperp^2 = d^2 - Rparallel^2\)</span>.</li>
+</ul>
+<p>(default: &#8216;Euclidean&#8217;; this value can also be given in the Catalog 
+constructor in the config dict.)</p>
+</li>
+<li><strong>logger</strong> &#8211; A logger file if desired (default: self.logger)</li>
+</ul>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A <a class="reference internal" href="field.html#treecorr.NSimpleField" title="treecorr.NSimpleField"><tt class="xref py py-class docutils literal"><span class="pre">NSimpleField</span></tt></a> object</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A <a class="reference internal" href="field.html#treecorr.NSimpleField" title="treecorr.NSimpleField"><tt class="xref py py-class docutils literal"><span class="pre">NSimpleField</span></tt></a> object</p>
+</td>
 </tr>
 </tbody>
 </table>
