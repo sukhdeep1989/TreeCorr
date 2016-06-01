@@ -199,6 +199,8 @@ public:
     double getW() const { return _data->getW(); }
     double getWPos() const { return _data->getWPos(); }
     long getN() const { return _data->getN(); }
+    const std::set<int>& getJackIds(){return _jackIds;}
+    const Cell<DC,M>* getJackCell(int jackId){return _jackCells[jackId]; }
 
     double getSize() const { return _size; }
     double getSizeSq() const { return _sizesq; }
@@ -222,6 +224,8 @@ protected:
     CellData<D,C>* _data;
     Cell<D,C>* _left;
     Cell<D,C>* _right;
+    std::map<int , Cell<DC,M>*> _jackCells;
+    std::set<int> _jackIds;               // Sets avoid duplication of indices
 };
 
 template <int D, int C>

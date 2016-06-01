@@ -454,6 +454,21 @@ void BinnedCorr2<D1,D2>::directProcess11(
 
     double nn = double(c1.getN()) * double(c2.getN());
     _npairs[k] += nn;
+    
+    std::set jackIds(c1.getJackIds);
+    for(std::set<int>::iterator it=c2.getJackIds().begin(); it != c2.getJackIds().end(); ++it){
+            jackIds.insert(*it);
+    }
+    
+    
+    for(std::set<int>::iterator it=jackIds.begin(); it != jackIds.end(); ++it){
+       _npairs_jack[j][k] = c1.getJackCell[i].getN() * c2.getN() +
+                         c2.getJackCell[i].getN() * c1.getN() -
+                         c1.getJackCell[i].getN() * c2.getJackCell[i].getN();
+                         //subtract to remove double count pairs. Works when c1!=c2
+                         
+    }
+   
 
     double ww = double(c1.getW()) * double(c2.getW());
     _meanr[k] += ww * r;
@@ -462,6 +477,17 @@ void BinnedCorr2<D1,D2>::directProcess11(
     //dbg<<"n,w = "<<nn<<','<<ww<<" ==>  "<<_npairs[k]<<','<<_weight[k]<<std::endl;
 
     DirectHelper<D1,D2>::template ProcessXi<C,M>(c1,c2,dsq,_xi,k);
+    
+    for(){
+        DirectHelper<DC1,DC2>::ProcessXi(c1.getJackCell[i],c2,dsq,xi1,k);
+        DirectHelper<DC1,DC2>::ProcessXi(c1,c2.getJackCell[i],dsq,xi2,k);
+        DirectHelper<DC1,DC2>::ProcessXi(c1.getJackCell[i],c2.getJackCell[i],dsq,xi3,k);
+        DirectHelper<DC1,DC2>::ProcessXi(c2.getJackCell[i],c1.getJackCell[i],dsq,xi4,k); // TODO: Fix this
+        _xi_jack[j][k] = xi1 + x2 - 0.5*(xi3 + xi4);
+                
+    }
+    
+    
 }
 
 template <int D1, int D2>

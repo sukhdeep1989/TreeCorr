@@ -91,6 +91,10 @@ protected:
     double* _meanlogr;
     double* _weight;
     double* _npairs;
+
+    double** _npairs_jack;
+    double** _weight_jack;
+    XiData<DC1,DC2>* _xi_jack; 
 };
 
 template <int D1, int D2>
