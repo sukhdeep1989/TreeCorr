@@ -318,10 +318,10 @@ struct XiData<GData, GData>
     double* xim;
     double* xim_im;
     
-    double* xip_jack;
-    double* xip_im_jack;
-    double* xim_jack;
-    double* xim_im_jack;
+    double** xip_jack;
+    double** xip_im_jack;
+    double** xim_jack;
+    double** xim_im_jack;
 };
 
 template <>
