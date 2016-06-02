@@ -94,7 +94,7 @@ protected:
 
     double** _npairs_jack;
     double** _weight_jack;
-    XiData<DC1,DC2>* _xi_jack; 
+    
 };
 
 template <int D1, int D2>
@@ -102,20 +102,53 @@ struct XiData // This works for NK, KK
 {
     XiData(double* xi0, double*, double*, double*) : xi(xi0) {}
 
-    void new_data(int n) { xi = new double[n]; }
-    void delete_data(int n) { delete [] xi; xi = 0; }
+    void new_data(int n)
+      {
+        xi = new double[n];
+        xi_jack=new double[n_Jack][n];
+      }
+    
+    void delete_data(int n)
+     {
+        delete [] xi; xi = 0;
+         
+        delete [][] xi_jack; xi_jack = 0;
+     }
+    
     void copy(const XiData<D1,D2>& rhs,int n)
-    { for (int i=0; i<n; ++i) xi[i] = rhs.xi[i]; }
+     {
+        for (int i=0; i<n; ++i)
+          {
+            xi[i] = rhs.xi[i];
+            for (int jk=0; jk<n_Jack; jk++)
+                xi_jack[jk][i] = rhs.xi_jack[jk][i];
+          }
+     }
+    
     void add(const XiData<D1,D2>& rhs,int n)
-    { for (int i=0; i<n; ++i) xi[i] += rhs.xi[i]; }
+      {
+        for (int i=0; i<n; ++i)
+         {
+            xi[i] += rhs.xi[i];
+            for (int jk=0; jk<n_Jack; jk++)
+                xi_jack[jk][i] += rhs.xi_jack[jk][i];
+         }
+      }
+    
     void clear(int n)
-    { for (int i=0; i<n; ++i) xi[i] = 0.; }
+      {
+        for (int i=0; i<n; ++i)
+         {
+            xi[i] = 0.;
+             for (int jk=0; jk<n_Jack; jk++)
+                 xi_jack[jk][i] = 0.;
+         }
+      }
+    
     void write(std::ostream& os) const // Just used for debugging.  Print the first value.
     { os << xi[0]; }
 
-    
-    
-    double* xi;
+    double* xi, **xi_jack;
 };
 
 template <int D1, int D2>
@@ -131,26 +164,56 @@ struct XiData<D1, GData> // This works for NG, KG
     {
         xi = new double[n];
         xi_im = new double[n];
+        xi_jack = new double[n_Jack][n];
+        xi_im_jack = new double[n_Jack][n];
     }
     void delete_data(int n)
     {
         delete [] xi; xi = 0;
         delete [] xi_im; xi_im = 0;
+        delete [] xi_jack; xi_jack = 0;
+        delete [] xi_im_jack; xi_im_jack = 0;
     }
     void copy(const XiData<D1,GData>& rhs,int n)
     {
-        for (int i=0; i<n; ++i) xi[i] = rhs.xi[i];
-        for (int i=0; i<n; ++i) xi_im[i] = rhs.xi_im[i];
+        for (int i=0; i<n; ++i)
+         {
+            xi[i] = rhs.xi[i];
+            xi_im[i] = rhs.xi_im[i];
+            for (int jk=0; jk<n_Jack; jk++)
+            {
+                xi_jack[jk][i] = rhs.xi_jack[jk][i];
+                xi_im_jack[jk][i] = rhs.xi_im_jack[jk][i];
+            }
+        }
     }
+    
     void add(const XiData<D1,GData>& rhs,int n)
     {
-        for (int i=0; i<n; ++i) xi[i] += rhs.xi[i];
-        for (int i=0; i<n; ++i) xi_im[i] += rhs.xi_im[i];
+        for (int i=0; i<n; ++i)
+         {
+            xi[i] += rhs.xi[i];
+            xi_im[i] += rhs.xi_im[i];
+            for (int jk=0; jk<n_Jack; jk++)
+            {
+                xi[jk][i] += rhs.xi_im_jack[jk][i];
+                xi_im_jack[jk][i] += rhs.xi_im_jack[jk][i];
+            }
+         }
     }
+    
     void clear(int n)
     {
-        for (int i=0; i<n; ++i) xi[i] = 0.;
-        for (int i=0; i<n; ++i) xi_im[i] = 0.;
+        for (int i=0; i<n; ++i)
+        {
+            xi[i] = 0.;
+            xi_im[i] = 0.;
+            for (int jk=0; jk<n_Jack; jk++)
+            {
+                xi_jack[jk][i] = 0.;
+                xi_im_jack[jk][i] = 0.;
+            }
+        }
     }
     void write(std::ostream& os) const
     { os << xi[0]<<','<<xi_im[0]; }
@@ -159,6 +222,8 @@ struct XiData<D1, GData> // This works for NG, KG
 
     double* xi;
     double* xi_im;
+    double** xi_jack;
+    double** xi_im_jack;
 };
 
 template <>
@@ -173,6 +238,11 @@ struct XiData<GData, GData>
         xip_im = new double[n];
         xim = new double[n];
         xim_im = new double[n];
+        
+        xip_jack = new double[n_Jack][n];
+        xip_im_jack = new double[n_Jack][n];
+        xim_jack = new double[n_Jack][n];
+        xim_im_jack = new double[n_Jack][n];
     }
     void delete_data(int n)
     {
@@ -180,27 +250,65 @@ struct XiData<GData, GData>
         delete [] xip_im; xip_im = 0;
         delete [] xim; xim = 0;
         delete [] xim_im; xim_im = 0;
+        
+        delete [] xip_jack; xip_jack = 0;
+        delete [] xip_im_jack; xip_im_jack = 0;
+        delete [] xim_jack; xim_jack = 0;
+        delete [] xim_im_jack; xim_im_jack = 0;
     }
     void copy(const XiData<GData,GData>& rhs,int n)
     {
-        for (int i=0; i<n; ++i) xip[i] = rhs.xip[i];
-        for (int i=0; i<n; ++i) xip_im[i] = rhs.xip_im[i];
-        for (int i=0; i<n; ++i) xim[i] = rhs.xim[i];
-        for (int i=0; i<n; ++i) xim_im[i] = rhs.xim_im[i];
+        for (int i=0; i<n; ++i)
+        {
+            xip[i] = rhs.xip[i];
+            xip_im[i] = rhs.xip_im[i];
+            xim[i] = rhs.xim[i];
+            xim_im[i] = rhs.xim_im[i];
+            for (int jk=0; jk<n_Jack; jk++)
+            {
+                xip_jack[jk][i] = rhs.xip_jack[jk][i];
+                xip_im_jack[jk][i] = rhs.xip_im_jack[jk][i];
+                xim_jack[jk][i] = rhs.xim_jack[jk][i];
+                xim_im_jack[jk][i] = rhs.xim_im_jack[jk][i];
+            }
+        }
     }
+    
     void add(const XiData<GData,GData>& rhs,int n)
     {
-        for (int i=0; i<n; ++i) xip[i] += rhs.xip[i];
-        for (int i=0; i<n; ++i) xip_im[i] += rhs.xip_im[i];
-        for (int i=0; i<n; ++i) xim[i] += rhs.xim[i];
-        for (int i=0; i<n; ++i) xim_im[i] += rhs.xim_im[i];
+        for (int i=0; i<n; ++i)
+        {
+            xip[i] += rhs.xip[i];
+            xip_im[i] += rhs.xip_im[i];
+            xim[i] += rhs.xim[i];
+            xim_im[i] += rhs.xim_im[i];
+            for (int jk=0; jk<n_Jack; jk++)
+            {
+                xip_jack[jk][i] += rhs.xip_jack[jk][i];
+                xip_im_jack[jk][i] += rhs.xip_im_jack[jk][i];
+                xim_jack[jk][i] += rhs.xim_jack[jk][i];
+                xim_im_jack[jk][i] += rhs.xim_im_jack[jk][i];
+            }
+        }
     }
+    
     void clear(int n)
     {
-        for (int i=0; i<n; ++i) xip[i] = 0.;
-        for (int i=0; i<n; ++i) xip_im[i] = 0.;
-        for (int i=0; i<n; ++i) xim[i] = 0.;
-        for (int i=0; i<n; ++i) xim_im[i] = 0.;
+        for (int i=0; i<n; ++i)
+        {
+            xip[i] = 0.;
+            xip_im[i] = 0.;
+            xim[i] = 0.;
+            xim_im[i] = 0.;
+            for (int jk=0; jk<n_Jack; jk++)
+            {
+                xip_jack[jk][i] = 0.;
+                xip_im_jack[jk][i] = 0.;
+                xim_jack[jk][i] = 0.;
+                xim_im_jack[jk][i] = 0.;
+            }
+            
+        }
     }
     void write(std::ostream& os) const
     { os << xip[0]<<','<<xip_im[0]<<','<<xim[0]<<','<<xim_im; }
@@ -209,6 +317,11 @@ struct XiData<GData, GData>
     double* xip_im;
     double* xim;
     double* xim_im;
+    
+    double* xip_jack;
+    double* xip_im_jack;
+    double* xim_jack;
+    double* xim_im_jack;
 };
 
 template <>
