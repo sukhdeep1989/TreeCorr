@@ -359,7 +359,27 @@ struct DirectHelper<NData,KData>
     static void ProcessXi(
         const Cell<NData,C>& c1, const Cell<KData,C>& c2, const double ,
         XiData<NData,KData>& xi, int k)
-    { xi.xi[k] += c1.getW() * c2.getData().getWK(); }
+    {
+        xi.xi[k] += c1.getW() * c2.getData().getWK();
+        
+        std::set jackIds(c1.getJackIds);
+        for(std::set<int>::iterator it=c2.getJackIds().begin(); it != c2.getJackIds().end(); ++it)
+          {
+            jackIds.insert(*it);
+          }
+        
+        for(std::set<int>::iterator it=jackIds.begin(); it != jackIds.end(); ++it)
+          {
+            xi.xi_jack[j][k]+=c1.getJackCell[*it].getData().getW() *
+                                c2.getData().getWK();
+              
+            xi.xi_jack[j][k]+=c1.getData().getW() *
+              c2.getJackCell[*it].getData().getWK();
+            
+            xi.xi_jack[j][k]-=c1.getJackCell[*it].getData().getW() *
+                                c2.getJackCell[*it].getData().getWK();
+          }
+    }
 };
 
 template <>
@@ -377,6 +397,35 @@ struct DirectHelper<NData,GData>
         g2 *= -c1.getW();
         xi.xi[k] += real(g2);
         xi.xi_im[k] += imag(g2);
+        
+        std::set jackIds(c1.getJackIds);
+        for(std::set<int>::iterator it=c2.getJackIds().begin(); it != c2.getJackIds().end(); ++it)
+        {
+            jackIds.insert(*it);
+        }
+        
+        for(std::set<int>::iterator it=jackIds.begin(); it != jackIds.end(); ++it)
+        {
+            std::complex<double> g_j1_2,g_1_j2,g_j1_j2;
+            
+            ProjectHelper<C>::ProjectShear(c1.getJackCell[*it],c2,g_j1_2);
+            g_j1_2 *= -c1.getJackCell[*it].getW();
+            
+            ProjectHelper<C>::ProjectShear(c1.getJackCell[*it],c2.getJackCell[*it],g_j1_j2);
+            g_j1_j2 *= -c1.getJackCell[*it].getW();
+            
+            ProjectHelper<C>::ProjectShear(c1,c2.getJackCell[*it],g_j1_2);
+            g_1_j2 *= -c1.getW();
+            
+            
+            xi.xi_jack[j][k]+=real(g_j1_2);
+            xi.xi_jack[j][k]+=real(g_1_j2);
+            xi.xi_jack[j][k]-=real(g_j1_j2);
+            
+            xi.xi_im_jack[j][k]+=imag(g_j1_2);
+            xi.xi_im_jack[j][k]+=imag(g_1_j2);
+            xi.xi_im_jack[j][k]-=imag(g_j1_j2);
+        }
     }
 };
 
@@ -387,7 +436,28 @@ struct DirectHelper<KData,KData>
     static void ProcessXi(
         const Cell<KData,C>& c1, const Cell<KData,C>& c2, const double ,
         XiData<KData,KData>& xi, int k)
-    { xi.xi[k] += c1.getData().getWK() * c2.getData().getWK(); }
+          {
+            xi.xi[k] += c1.getData().getWK() * c2.getData().getWK();
+              
+              std::set jackIds(c1.getJackIds);
+              for(std::set<int>::iterator it=c2.getJackIds().begin(); it != c2.getJackIds().end(); ++it)
+              {
+                  jackIds.insert(*it);
+              }
+              
+              for(std::set<int>::iterator it=jackIds.begin(); it != jackIds.end(); ++it)
+              {
+                  xi.xi_jack[j][k]+=c1.getJackCell[*it].getData().getWK() *
+                  c2.getData().getWK();
+                  
+                  xi.xi_jack[j][k]+=c1.getData().getWK() *
+                  c2.getJackCell[*it].getData().getWK();
+                  
+                  xi.xi_jack[j][k]-=c1.getJackCell[*it].getData().getWK() *
+                  c2.getJackCell[*it].getData().getWK();
+              }
+
+          }
 };
 
 template <>
@@ -405,6 +475,36 @@ struct DirectHelper<KData,GData>
         g2 *= -c1.getData().getWK();
         xi.xi[k] += real(g2);
         xi.xi_im[k] += imag(g2);
+        
+        std::set jackIds(c1.getJackIds);
+        for(std::set<int>::iterator it=c2.getJackIds().begin(); it != c2.getJackIds().end(); ++it)
+        {
+            jackIds.insert(*it);
+        }
+        
+        for(std::set<int>::iterator it=jackIds.begin(); it != jackIds.end(); ++it)
+        {
+            std::complex<double> g_j1_2,g_1_j2,g_j1_j2;
+            
+            ProjectHelper<C>::ProjectShear(c1.getJackCell[*it],c2,g_j1_2);
+            g_j1_2 *= -c1.getJackCell[*it].getWK();
+            
+            ProjectHelper<C>::ProjectShear(c1.getJackCell[*it],c2.getJackCell[*it],g_j1_j2);
+            g_j1_j2 *= -c1.getJackCell[*it].getWK();
+            
+            ProjectHelper<C>::ProjectShear(c1,c2.getJackCell[*it],g_j1_2);
+            g_1_j2 *= -c1.getWK();
+            
+            
+            xi.xi_jack[j][k]+=real(g_j1_2);
+            xi.xi_jack[j][k]+=real(g_1_j2);
+            xi.xi_jack[j][k]-=real(g_j1_j2);
+            
+            xi.xi_im_jack[j][k]+=imag(g_j1_2);
+            xi.xi_im_jack[j][k]+=imag(g_1_j2);
+            xi.xi_im_jack[j][k]-=imag(g_j1_j2);
+        }
+
     }
 };
 
@@ -430,6 +530,40 @@ struct DirectHelper<GData,GData>
         xi.xip_im[k] += g1ig2r - g1rg2i;
         xi.xim[k] += g1rg2r - g1ig2i;       // g1 * g2
         xi.xim_im[k] += g1ig2r + g1rg2i;
+        
+        std::set jackIds(c1.getJackIds);
+        for(std::set<int>::iterator it=c2.getJackIds().begin(); it != c2.getJackIds().end(); ++it)
+        {
+            jackIds.insert(*it);
+        }
+        
+        for(std::set<int>::iterator it=jackIds.begin(); it != jackIds.end(); ++it)
+        {
+            double g1rg2r_jack = g1.getJackCell[*it].real() * g2.real()
+                            +g1.real() * g2.getJackCell[*it].real()
+                            -g1.getJackCell[*it].real() * g2.getJackCell[*it].real();
+            
+            
+            double g1rg2i_jack = g1.getJackCell[*it].real() * g2.imag()
+                                +g1.real() * g2.getJackCell[*it].imag()
+                                -g1.getJackCell[*it].real() * g2.getJackCell[*it].imag();
+            
+            
+            double g1ig2r_jack = g1.getJackCell[*it].imag() * g2.real()
+                                +g1.imag() * g2.getJackCell[*it].real()
+                                -g1.getJackCell[*it].imag() * g2.getJackCell[*it].real();
+    
+            double g1ig2i_jack = g1.getJackCell[*it].imag() * g2.imag()
+                            +g1.imag() * g2.getJackCell[*it].imag()
+                            -g1.getJackCell[*it].imag() * g2.getJackCell[*it].imag();
+            
+            xi.xip_jack[j][k] += g1rg2r_jack + g1ig2i_jack;       // g1 * conj(g2)
+            xi.xip_im_jack[j][k] += g1ig2r_jack - g1rg2i_jack;
+            xi.xim_jack[j][k] += g1rg2r_jack - g1ig2i_jack;       // g1 * g2
+            xi.xim_im_jack[j][k] += g1ig2r_jack + g1rg2i_jack;
+        }
+
+        
     }
 };
 
