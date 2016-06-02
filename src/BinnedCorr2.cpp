@@ -453,41 +453,35 @@ void BinnedCorr2<D1,D2>::directProcess11(
     //dbg<<"r,logr,k = "<<r<<','<<logr<<','<<k<<std::endl;
 
     double nn = double(c1.getN()) * double(c2.getN());
+    double ww = double(c1.getW()) * double(c2.getW());
     _npairs[k] += nn;
+    _weight[k] += ww;
+    _meanr[k] += ww * r;
+    _meanlogr[k] += ww * logr;
+    DirectHelper<D1,D2>::template ProcessXi<C,M>(c1,c2,dsq,_xi,k);
+    //dbg<<"n,w = "<<nn<<','<<ww<<" ==>  "<<_npairs[k]<<','<<_weight[k]<<std::endl;
     
     std::set jackIds(c1.getJackIds);
     for(std::set<int>::iterator it=c2.getJackIds().begin(); it != c2.getJackIds().end(); ++it){
             jackIds.insert(*it);
     }
     
-    
     for(std::set<int>::iterator it=jackIds.begin(); it != jackIds.end(); ++it){
-       _npairs_jack[j][k] = c1.getJackCell[i].getN() * c2.getN() +
-                         c2.getJackCell[i].getN() * c1.getN() -
-                         c1.getJackCell[i].getN() * c2.getJackCell[i].getN();
-                         //subtract to remove double count pairs. Works when c1!=c2
-                         
-    }
-   
+       _npairs_jack[*it][k] = c1.getJackCell[*it].getN() * c2.getN() +
+                              c2.getJackCell[*it].getN() * c1.getN() -
+                              c1.getJackCell[*it].getN() * c2.getJackCell[*it].getN();
+                            
+       _weight_jack[*it][k] = c1.getJackCell[*it].getW() * c2.getW() +
+                              c2.getJackCell[*it].getW() * c1.getW() -
+                              c1.getJackCell[*it].getW() * c2.getJackCell[*it].getW();
 
-    double ww = double(c1.getW()) * double(c2.getW());
-    _meanr[k] += ww * r;
-    _meanlogr[k] += ww * logr;
-    _weight[k] += ww;
-    //dbg<<"n,w = "<<nn<<','<<ww<<" ==>  "<<_npairs[k]<<','<<_weight[k]<<std::endl;
-
-    DirectHelper<D1,D2>::template ProcessXi<C,M>(c1,c2,dsq,_xi,k);
-    
-    for(){
-        DirectHelper<DC1,DC2>::ProcessXi(c1.getJackCell[i],c2,dsq,xi1,k);
-        DirectHelper<DC1,DC2>::ProcessXi(c1,c2.getJackCell[i],dsq,xi2,k);
-        DirectHelper<DC1,DC2>::ProcessXi(c1.getJackCell[i],c2.getJackCell[i],dsq,xi3,k);
-        DirectHelper<DC1,DC2>::ProcessXi(c2.getJackCell[i],c1.getJackCell[i],dsq,xi4,k); // TODO: Fix this
-        _xi_jack[j][k] = xi1 + x2 - 0.5*(xi3 + xi4);
-                
-    }
-    
-    
+       DirectHelper<DC1, DC2>::ProcessXi(c1.getJackCell[*it], c2, dsq, xi_1, k);
+       DirectHelper<DC1, DC2>::ProcessXi(c1, c2.getJackCell[*it], dsq, xi_2, k);
+       DirectHelper<DC1, DC2>::ProcessXi(c1.getJackCell[*it], c2.getJackCell[*it], dsq, xi_3, k);
+       DirectHelper<DC1, DC2>::ProcessXi(c2.getJackCell[*it], c1.getJackCell[*it], dsq, xi_4, k); // TODO: Fix this
+       _xi_jack[*it][k] = xi1 + x2 - 0.5*(xi3 + xi4);
+      
+    }    
 }
 
 template <int D1, int D2>

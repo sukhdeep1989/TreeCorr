@@ -113,6 +113,8 @@ struct XiData // This works for NK, KK
     void write(std::ostream& os) const // Just used for debugging.  Print the first value.
     { os << xi[0]; }
 
+    
+    
     double* xi;
 };
 
@@ -152,6 +154,8 @@ struct XiData<D1, GData> // This works for NG, KG
     }
     void write(std::ostream& os) const
     { os << xi[0]<<','<<xi_im[0]; }
+    
+    void operator+(XiData< D1, GData >& rhs);
 
     double* xi;
     double* xi_im;
