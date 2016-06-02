@@ -179,6 +179,10 @@ struct XiData<D1, GData> // This works for NG, KG
     {
         delete [] xi; xi = 0;
         delete [] xi_im; xi_im = 0;
+        for (int jk=0; jk<n_Jack; jk++){
+            delete [] xi_jack[jk];
+            delete [] xi_im_jack[jk];
+        }
         delete [] xi_jack; xi_jack = 0;
         delete [] xi_im_jack; xi_im_jack = 0;
     }
@@ -266,7 +270,13 @@ struct XiData<GData, GData>
         delete [] xip_im; xip_im = 0;
         delete [] xim; xim = 0;
         delete [] xim_im; xim_im = 0;
-        
+        for (int jk=0; jk<n_Jack; jk++)
+        {
+            delete [] xip_jack[jk];
+            delete [] xip_im_jack[jk];
+            delete [] xim_jack[jk];
+            delete [] xim_im_jack[jk];
+        }
         delete [] xip_jack; xip_jack = 0;
         delete [] xip_im_jack; xip_im_jack = 0;
         delete [] xim_jack; xim_jack = 0;
