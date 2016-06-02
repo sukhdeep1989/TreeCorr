@@ -105,7 +105,10 @@ struct XiData // This works for NK, KK
     void new_data(int n)
       {
         xi = new double[n];
-        xi_jack=new double[n_Jack][n];
+        xi_jack=new double *[n_Jack];
+        for (int jk=0; jk<n_Jack; jk++)
+            xi_jack[jk]=new double [n];
+          
       }
     
     void delete_data(int n)
@@ -164,8 +167,13 @@ struct XiData<D1, GData> // This works for NG, KG
     {
         xi = new double[n];
         xi_im = new double[n];
-        xi_jack = new double[n_Jack][n];
-        xi_im_jack = new double[n_Jack][n];
+        xi_jack=new double *[n_Jack];
+        xi_im_jack = new double *[n_Jack];
+        for (int jk=0; jk<n_Jack; jk++){
+            xi_jack[jk]=new double [n];
+            xi_im_jack[jk]=new double [n];
+        }
+        
     }
     void delete_data(int n)
     {
@@ -239,10 +247,18 @@ struct XiData<GData, GData>
         xim = new double[n];
         xim_im = new double[n];
         
-        xip_jack = new double[n_Jack][n];
-        xip_im_jack = new double[n_Jack][n];
-        xim_jack = new double[n_Jack][n];
-        xim_im_jack = new double[n_Jack][n];
+        xip_jack = new double*[n_Jack];
+        xip_im_jack = new double*[n_Jack];
+        xim_jack = new double*[n_Jack];
+        xim_im_jack = new double*[n_Jack];
+        for (int jk=0; jk<n_Jack; jk++)
+        {
+            xip_jack[jk] = new double[n];
+            xim_jack[jk] = new double[n];
+            xip_im_jack[jk] = new double[n];
+            xim_im_jack[jk] = new double[n];
+        }
+        
     }
     void delete_data(int n)
     {

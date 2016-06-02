@@ -76,6 +76,8 @@ class Catalog(object):
         :r:      The distance, if defined, as a numpy array. (None otherwise)
         :w:      The weights, as a numpy array. (All 1's if no weight column provided.)
         :wpos:   The weights for position centroiding, as a numpy array.  (All 1's if neither
+        :jackID: Jaccknife id, if defined, as numpy int array. None otherwise
+        
                  weight column provided.)
         :g1:     The g1 component of the shear, if defined, as a numpy array. (None otherwise)
         :g2:     The g2 component of the shear, if defined, as a numpy array. (None otherwise)
@@ -171,6 +173,7 @@ class Catalog(object):
                         files or a string for FITS files. (default: 0 or '0', which means not to
                         read in this column. When reading from a file, either x_col and y_col are
                         required or ra_col and dec_col are required.)
+    :param jack_col:    Column to use for jackknife IDs.
     :param r_col:       The column to use for the r values. This should be an integer for ASCII
                         files or a string for FITS files.  Note that r_col is invalid in 
                         conjunction with x_col/y_col. (default: 0 or '0', which means not to
@@ -284,6 +287,8 @@ class Catalog(object):
                 'Which column to use for ra. Should be an integer for ASCII catalogs.'),
         'dec_col' : (str, True, '0', None,
                 'Which column to use for dec. Should be an integer for ASCII catalogs.'),
+        'jack_col' : (str, True, '0', None,
+                             'Which column to use for jackknife. Should be an integer for ASCII catalogs.'),
         'r_col' : (str, True, '0', None,
                 'Which column to use for r.  Only valid with ra,dec. ',
                 'Should be an integer for ASCII catalogs.'),
@@ -323,6 +328,8 @@ class Catalog(object):
                 'Which HDU to use for the ra_col. default is the global hdu value.'),
         'dec_hdu': (int, True, None, None,
                 'Which HDU to use for the dec_col. default is the global hdu value.'),
+        'jack_hdu': (int, True, None, None,
+                    'Which HDU to use for the jack_col. default is the global hdu value.'),
         'r_hdu': (int, True, None, None,
                 'Which HDU to use for the r_col. default is the global hdu value.'),
         'g1_hdu': (int, True, None, None,
@@ -373,6 +380,7 @@ class Catalog(object):
         self.y = None
         self.z = None
         self.ra = None
+        self.jackID=None
         self.dec = None
         self.r = None
         self.w = None
@@ -436,6 +444,7 @@ class Catalog(object):
             self.z = self.makeArray(z,'z')
             self.ra = self.makeArray(ra,'ra')
             self.dec = self.makeArray(dec,'dec')
+            self.jackID = self.makeArray(jackID,'jackID')
             self.r = self.makeArray(r,'r')
             self.w = self.makeArray(w,'w')
             self.wpos = self.makeArray(wpos,'wpos')
@@ -511,6 +520,7 @@ class Catalog(object):
         if self.z is not None: self.z = self.z[start:end]
         if self.ra is not None: self.ra = self.ra[start:end]
         if self.dec is not None: self.dec = self.dec[start:end]
+        if self.jackID is not None: self.jackID= self.jackID[start:end]
         if self.r is not None: self.r = self.r[start:end]
         if self.w is not None: self.w = self.w[start:end]
         if self.wpos is not None: self.wpos = self.wpos[start:end]
@@ -529,7 +539,9 @@ class Catalog(object):
                 raise ValueError("ra and dec have different numbers of elements")
         if self.ntot == 0:
             raise RuntimeError("Catalog has no objects!")
-        if self.z is not None and len(self.z) != self.ntot: 
+        if self.jackID is not None and len(self.jackID) != self.ntot:
+            raise ValueError("jackID has the wrong numbers of elements")
+        if self.z is not None and len(self.z) != self.ntot:
             raise ValueError("z has the wrong numbers of elements")
         if self.r is not None and len(self.r) != self.ntot:
             raise ValueError("r has the wrong numbers of elements")
@@ -550,6 +562,7 @@ class Catalog(object):
         self.checkForNaN(self.z,'z')
         self.checkForNaN(self.ra,'ra')
         self.checkForNaN(self.dec,'dec')
+        self.checkForNaN(self.jackID,'jackID')
         self.checkForNaN(self.r,'r')
         self.checkForNaN(self.g1,'g1')
         self.checkForNaN(self.g2,'g2')
@@ -721,6 +734,7 @@ class Catalog(object):
         z_col = treecorr.config.get_from_list(self.config,'z_col',num,int,0)
         ra_col = treecorr.config.get_from_list(self.config,'ra_col',num,int,0)
         dec_col = treecorr.config.get_from_list(self.config,'dec_col',num,int,0)
+        jack_col = treecorr.config.get_from_list(self.config,'jack_col',num,int,0)
         r_col = treecorr.config.get_from_list(self.config,'r_col',num,int,0)
         w_col = treecorr.config.get_from_list(self.config,'w_col',num,int,0)
         wpos_col = treecorr.config.get_from_list(self.config,'wpos_col',num,int,0)
@@ -748,6 +762,9 @@ class Catalog(object):
             self.logger.debug('read x = %s',str(self.x))
             self.y = data[:,y_col-1].astype(float)
             self.logger.debug('read y = %s',str(self.y))
+            if jack_col!=0:
+                self.jackID = data[:,jack_col-1].astype(float)
+                self.logger.debug('read jackID = %s',str(self.jackID))
             if z_col != 0:
                 self.z = data[:,z_col-1].astype(float)
                 self.logger.debug('read r = %s',str(self.r))
@@ -762,6 +779,9 @@ class Catalog(object):
             self.logger.debug('read ra = %s',str(self.ra))
             self.dec = data[:,dec_col-1].astype(float)
             self.logger.debug('read dec = %s',str(self.dec))
+            if jack_col!=0:
+                self.jackID = data[:,jack_col-1].astype(float)
+                self.logger.debug('read jackID = %s',str(self.jackID))
             if r_col != 0:
                 self.r = data[:,r_col-1].astype(float)
                 self.logger.debug('read r = %s',str(self.r))
@@ -837,6 +857,7 @@ class Catalog(object):
         z_col = treecorr.config.get_from_list(self.config,'z_col',num,str,'0')
         ra_col = treecorr.config.get_from_list(self.config,'ra_col',num,str,'0')
         dec_col = treecorr.config.get_from_list(self.config,'dec_col',num,str,'0')
+        jack_col = treecorr.config.get_from_list(self.config,'jack_col',num,str,'0')
         r_col = treecorr.config.get_from_list(self.config,'r_col',num,str,'0')
         w_col = treecorr.config.get_from_list(self.config,'w_col',num,str,'0')
         wpos_col = treecorr.config.get_from_list(self.config,'wpos_col',num,str,'0')
@@ -918,7 +939,10 @@ class Catalog(object):
                         raise AttributeError("r_col is invalid for file %s"%file_name)
                     self.r = fits[r_hdu].read_column(r_col).astype(float)
                     self.logger.debug('read r = %s',str(self.r))
-
+            # Read jaccknife
+            if jack_col!=0:
+                self.jackID = fits[jack_hdu].read_column(jack_col).astype(float)
+                self.logger.debug('read JackID = %s',str(self.jackID))
             # Read w
             if w_col != '0':
                 w_hdu = treecorr.config.get_from_list(self.config,'w_hdu',num,int,hdu)
@@ -1181,6 +1205,8 @@ class Catalog(object):
             if self.z is not None:
                 col_names.append('z')
                 columns.append(self.z)
+        if self.jackID is not None:
+                col_names.append('jackID')
         if self.nontrivial_w:
             col_names.append('w')
             columns.append(self.w)
@@ -1216,6 +1242,7 @@ class Catalog(object):
         if self.z is not None: s += 'z='+repr(self.z)+','
         if self.ra is not None: s += 'ra='+repr(self.ra)+','
         if self.dec is not None: s += 'dec='+repr(self.dec)+','
+        if self.jackID is not None: s += 'jackID='+repr(self.jackID)+','
         if self.r is not None: s += 'r='+repr(self.r)+','
         if self.w is not None: s += 'w='+repr(self.w)+','
         if self.wpos is not None: s += 'wpos='+repr(self.wpos)+','

@@ -155,6 +155,8 @@ class BinnedCorr2(object):
         'bin_slop' : (float, False, None, None,
                 'The fraction of a bin width by which it is ok to let the pairs miss the correct bin.',
                 'The default is to use 1 if bin_size <= 0.1, or 0.1/bin_size if bin_size > 0.1.'),
+        'n_Jack' : (int, False, None, None,
+                           'The number of Jackknife regions.'),
         'verbose' : (int, False, 1, [0, 1, 2, 3],
                 'How verbose the code should be during processing. ',
                 '0 = Errors Only, 1 = Warnings, 2 = Progress, 3 = Debugging'),
@@ -203,6 +205,13 @@ class BinnedCorr2(object):
         self.sep_units = treecorr.config.get(self.config,'sep_units',str,'radians')
         self.sep_unit_name = self.config.get('sep_units','')
         self.log_sep_units = math.log(self.sep_units)
+
+        if 'n_Jack' not in self.config:
+            self.n_Jack=0
+            print "Number of jackknife regions not given. Setting n_Jack=0"
+        else:
+            self.n_Jack=float(self.config['n_Jack'])
+        
         if 'nbins' not in self.config:
             if 'max_sep' not in self.config:
                 raise AttributeError("Missing required parameter max_sep")
